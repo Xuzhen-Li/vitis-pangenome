@@ -4,7 +4,7 @@ This repo is for *Vitis* pangenome graphs, presence/absence variation, and mixed
 
 ## This is not
 
-This is not the SNP capture panel. Design lives in [grapevine-chip](https://github.com/Xuzhen-Li/grapevine-chip); calling and ancestry live in [grapeancestry](https://github.com/Xuzhen-Li/grapeancestry).
+This is not the SNP capture panel. Chip design will live under [grapeancestry/chip](https://github.com/Xuzhen-Li/grapeancestry/tree/main/chip) (placeholder); calling and ancestry live in [grapeancestry](https://github.com/Xuzhen-Li/grapeancestry).
 This is not TE library curation. That line is [vitis-te](https://github.com/Xuzhen-Li/vitis-te).
 This is not plastid-only work. That line is [grapevine-plastid](https://github.com/Xuzhen-Li/grapevine-plastid).
 This is not synteny / collinearity. That line is [vitis-synteny](https://github.com/Xuzhen-Li/vitis-synteny).
