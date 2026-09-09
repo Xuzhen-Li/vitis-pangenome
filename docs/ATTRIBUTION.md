@@ -1,24 +1,31 @@
 # Attribution (字爹 / peer templates)
 
-This pipeline folder is **adapted** for *Vitis* from public crop-pangenome integration scripts.
-It is not a fork and does not ship third-party genotype data.
+Scripts under `pipeline/` are **rewritten for this *Vitis* lab grain**.
+No third-party genotypes ship here.
 
-## Primary templates
+## Graph build + plant defaults
 
-| Crop | Paper / data | Code | What we reused |
-|------|----------------|------|----------------|
-| Cannabis sativa | Pike et al., *Scientific Data* (reference-free 66-haplotype PGGB graph) | [COMInterop/lighthouse](https://github.com/COMInterop/lighthouse) `pangenome/` (can-pan) | Step order: PanSN rename → per-chromosome split → PGGB → panacus; plant-repeat-aware PGGB flags as a **starting point** |
-| Potato (phased) | Cheng et al., *Nature* (2025) hybrid-potato haplotype design | [Chenglin20170390/Haplotype-diversity](https://github.com/Chenglin20170390/Haplotype-diversity) `scripts/Graph construction by PGGB and MC/` | Mash divergence screen, PGGB vs Minigraph-Cactus notes, `vg deconstruct` + `vcfbub` size bins, odgi PAV / non-ref path ideas |
+| Peer | Code / paper | Reused idea |
+|------|----------------|-------------|
+| Cannabis sativa | [COMInterop/lighthouse](https://github.com/COMInterop/lighthouse) `pangenome/` · Pike et al. *Sci Data* | PanSN → per-chr → PGGB → panacus order; repeat-aware starting flags |
+| Potato (phased) | [Chenglin20170390/Haplotype-diversity](https://github.com/Chenglin20170390/Haplotype-diversity) · Cheng et al. *Nature* 2025 | Mash screen; PGGB vs Minigraph-Cactus; `vg deconstruct` + `vcfbub` size bins; odgi PAV / non-ref |
+| **North American *Vitis*** | [noecochetel/North_American_Vitis_Pangenome](https://github.com/noecochetel/North_American_Vitis_Pangenome) (MIT) · Cochetel et al. *Genome Biology* 2023 | Same genus: wfmash `-p 85 -s 10000`; LV=0 bubble extract; SNP/INDEL/INS/DEL/MNP class; vg reconstruct → map → pack → call; gene/core modeling sketch |
 
-## Core tools (cite in papers)
+## Downstream VCF / SV companions
 
-- [pggb](https://github.com/pangenome/pggb) — graph build
-- [odgi](https://github.com/pangenome/odgi), [panacus](https://github.com/marschall-lab/panacus) — stats / growth curves
-- [vg](https://github.com/vgteam/vg), [vcfbub](https://github.com/pangenome/vcfbub) — deconstruct / SV size filters
-- Optional: [Minigraph-Cactus](https://github.com/ComparativeGenomicsToolkit/cactus) — linear-reference-aware graphs (potato authors noted base loss in divergent plant regions; prefer PGGB when HDRs matter)
+| Peer | Code | Reused idea |
+|------|------|-------------|
+| Human / CPC graph VCF | [Shuhua-Group/PanGenome_VCF_PostProcess](https://github.com/Shuhua-Group/PanGenome_VCF_PostProcess) | `vcfbub` cap → trim unseen ALTs → length-group multiallelics → split small vs SV (≥50 bp) |
+| *Oryza* pan-genome | [LengFeng00/oryza-pangenome-pipeline](https://github.com/LengFeng00/oryza-pangenome-pipeline) | SyRI-based pan-SV merge (type + ±bp_slop + reciprocal overlap) as **alignment-based** check beside the graph |
+| Tomato graph / T2T | [YaoZhou89/TGG](https://github.com/YaoZhou89/TGG), [ChunmeiShi02/TomatoT2Tsuperpangenome](https://github.com/ChunmeiShi02/TomatoT2Tsuperpangenome) | Multi-caller HiFi SV + SyRI/plotsr pairing notes (pointer only; heavy callers stay on your cluster) |
 
-## License note
+## Orchestration (optional)
 
-Upstream potato / cannabis script repos did not declare an SPDX license at the time of adaptation.
-Scripts here are **rewritten** for *Vitis* (19 chromosomes, PN40024-style refs, clonal notes) under this repository’s terms.
-Do not paste unpublished assemblies or private sample matrices into public commits.
+- [nf-core/pangenome](https://github.com/nf-core/pangenome) — Nextflow wrapper around PGGB-family tools when you outgrow bash
+- [WarrenLab/minigraph-cactus-nf](https://github.com/WarrenLab/minigraph-cactus-nf) — MC as second view for mapping-heavy cohorts
+
+## Core tools
+
+pggb · wfmash · odgi · panacus · vg · vcfbub · bcftools · seqkit · mash · SyRI (optional)
+
+Do not commit unpublished assemblies or private sample matrices.
