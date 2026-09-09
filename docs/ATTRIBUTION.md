@@ -3,29 +3,39 @@
 Scripts under `pipeline/` are **rewritten for this *Vitis* lab grain**.
 No third-party genotypes ship here.
 
-## Graph build + plant defaults
+## Wave 1 — graph build defaults
 
 | Peer | Code / paper | Reused idea |
 |------|----------------|-------------|
-| Cannabis sativa | [COMInterop/lighthouse](https://github.com/COMInterop/lighthouse) `pangenome/` · Pike et al. *Sci Data* | PanSN → per-chr → PGGB → panacus order; repeat-aware starting flags |
-| Potato (phased) | [Chenglin20170390/Haplotype-diversity](https://github.com/Chenglin20170390/Haplotype-diversity) · Cheng et al. *Nature* 2025 | Mash screen; PGGB vs Minigraph-Cactus; `vg deconstruct` + `vcfbub` size bins; odgi PAV / non-ref |
-| **North American *Vitis*** | [noecochetel/North_American_Vitis_Pangenome](https://github.com/noecochetel/North_American_Vitis_Pangenome) (MIT) · Cochetel et al. *Genome Biology* 2023 | Same genus: wfmash `-p 85 -s 10000`; LV=0 bubble extract; SNP/INDEL/INS/DEL/MNP class; vg reconstruct → map → pack → call; gene/core modeling sketch |
+| Cannabis sativa | [COMInterop/lighthouse](https://github.com/COMInterop/lighthouse) `pangenome/` | PanSN → per-chr → PGGB → panacus |
+| Potato (phased) | [Chenglin20170390/Haplotype-diversity](https://github.com/Chenglin20170390/Haplotype-diversity) | Mash; PGGB vs MC; vcfbub bins; odgi PAV |
+| North American *Vitis* | [noecochetel/North_American_Vitis_Pangenome](https://github.com/noecochetel/North_American_Vitis_Pangenome) (MIT) | `-p 85 -s 10k`; LV=0 class; vg genotyping |
 
-## Downstream VCF / SV companions
+## Wave 2 — VCF / alignment companions
 
 | Peer | Code | Reused idea |
 |------|------|-------------|
-| Human / CPC graph VCF | [Shuhua-Group/PanGenome_VCF_PostProcess](https://github.com/Shuhua-Group/PanGenome_VCF_PostProcess) | `vcfbub` cap → trim unseen ALTs → length-group multiallelics → split small vs SV (≥50 bp) |
-| *Oryza* pan-genome | [LengFeng00/oryza-pangenome-pipeline](https://github.com/LengFeng00/oryza-pangenome-pipeline) | SyRI-based pan-SV merge (type + ±bp_slop + reciprocal overlap) as **alignment-based** check beside the graph |
-| Tomato graph / T2T | [YaoZhou89/TGG](https://github.com/YaoZhou89/TGG), [ChunmeiShi02/TomatoT2Tsuperpangenome](https://github.com/ChunmeiShi02/TomatoT2Tsuperpangenome) | Multi-caller HiFi SV + SyRI/plotsr pairing notes (pointer only; heavy callers stay on your cluster) |
+| Graph VCF post | [Shuhua-Group/PanGenome_VCF_PostProcess](https://github.com/Shuhua-Group/PanGenome_VCF_PostProcess) | vcfbub → trim ALTs → small vs SV |
+| *Oryza* | [LengFeng00/oryza-pangenome-pipeline](https://github.com/LengFeng00/oryza-pangenome-pipeline) | SyRI pan-SV merge |
+| Tomato | [YaoZhou89/TGG](https://github.com/YaoZhou89/TGG) | HiFi multi-caller pointer |
+
+## Wave 3 — dual graph + genotyping
+
+| Peer | Code | Reused idea |
+|------|------|-------------|
+| Dual PGGB/MC + giraffe/PanGenie | [andrew010417/pangenome_graph_pipeline](https://github.com/andrew010417/pangenome_graph_pipeline) | `cactus-pangenome` wrapper; giraffe pack/call; PanGenie panel; odgi+panacus QC |
+| Wheat graph protocol | [Chenghong412/wheat_pangenome](https://github.com/Chenghong412/wheat_pangenome) | per-chr `minigraph -cxggs`; map assemblies → GAF |
+| Maize graph protocol | [Jia-nianhua/Maize-Graph-Pangenome](https://github.com/Jia-nianhua/Maize-Graph-Pangenome) | minigraph / cactus construction layout |
+| Barley minigraph | [mb47/minigraph-barley](https://github.com/mb47/minigraph-barley) | incremental per-chr build; odgi heaps saturation |
+| Barley wild relative | [jia-wu-feng/Pan_Bulbosum](https://github.com/jia-wu-feng/Pan_Bulbosum) | haplotype-resolved graph folder contract |
 
 ## Orchestration (optional)
 
-- [nf-core/pangenome](https://github.com/nf-core/pangenome) — Nextflow wrapper around PGGB-family tools when you outgrow bash
-- [WarrenLab/minigraph-cactus-nf](https://github.com/WarrenLab/minigraph-cactus-nf) — MC as second view for mapping-heavy cohorts
+- [nf-core/pangenome](https://github.com/nf-core/pangenome)
+- [WarrenLab/minigraph-cactus-nf](https://github.com/WarrenLab/minigraph-cactus-nf)
 
 ## Core tools
 
-pggb · wfmash · odgi · panacus · vg · vcfbub · bcftools · seqkit · mash · SyRI (optional)
+pggb · wfmash · minigraph · cactus · odgi · panacus · vg · PanGenie · vcfbub · bcftools · seqkit · mash · SyRI
 
 Do not commit unpublished assemblies or private sample matrices.

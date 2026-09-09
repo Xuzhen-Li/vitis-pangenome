@@ -19,3 +19,11 @@ Upstream MIT R helpers live in
 `noecochetel/North_American_Vitis_Pangenome/scripts/`
 (`PANGENOME.seq_pangenome_modeling.R`, gene intersect). Port later if you need
 core/dispensable curves beyond panacus.
+
+## Wave 3 (also adapted as 12–16)
+
+- andrew010417/pangenome_graph_pipeline — dual graph + giraffe + PanGenie + QC
+- Chenghong412/wheat_pangenome — per-chr minigraph
+- Jia-nianhua/Maize-Graph-Pangenome — minigraph/cactus protocol
+- mb47/minigraph-barley — incremental minigraph + odgi heaps
+- jia-wu-feng/Pan_Bulbosum — wild-relative haplotype graph layout
