@@ -6,10 +6,8 @@
 
 ## 不包含的内容
 
-- SNP 捕获 panel：[grapeancestry/chip](https://github.com/Xuzhen-Li/grapeancestry/tree/main/chip)
 - TE 库构建：[vitis-te](https://github.com/Xuzhen-Li/vitis-te)
 - 纯质体：[grapevine-plastid](https://github.com/Xuzhen-Li/grapevine-plastid)
-- 共线性：[vitis-synteny](https://github.com/Xuzhen-Li/vitis-synteny)
 
 本仓库不包含未发表的基因型或私有样本矩阵。
 

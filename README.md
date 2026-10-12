@@ -6,10 +6,8 @@ This repository provides *Vitis* pangenome graphs, presence/absence variation, a
 
 ## Out of scope
 
-- SNP capture panel: [grapeancestry/chip](https://github.com/Xuzhen-Li/grapeancestry/tree/main/chip)
 - TE library curation: [vitis-te](https://github.com/Xuzhen-Li/vitis-te)
 - Plastid-only: [grapevine-plastid](https://github.com/Xuzhen-Li/grapevine-plastid)
-- Synteny: [vitis-synteny](https://github.com/Xuzhen-Li/vitis-synteny)
 
 It contains no unpublished genotypes or private sample matrices.
 
