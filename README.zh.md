@@ -17,9 +17,7 @@
 
 ## 方法目录
 
-本页是方法目录首页，按任务列出 2026-11 调查中的 252 条。仓库的默认分析流程仍以下方「分析流程」中的脚本为准，该目录不改变现有流程。完整表格仍在文末链接的详细目录文件中。本页已采用勘误中的表述；详细目录文件本身尚未改动。
-
-按类型计：工具 168 条，分析 61 条，设想 16 条，资源 6 条，格式 1 条。
+本页按任务列出 2026-11 调研整理的 252 项方法、工具与分析（工具 168、分析 61、设想 16、资源 6、格式 1）。默认分析流程仍为页面底部的流程脚本，本目录不改变该流程。完整表格与勘误见 `docs/` 目录下的详细文件。
 
 ## 目录
 
@@ -44,7 +42,7 @@
 <a id="section-1"></a>
 ## 1. 上游输入：分相组装
 
-进入图谱之前，一条单倍型需要具备的输入和检查。组装本身不是本仓库的主题。
+用于图谱构建前的分相组装、去冗余和挂载到染色体的工具，如 hifiasm、Verkko 和 purge_dups。
 
 - **hifiasm** (工具) — 用 HiFi reads 组装分相的单倍型 contig，支持 trio 或 Hi-C 分相模式。 葡萄栽培品种是高度杂合的无性系，每个材料的两条分相单倍型是进入图谱的自然输入。 [doi:10.1038/s41592-020-01056-5](https://doi.org/10.1038/s41592-020-01056-5) · [link](https://github.com/chhylp123/hifiasm) · [详情](docs/PANGENOME_CATALOG.md#L40)
 - **Verkko** (工具) — 把 HiFi 和超长 ONT reads 组合成端粒到端粒（T2T）的单倍型组装。 补上着丝粒和长重复，避免图谱路径在缺口处断开，与葡萄 T2T 组装的情形一致。 [doi:10.1038/s41587-023-01662-6](https://doi.org/10.1038/s41587-023-01662-6) · [link](https://github.com/marbl/verkko) · [详情](docs/PANGENOME_CATALOG.md#L41)
@@ -59,7 +57,7 @@
 <a id="section-2"></a>
 ## 2. 图谱构建
 
-图谱构建工具及其组件。本仓库脚本 01–05（PGGB 路径）和 12–13（Minigraph-Cactus、minigraph）已经用到其中若干项。
+用于构建和拆分泛基因组变异图谱与压缩 de Bruijn 图的方法及命名规范，包括 PGGB、Minigraph-Cactus 和 PanSN-spec。
 
 - **PGGB** (工具) — 由全对全比对构建无偏倚的变异图谱（wfmash → seqwish → smoothxg → GFAffix）。 已是本仓库的发现图谱（脚本 04–05）；Grapepan v1.0 也使用了 PGGB。 [doi:10.1038/s41592-024-02430-3](https://doi.org/10.1038/s41592-024-02430-3) · [link](https://github.com/pangenome/pggb) · [详情](docs/PANGENOME_CATALOG.md#L54)
 - **Minigraph-Cactus** (工具) — 以参考为锚的碱基级泛基因组图谱：先用 minigraph 做 SV 骨架，再用 Cactus 比对，并带 vg/Giraffe 索引。 可得到供 Giraffe 使用的图谱；Grapepan v1.0 和栽培葡萄 G3 2026 图谱都用过。 [doi:10.1038/s41587-023-01793-w](https://doi.org/10.1038/s41587-023-01793-w) · [link](https://github.com/ComparativeGenomicsToolkit/cactus) · [详情](docs/PANGENOME_CATALOG.md#L55)
@@ -84,7 +82,7 @@
 <a id="section-3"></a>
 ## 3. 基因分型前的组装与图谱质控
 
-在建成图谱之后、群体基因分型之前使用。脚本 16（图谱质控）虽然编号在 14–15 之后，但按任务归在这一节。
+在下游基因分型前用于检查组装完整性、碱基准确度与图谱拓扑结构的评估工具和基准流程，如 Merqury、Inspector 和 Truvari。
 
 - **Merqury** (工具) — 无需参考、基于 k-mer 评估组装的 QV、完整性和分相。 每条单倍型进入图谱前都应运行。 [doi:10.1186/s13059-020-02134-9](https://doi.org/10.1186/s13059-020-02134-9) · [link](https://github.com/marbl/merqury) · [详情](docs/PANGENOME_CATALOG.md#L80)
 - **BUSCO** (工具) — 用单拷贝直系同源基因评估基因空间完整性。 每条葡萄属单倍型的常规门槛（Grapepan 报告约 98%）。 [doi:10.1093/molbev/msab199](https://doi.org/10.1093/molbev/msab199) · [link](https://busco.ezlab.org/) · [详情](docs/PANGENOME_CATALOG.md#L81)
@@ -107,7 +105,7 @@
 <a id="section-4"></a>
 ## 4. 变异发现：序列 PAV、结构变异和 TE 插入
 
-这里把三层分开：（a）序列或窗口水平的存在/缺失和增长曲线；（b）从图谱、组装或长读长新等位基因中发现的结构变异。 基因水平的 PAV 和基因家族拷贝数在第 7 节，不在这里。脚本 06 的 panacus 增长曲线统计的是碱基，不是基因。
+用于检测序列有无变异（PAV）、结构变异与 TE 插入多态性的检测工具及图谱拆解方法，如 panacus、vg deconstruct 和 GraffiTE。TE 库构建不在本仓库中（位于 `vitis-te`）。
 
 ### (a) 序列和窗口 PAV，以及增长曲线
 
@@ -148,7 +146,7 @@
 <a id="section-5"></a>
 ## 5. 群体基因分型与 reads 到图谱的比对
 
-这些工具对图谱中已有的变异位点做基因分型。Giraffe + vg call（脚本 14）和 PanGenie（脚本 15）都属于群体基因分型：前者把 reads 比对到图谱，后者使用 k-mer。两者都不会向图谱添加新的等位基因。从 reads 中发现新的 SV 等位基因，见第 4 节的 SVarp 和 SVPG。
+短读长与长读长的图谱比对工具及群体基因分型工具，包括 vg Giraffe、vg call、PanGenie 和 GraphAligner。注意 Giraffe + vg call 与 PanGenie 仅对图谱中已有的位点进行基因分型，不会添加新的等位基因。
 
 - **vg Giraffe** (工具) — 面向 GBZ 泛基因组图谱的、考虑单倍型的快速短读长比对器。 脚本 14 的比对器；把重测序的葡萄群体比对到图谱。 [doi:10.1126/science.abg8871](https://doi.org/10.1126/science.abg8871) · [link](https://github.com/vgteam/vg) · [详情](docs/PANGENOME_CATALOG.md#L140)
 - **vg Giraffe long reads** (工具) — 把 Giraffe 扩展到大型泛基因组图谱上的快速长读长和短读长比对。[preprint] 把 HiFi/ONT 葡萄 reads 比对到与短读长相同的图谱上。 [doi:10.1101/2025.09.29.678807](https://doi.org/10.1101/2025.09.29.678807) · [link](https://github.com/vgteam/vg) · [详情](docs/PANGENOME_CATALOG.md#L141)
@@ -178,7 +176,7 @@
 <a id="section-6"></a>
 ## 6. 共线性、比对与比较图谱
 
-组装之间的比对和共线性检查。脚本 10（SyRI）是共线性核对，按任务属于这一节。
+用于基因组间组装比较与共线性区块分析的全基因组比对和共线性工具，如 minimap2、AnchorWave 和 GENESPACE。
 
 - **minimap2** (工具) — 通用的长序列和组装比对器。 用于 SyRI 和点图的组装对组装比对。 [doi:10.1093/bioinformatics/bty191](https://doi.org/10.1093/bioinformatics/bty191) · [link](https://github.com/lh3/minimap2) · [详情](docs/PANGENOME_CATALOG.md#L166)
 - **AnchorWave** (工具) — 以基因为锚的全基因组比对，可处理全基因组复制（WGD）和 SV。 在分歧较大的葡萄属物种 / Muscadinia 之间可得到更好的比对。 [doi:10.1073/pnas.2113075119](https://doi.org/10.1073/pnas.2113075119) · [link](https://github.com/baoxingsong/AnchorWave) · [详情](docs/PANGENOME_CATALOG.md#L167)
@@ -195,7 +193,7 @@
 <a id="section-7"></a>
 ## 7. 图谱层面的基因有无与基因家族拷贝数
 
-只涉及跨单倍型的基因存在/缺失、拷贝数和家族归属。基因模型（结构）留在 gene-structure-annotation；基因名称、GO/KEGG 和结构域留在 gene-function-annotation。这里的工具使用已有的基因模型或蛋白序列，不制作新的注释。
+用于直系同源聚类、基因投射以及跨泛基因组追踪基因有无和家族拷贝数的工具，如 OrthoFinder、pangene 和 Liftoff。本节仅涉及图谱层面的基因有无与基因家族拷贝数，不包括基因结构注释。
 
 - **OrthoFinder** (工具) — 推断跨基因组的直系同源组和基因树。 葡萄单倍型间的基因家族拷贝数表（使用来自注释仓库的基因模型）。 [doi:10.1186/s13059-019-1832-y](https://doi.org/10.1186/s13059-019-1832-y) · [link](https://github.com/davidemms/OrthoFinder) · [详情](docs/PANGENOME_CATALOG.md#L183)
 - **Pandagma** (工具) — 考虑共线性的泛基因和家族集合，处理 WGD 和染色体约束。 为葡萄属内比较构建泛基因集合。 [doi:10.1093/bioinformatics/btae526](https://doi.org/10.1093/bioinformatics/btae526) · [link](https://github.com/legumeinfo/pandagma) · [详情](docs/PANGENOME_CATALOG.md#L184)
@@ -218,7 +216,7 @@
 <a id="section-8"></a>
 ## 8. 图谱分析、索引与格式
 
-工具集、文件格式和图谱层面的分析。
+用于查询和拆解泛基因组图谱的处理工具包、压缩索引与格式规范，包括 odgi、GBZ / GBWT 和 GFA specification。
 
 - **odgi** (工具) — 用于排序、布局、提取、解开和汇总变异图谱的工具包。 PGGB 葡萄图谱的核心分析工具包。 [doi:10.1093/bioinformatics/btac308](https://doi.org/10.1093/bioinformatics/btac308) · [link](https://github.com/pangenome/odgi) · [详情](docs/PANGENOME_CATALOG.md#L205)
 - **GBZ / GBWT** (工具) — vg Giraffe 使用的、压缩且考虑单倍型的图谱格式。 脚本 14 中 Giraffe 基因分型所需的格式。 [doi:10.1093/bioinformatics/btac656](https://doi.org/10.1093/bioinformatics/btac656) · [link](https://github.com/jltsiren/gbwtgraph) · [详情](docs/PANGENOME_CATALOG.md#L206)
@@ -240,7 +238,7 @@
 <a id="section-9"></a>
 ## 9. 可视化
 
-用于图谱、共线性和 PAV 的查看器和作图工具。
+用于查看图谱拓扑、单倍型、共线性与序列重复的浏览器和绘图工具，如 BandageNG、SequenceTubeMap 和 odgi viz / draw。
 
 - **Bandage** (工具) — 用于组装图和小型图谱的交互式查看器。 检查单个葡萄位点的子图。 [doi:10.1093/bioinformatics/btv383](https://doi.org/10.1093/bioinformatics/btv383) · [link](https://github.com/rrwick/Bandage) · [详情](docs/PANGENOME_CATALOG.md#L225)
 - **BandageNG** (工具) — Bandage 的持续维护分支，改进了路径和 GFA 支持。 同样的用途，支持更现代的 GFA 路径。 [link](https://github.com/asl/BandageNG) · [详情](docs/PANGENOME_CATALOG.md#L226)
@@ -266,7 +264,7 @@
 <a id="section-10"></a>
 ## 10. 表达、QTL 与泛基因组 GWAS
 
-使用泛基因组的关联分析和表达分析。这不是结构注释中的 RNA 证据步骤（HISAT2/StringTie），也不是功能注释。
+将泛基因组结构变异、图谱节点、k-mer、转录组和甲基化组与表型关联的方法及研究案例，包括 Grapepan v1.0 SV-GWAS、NodeGWAS 和 rpvg / spliced pangenome graphs。
 
 - **Grapepan v1.0 SV-GWAS** (分析) — 29 条单倍型的图谱泛基因组；对 466 份材料做基因分型；SV 为 29 个性状增加了遗传力和 QTL。 葡萄属 SV-GWAS 和基因组预测的直接先例。 [doi:10.1038/s41588-024-01967-5](https://doi.org/10.1038/s41588-024-01967-5) · [详情](docs/PANGENOME_CATALOG.md#L246)
 - **Vitis super-pangenome SV-eQTL** (分析) — 72 个单倍型分辨的葡萄属基因组；SV-eQTL 和霜霉病侵染转录组鉴定出 VvLHT8 及其他抗霜霉病位点。 葡萄抗病中 SV 与表达联系的模型。 [doi:10.1038/s41588-025-02111-7](https://doi.org/10.1038/s41588-025-02111-7) · [详情](docs/PANGENOME_CATALOG.md#L247)
@@ -308,7 +306,7 @@
 <a id="section-11"></a>
 ## 11. 演化、祖先成分与渗入
 
-从单倍型和图谱读取的群体历史。
+谱系（ARG / 树序列）推断，如 SINGER 和 tsinfer；基因渗入检验，如 Dsuite；以及葡萄驯化与无性系分化的相关研究。
 
 - **Grapevine SV domestication** (分析) — 葡萄驯化中 SV 和半合性的群体遗传学。 可将图谱结果与之比较的基础性葡萄属 SV 研究。 [doi:10.1038/s41477-019-0507-8](https://doi.org/10.1038/s41477-019-0507-8) · [详情](docs/PANGENOME_CATALOG.md#L267)
 - **Grapevine clone diversification** (分析) — 葡萄无性系之间的体细胞 SV 和 SNV。 说明有必要为 Pinot/Chardonnay 等无性系建立无性系水平的图谱。 [doi:10.1186/s12864-019-6211-2](https://doi.org/10.1186/s12864-019-6211-2) · [详情](docs/PANGENOME_CATALOG.md#L268)
@@ -326,7 +324,7 @@
 <a id="section-12"></a>
 ## 12. 葡萄属泛基因组研究与公开资源
 
-可复用或对照的葡萄专属图谱、面板和门户。
+已发表的葡萄属（*Vitis*）与圆叶葡萄属（*Muscadinia*）泛基因组数据集、参考基因组组装、综述与公开数据库，包括 Grapepan v1.0、Vitis super-pangenome 和 PN_T2T reference。
 
 - **Grapepan v1.0** (分析) — 18 条 T2T 单倍型加 11 个公开组装；包含 MC 和 PGGB 图谱。 可复用的公开葡萄属图谱。 [doi:10.1038/s41588-024-01967-5](https://doi.org/10.1038/s41588-024-01967-5) · [详情](docs/PANGENOME_CATALOG.md#L283)
 - **Vitis super-pangenome** (分析) — 72 份材料（25 份野生，47 份栽培）；组装和注释存放在 Zenodo。 目前最大的属水平分相葡萄面板。 [doi:10.1038/s41588-025-02111-7](https://doi.org/10.1038/s41588-025-02111-7) · [link](https://doi.org/10.5281/zenodo.13982444) · [详情](docs/PANGENOME_CATALOG.md#L284)
@@ -351,7 +349,7 @@
 <a id="section-13"></a>
 ## 13. 工作流与流程
 
-现成的分析流程和发布方案。
+端到端的泛基因组构建工作流与多样本分析流程，如 nf-core/pangenome、Pan1c 和 cactus-pangenome。
 
 - **nf-core/pangenome** (工具) — 在集群上运行 PGGB 工具的 Nextflow 流程。 脚本 04–06 可直接用的编排。 [doi:10.1093/bioinformatics/btae609](https://doi.org/10.1093/bioinformatics/btae609) · [link](https://github.com/nf-core/pangenome) · [详情](docs/PANGENOME_CATALOG.md#L301)
 - **Pan1c** (工具) — 用于染色体水平 PGGB/MC 图谱的 Snakemake 流程，带质控和报告。[preprint] 由植物研究组构建；与按染色体构建葡萄图谱的设计一致。 [doi:10.64898/2026.04.17.719212](https://doi.org/10.64898/2026.04.17.719212) · [link](https://forge.inrae.fr/genotoul-bioinfo/Pan1c/pan1c) · [详情](docs/PANGENOME_CATALOG.md#L302)
@@ -363,7 +361,7 @@
 <a id="section-14"></a>
 ## 14. 尚未在葡萄属上验证的设想
 
-这里是设想，不是结果。每一项在进入本仓库流程之前都需要先做试点。
+尚未在葡萄属上尝试的分析设想与 DNA 基础模型，如 COSIGT on ancient grape seeds、Berry-colour locus graph (VvMybA1) 和 PlantCaduceus。
 
 - **COSIGT on ancient grape seeds** (设想) — 在复杂位点上，对考古葡萄种子做低覆盖度图谱基因分型。 SV 等位基因的驯化时间。[待确认: 未在葡萄属上尝试] [doi:10.1186/s13059-026-04242-4](https://doi.org/10.1186/s13059-026-04242-4) · [详情](docs/PANGENOME_CATALOG.md#L316)
 - **Berry-colour locus graph (VvMybA1)** (设想) — 在已知 SV 位点周围构建位点图谱（impg 或 PGGB），例如 VvMybA1（果色）处的 Gret1 反转录转座子。 在一个表型清楚的已知葡萄 SV 上测试图谱基因分型。 [doi:10.1126/science.1095011](https://doi.org/10.1126/science.1095011) · [详情](docs/PANGENOME_CATALOG.md#L317)
@@ -382,7 +380,7 @@
 <a id="section-15"></a>
 ## 15. 其他植物泛基因组研究与综述
 
-非葡萄属的植物泛基因组研究和综述。列入这里，是因为其中的方法或结果可能用于葡萄。
+其他植物物种的泛基因组研究论文与方法学综述，包括 Rice super pan-genome、Maize 26 genomes (NAM) 和 Pangenome graphs review。
 
 - **Pangenome graphs review** (分析) — 泛基因组图谱模型和工具的综述。 本仓库文档的背景。 [doi:10.1146/annurev-genom-120219-080406](https://doi.org/10.1146/annurev-genom-120219-080406) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs074)
 - **Plant T2T methods review** (分析) — 植物 T2T 组装和泛基因组应用的综述。 葡萄属 T2T 图谱的组装标准。 [doi:10.1038/s41588-024-01830-7](https://doi.org/10.1038/s41588-024-01830-7) · [link](https://www.nature.com/articles/s41588-024-01830-7) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs075)
