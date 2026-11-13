@@ -11,6 +11,10 @@ This repository provides *Vitis* pangenome graphs, presence/absence variation, a
 
 It contains no unpublished genotypes or private sample matrices.
 
+## Methods catalog
+
+The reading list of methods and tools is in [`docs/CATALOG.md`](docs/CATALOG.md). It currently contains 252 entries and can be browsed by task section or by type. The default analysis pipeline remains the scripts in the Pipeline section below; this catalog does not change the pipeline.
+
 ## Pipeline
 
 The pipeline is organized according to three waves of peer playbooks. See [`pipeline/00_overview.md`](pipeline/00_overview.md), [`docs/ATTRIBUTION.md`](docs/ATTRIBUTION.md), and [`docs/DUAL_GRAPH.md`](docs/DUAL_GRAPH.md).

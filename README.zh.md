@@ -11,6 +11,10 @@
 
 本仓库不包含未发表的基因型或私有样本矩阵。
 
+## 方法目录
+
+方法与工具的阅读清单见 [`docs/CATALOG.md`](docs/CATALOG.md)，目前收录 252 条，可按任务章节或类型浏览。仓库的默认分析流程仍以下方「分析流程」中的脚本为准，该目录不改变现有流程。
+
 ## 分析流程
 
 参照三批同行的分析流程整理。参见 [`pipeline/00_overview.md`](pipeline/00_overview.md)、[`docs/ATTRIBUTION.md`](docs/ATTRIBUTION.md) 和 [`docs/DUAL_GRAPH.md`](docs/DUAL_GRAPH.md)。
