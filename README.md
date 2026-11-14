@@ -17,25 +17,27 @@ This repository covers pangenome graphs, presence/absence variation, and genotyp
 
 ## Methods catalog
 
-This page lists, by task, the 339 methods, tools, and analyses from the 2026-11 survey (tool 240, analysis 66, idea 19, resource 13, format 1); 87 were added on 2026-11-13 and have no details row in `docs/` yet. The default analysis pipeline is still the pipeline scripts at the foot of the page; the catalog does not change that pipeline. The full tables and errata are in the detailed files under `docs/`.
+This page lists, by task, the 371 methods, tools, and analyses from the 2026-11 survey and the 2026-11-14 update (tool 260, analysis 74, idea 24, resource 12, format 1); 87 were added on 2026-11-13 and 39 on 2026-11-14, and none of these has a details row in `docs/` yet. On 2026-11-14, 7 entries were merged into another entry: six older versions into the latest version, and cactus-pangenome into Minigraph-Cactus. The default analysis pipeline is still the pipeline scripts at the foot of the page; the catalog does not change that pipeline. The full tables and errata are in the detailed files under `docs/`.
+
+**2026-11-14 update.** Each section now opens with a **Clusters:** list. It groups the entries as alternatives (pick one), complementary (use together) or in order (run in sequence), with a note on when to pick which. Inside a list, “A or B” means pick one of the two and “A → B” is one fixed route. Different versions of one program are now one entry named for the latest version; older versions are only mentioned in that entry's note. A workflow chart with tool choices and decision points is in [`docs/CATALOG.md`](docs/CATALOG.md#workflow-2026-11-14).
 
 ## Contents
 
-1. [Upstream inputs: phased assemblies](#section-1) (16)
+1. [Upstream inputs: phased assemblies](#section-1) (18)
 2. [Graph construction](#section-2) (23)
-3. [Assembly and graph QC before genotyping](#section-3) (24)
-4. [Variant discovery: sequence PAV, structural variants and TE insertions](#section-4) (34)
-5. [Cohort genotyping and read-to-graph mapping](#section-5) (31)
+3. [Assembly and graph QC before genotyping](#section-3) (25)
+4. [Variant discovery: sequence PAV, structural variants and TE insertions](#section-4) (35)
+5. [Cohort genotyping and read-to-graph mapping](#section-5) (32)
 6. [Synteny, alignment and comparative maps](#section-6) (15)
-7. [Graph-aware gene presence and family copy-number](#section-7) (23)
-8. [Graph analysis, indexing and formats](#section-8) (21)
-9. [Visualization](#section-9) (27)
-10. [Expression, QTL and pangenome-GWAS](#section-10) (33)
-11. [Evolution, ancestry and introgression](#section-11) (20)
-12. [Vitis pangenome studies and public resources](#section-12) (24)
-13. [Workflows and pipelines](#section-13) (11)
-14. [Ideas still untested on Vitis](#section-14) (16)
-15. [Peer plant pangenome studies and reviews](#section-15) (21)
+7. [Graph-aware gene presence and family copy-number](#section-7) (26)
+8. [Graph analysis, indexing and formats](#section-8) (22)
+9. [Visualization](#section-9) (26)
+10. [Expression, QTL and pangenome-GWAS](#section-10) (39)
+11. [Evolution, ancestry and introgression](#section-11) (27)
+12. [Vitis pangenome studies and public resources](#section-12) (30)
+13. [Workflows and pipelines](#section-13) (8)
+14. [Ideas still untested on Vitis](#section-14) (21)
+15. [Peer plant pangenome studies and reviews](#section-15) (24)
 
 - [Data needed alongside the pangenome](#data-needs)
 - [Figure credits](#figure-credits)
@@ -48,6 +50,13 @@ How the sections line up with the scripts in this repo: build the graph (01–05
 Tools for de novo haplotype-resolved assembly, purging duplicates, and scaffolding prior to graph building, such as hifiasm, Verkko, and purge_dups.
 
 **Needs:** long reads for haplotype assemblies (HiFi and/or ONT); add Hi-C or genetic/optical maps only if contigs must be ordered into chromosomes. [Data needs by scenario](#data-needs)
+
+**Clusters:**
+- *Haplotype assembly* (alternatives): hifiasm, Verkko, Flye, NextDenovo. Use hifiasm for HiFi (default, trio or Hi-C phasing); Verkko with ultra-long ONT for T2T; Flye or NextDenovo only for ONT-only data.
+- *Phasing aids* (alternatives): Hi-C phasing with GreenHill, PhaseGrass, NOHIC. Use only when trio data are missing; check switch errors afterwards.
+- *Haplotig purging* (alternatives): purge_dups, Purge Haplotigs. For collapsed primary assemblies only; never run on already phased haplotypes.
+- *Scaffolding* (in order): YaHS or HapHiC or ALLHiC or 3D-DNA or ALLMAPS or RagTag, Juicebox Assembly Tools (JBAT). Automatic scaffolding first: YaHS or HapHiC (allele-aware) with Hi-C, ALLMAPS with genetic maps, RagTag only against a close reference; then review by hand in JBAT.
+- *Gaps and telomeres* (complementary): quarTeT, GCI. Confirm gap count and telomere ends before PanSN renaming.
 
 - **hifiasm** (tool) — Assembles HiFi reads into phased haplotype contigs, with trio or Hi-C phasing modes. Grapevine cultivars are highly heterozygous clones, so two phased haplotypes per accession are the natural input for a graph. [doi:10.1038/s41592-020-01056-5](https://doi.org/10.1038/s41592-020-01056-5) · [link](https://github.com/chhylp123/hifiasm) · [details](docs/PANGENOME_CATALOG.md#L40)
 - **Verkko** (tool) — Combines HiFi and ultra-long ONT reads into telomere-to-telomere haplotype assemblies. Fills centromeres and long repeats so graph paths are not broken at gaps, as in T2T grape assemblies. [doi:10.1038/s41587-023-01662-6](https://doi.org/10.1038/s41587-023-01662-6) · [link](https://github.com/marbl/verkko) · [details](docs/PANGENOME_CATALOG.md#L41)
@@ -69,6 +78,8 @@ Tools for de novo haplotype-resolved assembly, purging duplicates, and scaffoldi
 - **ALLHiC** (tool) — Allele-aware Hi-C scaffolding for polyploid and highly heterozygous genomes. Option for polyploid Vitis or Muscadinia material and older grape assemblies. [doi:10.1038/s41477-019-0487-8](https://doi.org/10.1038/s41477-019-0487-8) · [link](https://github.com/tangerzhang/ALLHiC)
 - **3D-DNA** (tool) — Hi-C based scaffolding and misjoin correction, reviewed in Juicebox. Widely used for manual curation of grape chromosome assemblies. [doi:10.1126/science.aal3327](https://doi.org/10.1126/science.aal3327) · [link](https://github.com/aidenlab/3d-dna)
 - **ALLMAPS** (tool) — Orders scaffolds using genetic, optical or synteny maps together. Grape has dense genetic maps; ALLMAPS can check or fix chromosome order. [doi:10.1186/s13059-014-0573-1](https://doi.org/10.1186/s13059-014-0573-1) · [link](https://github.com/tanghaibao/jcvi)
+- **Purge Haplotigs** (tool) — Reassigns allelic contigs from a primary assembly using read depth and synteny. An alternative to purge_dups; its paper used a grape (Cabernet Sauvignon) assembly as a test case [待确认: wording]. [doi:10.1186/s12859-018-2485-7](https://doi.org/10.1186/s12859-018-2485-7) · [link](https://bitbucket.org/mroachawri/purge_haplotigs)
+- **Juicebox Assembly Tools (JBAT)** (tool) — Interactive Hi-C contact-map editor for fixing misjoins and orientation after automated scaffolding. Used for manual review of grape chromosomes before PanSN naming. [preprint] [doi:10.1101/254797](https://doi.org/10.1101/254797) · [link](https://github.com/aidenlab/Juicebox)
 
 <a id="section-2"></a>
 ## 2. Graph construction
@@ -77,12 +88,21 @@ Methods and naming specifications for building and partitioning pangenome variat
 
 **Needs:** chromosome-named haplotype FASTAs (PanSN). Population reads are not required to build the graph. For already-phased haplotypes, check false duplication (BUSCO Duplicated, Merqury) and run purge_dups only if haplotigs remain. [Data needs by scenario](#data-needs)
 
+**Clusters:**
+- *Graph builders (pick by goal)* (alternatives): PGGB, Minigraph-Cactus, minigraph. PGGB for an unbiased all-to-all graph (discovery); Minigraph-Cactus for a reference-anchored, Giraffe-ready graph; minigraph for a lightweight SV backbone. This repo retains both PGGB and MC (dual graph).
+- *PGGB main chain* (in order): wfmash, seqwish, smoothxg, GFAffix. The steps PGGB runs in order.
+- *POA engines inside smoothxg* (alternatives): abPOA, SPOA. smoothxg uses one of them internally.
+- *Alignment and implicit-graph helpers* (complementary): SweepGA, impg. Not steps of the PGGB chain: SweepGA filters whole-genome alignments; impg queries the implicit graph built from alignments.
+- *Whole-genome aligners* (alternatives): Progressive Cactus, SibeliaZ, pgr-tk, AlfaPang. Alternatives for multi-genome alignment outside the default path.
+- *k-mer and de Bruijn graphs* (alternatives): Bifrost, GGCAT, Cuttlefish 2, TwoPaCo, rust-mdbg. Fast colored k-mer graphs for sequence PAV, not for SV genotyping.
+- *Conventions* (complementary): PanSN-spec, Chromosome-level graph partitioning, Pangenome graph construction review (Plant). PanSN names and per-chromosome builds are required inputs.
+
 - **PGGB** (tool) — Builds an unbiased variation graph from all-to-all alignments (wfmash → seqwish → smoothxg → GFAffix). Already the discovery graph in this repo (scripts 04–05); Grapepan v1.0 also used PGGB. [doi:10.1038/s41592-024-02430-3](https://doi.org/10.1038/s41592-024-02430-3) · [link](https://github.com/pangenome/pggb) · [details](docs/PANGENOME_CATALOG.md#L54)
 
   <img src="docs/figures/catalog/02_pggb_drb1_odgi_draw_w1600.png" width="360" alt="PGGB: odgi draw 2D layout of a PGGB graph built from the DRB1-3123 test set (12 human HLA-DRB1 haplotype sequences)">
 
   <sub>**PGGB**: odgi draw 2D layout of a PGGB graph built from the DRB1-3123 test set (12 human HLA-DRB1 haplotype sequences). Data: human (non-grape data). Source: repository [pangenome/pggb](https://github.com/pangenome/pggb/blob/4225c6ce010553ef353c5ea13805e38c2016b503/docs/img/DRB1-3123.fa.gz.pggb-E-s5000-l15000-p80-n10-a0-K16-k8-w50000-j5000-e5000-I0-R0-N.smooth.chop.og.lay.draw_mqc.png), MIT.</sub>
-- **Minigraph-Cactus** (tool) — Reference-anchored base-level pangenome graph built from a minigraph SV backbone and Cactus alignments, with vg/Giraffe indexes. Produces Giraffe-ready graphs; used by Grapepan v1.0 and the cultivated grapevine G3 2026 graph. [doi:10.1038/s41587-023-01793-w](https://doi.org/10.1038/s41587-023-01793-w) · [link](https://github.com/ComparativeGenomicsToolkit/cactus) · [details](docs/PANGENOME_CATALOG.md#L55)
+- **Minigraph-Cactus** (tool) — Reference-anchored base-level pangenome graph built from a minigraph SV backbone and Cactus alignments, with vg/Giraffe indexes. Produces Giraffe-ready graphs; used by Grapepan v1.0 and the cultivated grapevine G3 2026 graph. It runs as one command with the cactus-pangenome workflow (GBZ, VCF and indexes; the target of script 12). [doi:10.1038/s41587-023-01793-w](https://doi.org/10.1038/s41587-023-01793-w) · [link](https://github.com/ComparativeGenomicsToolkit/cactus) · [details](docs/PANGENOME_CATALOG.md#L55)
 
   <img src="docs/figures/catalog/02_minigraph_cactus_yeast_chrI_w1600.png" width="360" alt="Minigraph-Cactus: odgi draw layout of chromosome I from the Minigraph-Cactus yeast pangenome tutorial graph (real S. cerevisiae assemblies)">
 
@@ -116,12 +136,18 @@ Evaluation tools and benchmarks for checking assembly completeness, base accurac
 
 **Needs:** the assemblies or graph, plus the assembly reads when checking k-mers or base accuracy. [Data needs by scenario](#data-needs)
 
+**Clusters:**
+- *Assembly accuracy* (complementary): Merqury, Merfin, CRAQ, Inspector, Flagger, QUAST, gfastats. Merqury QV per haplotype; Merfin after polishing; Flagger or CRAQ to mask unreliable blocks before graph building.
+- *Completeness* (complementary): BUSCO, compleasm, OMArk, LAI, tidk. compleasm as a fast BUSCO alternative; LAI for repeats; tidk for telomeres.
+- *Reads and contamination* (complementary): GenomeScope 2.0, Smudgeplot, KAT, BlobToolKit, skani. Ploidy and heterozygosity from reads; skani to catch swapped or mislabelled assemblies.
+- *Graph QC and benchmarks* (complementary): odgi stats / validate, gfatools, gretl, Truvari, vcfdist, Leave-one-out haplotype benchmark, Crop graph evaluation framework, Human graph method comparison. Script 16 runs odgi + panacus; Truvari or vcfdist compares graph VCFs; leave-one-out tests genotyping accuracy.
+
 - **Merqury** (tool) — Reference-free k-mer QV, completeness and phasing assessment of assemblies. Run on every haplotype before it enters the graph. [doi:10.1186/s13059-020-02134-9](https://doi.org/10.1186/s13059-020-02134-9) · [link](https://github.com/marbl/merqury) · [details](docs/PANGENOME_CATALOG.md#L80)
 
   <img src="docs/figures/catalog/03_merqury_arabidopsis_spectra_cn.png" width="360" alt="Merqury: Merqury copy-number spectrum of the TrioCanu CLR Col-0 haplotype assembly of an Arabidopsis thaliana Col-0 x Cvi-0 F1">
 
   <sub>**Merqury**: Merqury copy-number spectrum of the TrioCanu CLR Col-0 haplotype assembly of an Arabidopsis thaliana Col-0 x Cvi-0 F1. Data: Arabidopsis thaliana (non-grape data). Source: repository [marbl/merqury](https://github.com/marbl/merqury/blob/88f37c0f4dbb073001d194bcc5d5989a0b0527df/example/triocanu_clr.col.spectra-cn.fl.png), public domain (US Government work, NHGRI).</sub>
-- **BUSCO** (tool) — Gene-space completeness using single-copy orthologs. Standard gate for each Vitis haplotype (Grapepan reported ~98%). [doi:10.1093/molbev/msab199](https://doi.org/10.1093/molbev/msab199) · [link](https://busco.ezlab.org/) · [details](docs/PANGENOME_CATALOG.md#L81)
+- **BUSCO** (tool) — Assesses gene-space completeness using single-copy orthologs. Standard QC gate for each Vitis haplotype (Grapepan reported ~98%). Lineage datasets now come from OrthoDB v12 (2024 update, doi:10.1093/nar/gkae987). [doi:10.1093/molbev/msab199](https://doi.org/10.1093/molbev/msab199) · [link](https://busco.ezlab.org/) · [details](docs/PANGENOME_CATALOG.md#L81)
 - **compleasm** (tool) — Faster, miniprot-based BUSCO-style completeness estimate. Quick re-check for dozens of grape haplotypes. [doi:10.1093/bioinformatics/btad595](https://doi.org/10.1093/bioinformatics/btad595) · [link](https://github.com/huangnengCSU/compleasm) · [details](docs/PANGENOME_CATALOG.md#L82)
 - **LAI** (tool) — LTR Assembly Index measures repeat-space contiguity. Grape genomes are ~55–59% TE; LAI flags weak repeat assembly before graph build. [doi:10.1093/nar/gky730](https://doi.org/10.1093/nar/gky730) · [link](https://github.com/oushujun/LTR_retriever) · [details](docs/PANGENOME_CATALOG.md#L83)
 - **Inspector** (tool) — Read-based assembly error detection and correction. Finds structural misassemblies that would masquerade as graph SVs. [doi:10.1186/s13059-021-02527-4](https://doi.org/10.1186/s13059-021-02527-4) · [link](https://github.com/Maggi-Chen/Inspector) · [details](docs/PANGENOME_CATALOG.md#L84)
@@ -156,6 +182,7 @@ Evaluation tools and benchmarks for checking assembly completeness, base accurac
 - **OMArk** (tool) — Checks gene-set completeness and contamination against known gene families. Complements BUSCO when comparing gene sets across grape assemblies (gene models themselves belong to gene-structure-annotation). [doi:10.1038/s41587-024-02147-w](https://doi.org/10.1038/s41587-024-02147-w) · [link](https://github.com/DessimozLab/OMArk)
 - **tidk** (tool) — Finds and plots telomeric repeats along an assembly. Quick check that grape T2T haplotypes have telomeres at both chromosome ends. [doi:10.1093/bioinformatics/btaf049](https://doi.org/10.1093/bioinformatics/btaf049) · [link](https://github.com/tolkit/telomeric-identifier)
 - **BlobToolKit** (tool) — Plots GC, coverage and taxonomy of contigs to spot contamination. Screens grape assemblies for fungal, bacterial or organelle contigs before graph building. [doi:10.1534/g3.119.400908](https://doi.org/10.1534/g3.119.400908) · [link](https://github.com/genomehubs/blobtoolkit)
+- **Merfin** (tool) — Uses read k-mers to filter variant calls and polishing edits and to estimate QV. Verifies that polishing did not remove true heterozygous sites in grape haplotypes. [doi:10.1038/s41592-022-01445-y](https://doi.org/10.1038/s41592-022-01445-y) · [link](https://github.com/arangrhie/merfin)
 
 <a id="section-4"></a>
 ## 4. Variant discovery: sequence PAV, structural variants and TE insertions
@@ -163,6 +190,13 @@ Evaluation tools and benchmarks for checking assembly completeness, base accurac
 Callers and graph-decomposition methods for detecting presence-absence variation, structural variants, and TE insertion polymorphisms, such as panacus, vg deconstruct, and GraffiTE. TE library construction is not in this repository (it is in `vitis-te`).
 
 **Needs:** the graph or assemblies for sequence PAV and SVs; a curated TE library from vitis-te for TE-insertion polymorphism. [Data needs by scenario](#data-needs)
+
+**Clusters:**
+- *Sequence PAV and growth* (complementary): panacus, odgi pav, pangrowth, panagram, GraTools, PanK-Pipeline, Heaps law openness. Section 4a covers sequence or window presence, not gene presence (section 7).
+- *Graph decomposition* (in order): vg deconstruct, vcfbub, vcfwave (vcflib), collapse-bubble. Run vg deconstruct → vcfbub → vcfwave to produce normalised graph VCFs.
+- *Assembly-based SV* (alternatives): SyRI, PAV (EichlerLab assembly variant caller), SVIM-asm, dipcall, Assemblytics. Per-haplotype calls against PN_T2T; SyRI also calls inversions and translocations.
+- *Read-based SV* (in order): Sniffles2 or cuteSV or SVision-pro or DeBreak or SVDSS or Delly or Manta, Jasmine or SURVIVOR. Detect per sample (long reads: Sniffles2 population mode or cuteSV; short reads: Delly or Manta), then merge across samples with Jasmine or SURVIVOR.
+- *TE insertions* (alternatives): GraffiTE, McClintock 2, TEMP2. GraffiTE for graph-based TE genotyping; McClintock 2 runs multiple short-read callers.
 
 ### (a) Sequence and window PAV, growth curves
 
@@ -219,6 +253,7 @@ Structural variants and TE insertions found from the graph, from assemblies, or 
 - **dipcall** (tool) — Calls variants from a phased diploid assembly against a reference. Truth-set style calls for each phased grape accession, used to benchmark graph genotypes. [doi:10.1038/s41592-018-0054-7](https://doi.org/10.1038/s41592-018-0054-7) · [link](https://github.com/lh3/dipcall)
 - **McClintock 2** (tool) — Runs and compares several TE insertion callers on short reads in one pipeline. TE insertion polymorphism calls in grape panels; the TE library itself comes from vitis-te. [doi:10.1186/s13100-023-00296-4](https://doi.org/10.1186/s13100-023-00296-4) · [link](https://github.com/bergmanlab/mcclintock)
 - **TEMP2** (tool) — Detects germline and de novo TE insertions from short reads. Clone-level TE insertions in grape somatic variants; uses the vitis-te library. [doi:10.1093/nar/gkab010](https://doi.org/10.1093/nar/gkab010) · [link](https://github.com/weng-lab/TEMP2)
+- **DeepSomatic** (tool) — Deep-learning somatic SNV and indel caller for short and long reads, built on DeepVariant. Candidate for calling clone-to-clone differences within a cultivar, though its tumour/normal logic requires adaptation [待确认: no plant benchmark]. [preprint] [doi:10.1101/2024.08.16.608331](https://doi.org/10.1101/2024.08.16.608331) · [link](https://github.com/google/deepsomatic)
 
 <a id="section-5"></a>
 ## 5. Cohort genotyping and read-to-graph mapping
@@ -227,16 +262,22 @@ Short- and long-read graph aligners and cohort genotypers, including vg Giraffe,
 
 **Needs:** the graph plus cohort reads. Giraffe + vg call only genotype sites already in the graph (`vg augment` can discover new variants, but is not this repo's default). PanGenie uses short-read k-mers and needs a phased, bubble-decomposed VCF (e.g. Minigraph-Cactus + vcfbub), not a PGGB GFA; long reads go via GraphAligner or minigraph. [Data needs by scenario](#data-needs)
 
-- **vg Giraffe** (tool) — Fast haplotype-aware short-read mapper to GBZ pangenome graphs. Script 14 mapper; maps resequenced grape cohorts to the graph. [doi:10.1126/science.abg8871](https://doi.org/10.1126/science.abg8871) · [link](https://github.com/vgteam/vg) · [details](docs/PANGENOME_CATALOG.md#L140)
-- **vg Giraffe long reads** (tool) — Extends Giraffe to fast long-read and short-read mapping on large pangenome graphs. [preprint] Map HiFi/ONT grape reads to the same graph as short reads. [doi:10.1101/2025.09.29.678807](https://doi.org/10.1101/2025.09.29.678807) · [link](https://github.com/vgteam/vg) · [details](docs/PANGENOME_CATALOG.md#L141)
+**Clusters:**
+- *Graph genotyping of known sites* (alternatives): vg Giraffe → vg call, PanGenie, KAGE, BayesTyper, GraphTyper2, Paragraph, SVJedi-graph, Varigraph, Locityper, COSIGT, Plant graph genotyper benchmark + ensemble. Default: vg Giraffe → vg call (script 14) and PanGenie (script 15); they genotype sites already in the graph only.
+- *Long-read graph aligners* (alternatives): GraphAligner, GraphChainer, Haplotype-aware long-read alignment, Panmap, Moni-align, RecAlign. Use when cohorts are sequenced with HiFi/ONT; Giraffe now also maps long reads.
+- *Linear callers* (alternatives): DeepVariant, Clair3, BCFtools, GATK HaplotypeCaller. Baseline against PN_T2T and for SNPs not in the graph. SVTyper, which genotypes known SVs on the linear reference, is a separate step.
+- *Phasing* (in order): WhatsHap, SHAPEIT5 or Beagle 5. Read-based phase sets from WhatsHap can feed statistical phasing of the cohort with SHAPEIT5 or Beagle 5.
+- *Low-depth imputation* (alternatives): GLIMPSE2, STITCH, Practical Haplotype Graph (PHG v2). GLIMPSE2 and PHG v2 need a reference panel built from phased high-depth samples; STITCH works without a panel in low-depth families.
+- *Identity QC before analysis* (alternatives): KING, NgsRelate v2. KING on called genotypes (higher depth); NgsRelate v2 on genotype likelihoods (low depth). Keep one sample per clone and remove synonyms before GWAS or selection scans.
+
+- **vg Giraffe** (tool) — Fast haplotype-aware short-read mapper for GBZ pangenome graphs. Used in script 14 to map resequenced grape cohorts to the graph. The 2025 long-read extension (preprint, doi:10.1101/2025.09.29.678807) maps HiFi/ONT grape reads to the same graph used for short reads. [doi:10.1126/science.abg8871](https://doi.org/10.1126/science.abg8871) · [link](https://github.com/vgteam/vg) · [details](docs/PANGENOME_CATALOG.md#L140)
 - **vg call** (tool) — Genotypes known graph bubbles (SVs and small variants) from read support after vg pack. Script 14 step: cohort genotyping of variants already in the graph, not discovery of new alleles. [doi:10.1186/s13059-020-1941-7](https://doi.org/10.1186/s13059-020-1941-7) · [link](https://github.com/vgteam/vg) · [details](docs/PANGENOME_CATALOG.md#L142)
 - **Haplotype sampling (personalized graphs)** (tool) — Samples the most similar haplotypes per sample with k-mers to build a personalized graph before mapping. Improves mapping when the grape graph holds many divergent wild haplotypes. [doi:10.1038/s41592-024-02407-2](https://doi.org/10.1038/s41592-024-02407-2) · [link](https://github.com/vgteam/vg) · [details](docs/PANGENOME_CATALOG.md#L143)
-- **PanGenie** (tool) — Alignment-free k-mer HMM genotyping of known pangenome variants from short reads. Script 15; fast cohort genotyping of graph SVs. Differs from Giraffe+vg call by k-mers vs read alignment. [doi:10.1038/s41588-022-01043-w](https://doi.org/10.1038/s41588-022-01043-w) · [link](https://github.com/eblerjana/pangenie) · [details](docs/PANGENOME_CATALOG.md#L144)
+- **PanGenie** (tool) — Alignment-free k-mer HMM genotyping of known pangenome variants from short reads. Script 15; fast cohort genotyping of graph SVs. Differs from Giraffe+vg call by k-mers vs read alignment. The 2026 release adds sample-specific haplotype sampling and rare-variant polishing for panels beyond the old 254-haplotype limit (preprint, doi:10.64898/2026.06.29.735275). [待确认: whether polishing adds alleles not in the graph] [doi:10.1038/s41588-022-01043-w](https://doi.org/10.1038/s41588-022-01043-w) · [link](https://github.com/eblerjana/pangenie) · [details](docs/PANGENOME_CATALOG.md#L144)
 
   <img src="docs/figures/catalog/05_pangenie_1000g.jpg" width="360" alt="PanGenie: PanGenie genotypes for 200 unrelated 1000 Genomes samples: allele frequency vs heterozygosity and related QC (Fig. 4)">
 
   <sub>**PanGenie**: PanGenie genotypes for 200 unrelated 1000 Genomes samples: allele frequency vs heterozygosity and related QC (Fig. 4). Data: human, 1000 Genomes (non-grape data). Source: Ebler et al. 2022, Nature Genetics, Fig. 4 ([doi:10.1038/s41588-022-01043-w](https://doi.org/10.1038/s41588-022-01043-w)), CC BY.</sub>
-- **PanGenie with haplotype sampling and polishing** (tool) — Adds sample-specific haplotype sampling and rare-variant polishing to scale PanGenie cohorts. [preprint] Larger grape panels than the old 254-haplotype limit. [doi:10.64898/2026.06.29.735275](https://doi.org/10.64898/2026.06.29.735275) · [link](https://github.com/eblerjana/pangenie) · [details](docs/PANGENOME_CATALOG.md#L145)
 - **Varigraph** (tool) — k-mer genotyper for small and large variants on graphs, including polyploid allele dosage. Built and tested on plant genomes; useful for polyploid/hybrid rootstock material too. [doi:10.1016/j.molp.2025.08.001](https://doi.org/10.1016/j.molp.2025.08.001) · [link](https://github.com/JiaoLab2021/varigraph) · [details](docs/PANGENOME_CATALOG.md#L146)
 - **GraphAligner** (tool) — Aligns long reads to sequence graphs. Long-read mapping to minigraph grape graphs. [doi:10.1186/s13059-020-02157-2](https://doi.org/10.1186/s13059-020-02157-2) · [link](https://github.com/maickrau/GraphAligner) · [details](docs/PANGENOME_CATALOG.md#L147)
 - **Haplotype-aware long-read alignment** (tool) — Aligns sequences to pangenome graphs while respecting haplotype paths (Minichain/haplotype-aware co-linear chaining). Avoids chimeric paths across grape haplotypes. [doi:10.1101/gr.279143.124](https://doi.org/10.1101/gr.279143.124) · [details](docs/PANGENOME_CATALOG.md#L148)
@@ -247,7 +288,6 @@ Short- and long-read graph aligners and cohort genotypers, including vg Giraffe,
 - **SVJedi-graph** (tool) — Long-read SV genotyping on a variation graph of close/overlapping SVs. Genotype nested grape SVs with ONT data. [doi:10.1093/bioinformatics/btad237](https://doi.org/10.1093/bioinformatics/btad237) · [link](https://github.com/SandraLouise/SVJedi-graph) · [details](docs/PANGENOME_CATALOG.md#L153)
 - **COSIGT** (tool) — Genotypes complex loci from 1–2x coverage by matching read-coverage vectors to graph haplotypes. Low-coverage or ancient grape seed DNA genotyping at complex loci. [doi:10.1186/s13059-026-04242-4](https://doi.org/10.1186/s13059-026-04242-4) · [link](https://github.com/davidebolo1993/cosigt) · [details](docs/PANGENOME_CATALOG.md#L154)
 - **Panmap** (tool) — Phylogeny-compressed k-mer index for placement, alignment and genotyping on mutation-annotated pangenomes. [preprint] Idea for placing new grape samples on a haplotype phylogeny. [doi:10.64898/2026.03.29.711974](https://doi.org/10.64898/2026.03.29.711974) · [link](https://github.com/amkram/panmap) · [details](docs/PANGENOME_CATALOG.md#L155)
-- **Pangenome-aware DeepVariant** (tool) — Small-variant calling that adds pangenome haplotypes to pileup images. [preprint] More accurate SNP/indel calls in divergent grape regions. This is small-variant discovery that can report SNPs/indels not already in the graph; it is not genotyping of known graph bubbles, unlike Giraffe + vg call or PanGenie in this section. [doi:10.1101/2025.06.05.657102](https://doi.org/10.1101/2025.06.05.657102) · [link](https://github.com/google/deepvariant) · [details](docs/PANGENOME_CATALOG.md#L156)
 - **Locityper** (tool) — Genotypes complex polymorphic loci by choosing the best pair of known haplotypes from a panel (short or long reads). Cohort genotyping of NLR or other hypervariable grape loci against haplotypes already in the panel; it does not discover new alleles. [doi:10.1038/s41588-025-02362-4](https://doi.org/10.1038/s41588-025-02362-4) · [link](https://github.com/tprodanov/locityper) · [details](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs015)
 - **GraphChainer** (tool) — Co-linear chaining for long-read graph alignment. More accurate long-read placement in repeats. [doi:10.1093/bioinformatics/btad460](https://doi.org/10.1093/bioinformatics/btad460) · [link](https://github.com/algbio/GraphChainer) · [details](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs016)
 - **RecAlign** (tool) — Recombination-aware long-read alignment to variation graphs. Reads from recombinant grape progeny switch haplotypes. [doi:10.1186/s12859-026-06640-8](https://doi.org/10.1186/s12859-026-06640-8) · [link](https://github.com/AlgoLab/rec_align_exps) · [details](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs017)
@@ -263,9 +303,13 @@ Short- and long-read graph aligners and cohort genotypers, including vg Giraffe,
 - **SHAPEIT5** (tool) — Phases large cohorts, including rare variants. Phasing grape cohort VCFs after graph genotyping. [doi:10.1038/s41588-023-01415-w](https://doi.org/10.1038/s41588-023-01415-w) · [link](https://github.com/odelaneau/shapeit5)
 - **BCFtools** (tool) — Calls, filters, merges and normalises variants in VCF/BCF. Everyday filtering and normalisation of vg call / PanGenie output for grape cohorts. [doi:10.1093/gigascience/giab008](https://doi.org/10.1093/gigascience/giab008) · [link](https://github.com/samtools/bcftools)
 - **Clair3** (tool) — Deep-learning small-variant caller for long reads. SNP/indel calls from ONT/HiFi grape reads to compare with graph genotypes. [doi:10.1038/s43588-022-00387-x](https://doi.org/10.1038/s43588-022-00387-x) · [link](https://github.com/HKU-BAL/Clair3)
-- **DeepVariant** (tool) — Deep-learning SNP and indel caller for short and long reads. Linear baseline for the pangenome-aware DeepVariant already in the catalog. [doi:10.1038/nbt.4235](https://doi.org/10.1038/nbt.4235) · [link](https://github.com/google/deepvariant)
+- **DeepVariant** (tool) — Deep-learning SNP and indel caller for short and long reads. Its pangenome-aware mode (preprint, doi:10.1101/2025.06.05.657102) adds graph haplotypes to the pileup and is more accurate in divergent regions (benchmarked in human; untested in grape); it discovers SNPs/indels not already in the graph and is not genotyping of known graph bubbles, unlike Giraffe + vg call or PanGenie. [doi:10.1038/nbt.4235](https://doi.org/10.1038/nbt.4235) · [link](https://github.com/google/deepvariant)
 - **SVTyper** (tool) — Bayesian genotyper for known SVs from short reads. Short-read genotyping of known grape SVs, as a linear comparison to graph genotyping. [doi:10.1038/nmeth.3505](https://doi.org/10.1038/nmeth.3505) · [link](https://github.com/hall-lab/svtyper)
 - **WhatsHap** (tool) — Read-based phasing and haplotagging of reads. Phases grape long-read data and tags reads by haplotype for allele-specific work. [doi:10.1101/085050](https://doi.org/10.1101/085050) · [link](https://github.com/whatshap/whatshap)
+- **KING** (tool) — Robust kinship estimation and duplicate detection from genotypes. First step for identifying synonyms, mislabels and clones of the same cultivar before GWAS. [doi:10.1093/bioinformatics/btq559](https://doi.org/10.1093/bioinformatics/btq559) · [link](https://www.kingrelatedness.com/)
+- **NgsRelate v2** (tool) — Estimates relatedness and inbreeding from genotype likelihoods, allowing checks on low-depth samples. Used for parent-offspring verification in grape pedigrees with shallow resequencing. [doi:10.1093/gigascience/giz034](https://doi.org/10.1093/gigascience/giz034) · [link](https://github.com/ANGSD/NgsRelate)
+- **STITCH** (tool) — Imputes genotypes from low-coverage sequencing without a reference panel. Suited to breeding populations (F1 or half-sib families) sequenced at low depth. [doi:10.1038/ng.3594](https://doi.org/10.1038/ng.3594) · [link](https://github.com/rwdavies/STITCH)
+- **GATK HaplotypeCaller** (tool) — Joint-genotyping SNP/indel caller widely used for grape resequencing panels. Serves as a linear baseline alongside graph genotyping; watch for batch effects when merging public grape panels. [preprint] [doi:10.1101/201178](https://doi.org/10.1101/201178) · [link](https://github.com/broadinstitute/gatk)
 
 <a id="section-6"></a>
 ## 6. Synteny, alignment and comparative maps
@@ -273,6 +317,11 @@ Short- and long-read graph aligners and cohort genotypers, including vg Giraffe,
 Whole-genome aligners and synteny tools for comparing assemblies and collinear blocks across genomes, such as minimap2, AnchorWave, and GENESPACE.
 
 **Needs:** two or more assemblies; gene models from gene-structure-annotation if using gene-based synteny (GENESPACE, JCVI). In cross-genus *Vitis*–*Muscadinia* synteny, map both *Muscadinia* chr7 and chr20 to *Vitis* chr7, not one-to-one by number. [Data needs by scenario](#data-needs)
+
+**Clusters:**
+- *Genome aligners* (alternatives): minimap2, AnchorWave, MUMmer4, FastGA, LAST. minimap2 for close haplotypes; AnchorWave for distant or rearranged genomes.
+- *Synteny* (alternatives): GENESPACE, JCVI / MCscan, MCScanX, WGDI, ntSynt, halSynteny, msyd, Mumemto. GENESPACE for gene-based synteny across Vitis; WGDI for polyploidy events; ntSynt when annotations are unavailable.
+- *Plots* (complementary): plotsr, D-GENIES. plotsr for SyRI output; D-GENIES for quick dot plots.
 
 - **minimap2** (tool) — General long sequence and assembly aligner. Assembly-to-assembly alignment for SyRI and dotplots. [doi:10.1093/bioinformatics/bty191](https://doi.org/10.1093/bioinformatics/bty191) · [link](https://github.com/lh3/minimap2) · [details](docs/PANGENOME_CATALOG.md#L166)
 - **AnchorWave** (tool) — Gene-anchored whole-genome alignment that handles WGD and SV. Better alignments across divergent Vitis species / Muscadinia. [doi:10.1073/pnas.2113075119](https://doi.org/10.1073/pnas.2113075119) · [link](https://github.com/baoxingsong/AnchorWave) · [details](docs/PANGENOME_CATALOG.md#L167)
@@ -309,7 +358,14 @@ Tools for orthology clustering, gene projection, and tracking gene presence and 
 
 **Needs:** the graph or haplotypes plus gene models or proteins from gene-structure-annotation. This section does not build new gene models. [Data needs by scenario](#data-needs)
 
-- **OrthoFinder** (tool) — Infers orthogroups and gene trees across genomes. Gene-family copy-number tables across grape haplotypes (uses gene models from the annotation repos). [doi:10.1186/s13059-019-1832-y](https://doi.org/10.1186/s13059-019-1832-y) · [link](https://github.com/davidemms/OrthoFinder) · [details](docs/PANGENOME_CATALOG.md#L183)
+**Clusters:**
+- *Pan-gene clustering* (alternatives): OrthoFinder 3, SonicParanoid2, Broccoli, GET_HOMOLOGUES-EST, Pandagma, pangene, PanTools (ploidy-aware), GET_PANGENES. OrthoFinder for gene families; pangene or Pandagma for pan-gene sets; requires gene models from the annotation repos.
+- *Projection onto haplotypes* (alternatives): miniprot, Liftoff, LiftOn, GrAnnoT + GrAPEx. Projects one annotation onto all haplotypes so absent genes are tested rather than left unannotated.
+- *Read-depth copy number* (alternatives): CNVnator, cn.MOPS, Control-FREEC, Hecaton. cn.MOPS across many samples; Control-FREEC per accession. mosdepth only computes the depth these callers start from.
+- *NLR pan-repertoires* (complementary): Pan-NLRome, NLR-Annotator, Melon pan-NLRome graph, NLR neighborhoods by graph traversal (Arabidopsis). Counts NLR loci from the annotation repos per haplotype.
+- *Family evolution* (complementary): CAFE 5, DupGen_finder. Analyses gene family expansion and duplication modes once families are defined.
+
+- **OrthoFinder 3** (tool) — Infers orthogroups and gene trees across genomes; version 3 (2025 preprint) is the current release, while the 2019 paper (doi:10.1186/s13059-019-1832-y) describes v2. Builds gene-family copy-number tables across grape haplotypes using gene models from the annotation repos. [doi:10.1101/2025.07.15.664860](https://doi.org/10.1101/2025.07.15.664860) · [link](https://github.com/OrthoFinder/OrthoFinder) · [details](docs/PANGENOME_CATALOG.md#L183)
 - **Pandagma** (tool) — Synteny-aware pan-gene and family sets, handling WGDs and chromosome constraints. Builds pan-gene sets for Vitis within-genus comparisons. [doi:10.1093/bioinformatics/btae526](https://doi.org/10.1093/bioinformatics/btae526) · [link](https://github.com/legumeinfo/pandagma) · [details](docs/PANGENOME_CATALOG.md#L184)
 - **pangene** (tool) — Builds a pangene graph from protein-to-genome alignments (miniprot) to show gene order and copy changes. Graph-aware gene presence/copy-number without full re-annotation. [doi:10.1093/bioinformatics/btae456](https://doi.org/10.1093/bioinformatics/btae456) · [link](https://github.com/lh3/pangene) · [details](docs/PANGENOME_CATALOG.md#L185)
 
@@ -344,6 +400,9 @@ Tools for orthology clustering, gene projection, and tracking gene presence and 
 - **mosdepth** (tool) — Fast per-base and per-region coverage from BAM/CRAM. Coverage-based gene presence/absence calls for resequenced grape accessions. [doi:10.1093/bioinformatics/btx699](https://doi.org/10.1093/bioinformatics/btx699) · [link](https://github.com/brentp/mosdepth)
 - **DupGen_finder** (tool) — Classifies gene duplicates by mode (WGD, tandem, proximal, transposed, dispersed). Grape keeps the gamma triplication; separates it from tandem copy changes in families. [doi:10.1186/s13059-019-1650-2](https://doi.org/10.1186/s13059-019-1650-2) · [link](https://github.com/qiao-xin/DupGen_finder)
 - **Hecaton** (tool) — CNV detection in plant genomes from short reads, tuned for plants. Plant-tested CNV calls for grape resequencing data. [待确认: code URL not found] [doi:10.1186/s12864-019-6153-8](https://doi.org/10.1186/s12864-019-6153-8)
+- **cn.MOPS** (tool) — Calls population-level copy number from read depth across many samples simultaneously. Used for gene-family copy number across a grape resequencing panel. [doi:10.1093/nar/gks003](https://doi.org/10.1093/nar/gks003) · [link](https://bioconductor.org/packages/cn.mops/)
+- **Control-FREEC** (tool) — Estimates copy number and allelic content from read depth and B-allele frequency. Checks dosage and hemizygous regions in individual grape accessions. [doi:10.1093/bioinformatics/btr670](https://doi.org/10.1093/bioinformatics/btr670) · [link](https://github.com/BoevaLab/FREEC)
+- **GrAnnoT + GrAPEx** (tool) — GrAnnoT transfers a gene annotation onto every path of a pangenome graph; GrAPEx (2026 preprint, doi:10.64898/2026.09.28.754982) summarises gene presence across haplotypes. Calls gene PAV directly from the grape graph. [doi:10.24072/pcjournal.651](https://doi.org/10.24072/pcjournal.651) · [link](https://forge.ird.fr/diade/dynadiv/grannot)
 
 <a id="section-8"></a>
 ## 8. Graph analysis, indexing and formats
@@ -351,6 +410,12 @@ Tools for orthology clustering, gene projection, and tracking gene presence and 
 Graph manipulation toolkits, compressed indexes, and format specifications for querying and decomposing pangenome graphs, including odgi, GBZ / GBWT, and the GFA specification.
 
 **Needs:** the graph itself (GFA / GBZ / GBWT). No extra cohort data unless running IBD or similar analyses. [Data needs by scenario](#data-needs)
+
+**Clusters:**
+- *Graph toolkits and formats* (complementary): odgi, vg toolkit, GBZ / GBWT, GFA specification, GfaPy, libbdsg / libhandlegraph, AGC. odgi for PGGB graphs; vg/GBZ for MC graphs.
+- *Bubbles and snarls* (complementary): BubbleGun, Snarl decomposition, Popping bubbles (arXiv), Cataloging variants in pangenome graphs (pantree). How graph sites are defined before genotyping.
+- *k-mer indexes* (alternatives): KMC 3, Fulgor, Themisto, SPUMONI 2, ropebwt3. Membership and read classification without alignment. Mash gives sketch distances (script 03), not an index.
+- *Coverage and applications on graphs* (complementary): gfainject, gafpack, Graph IBD with SVs (GIBD), GRAFIMO, Billi. Projects alignments or sequence motifs onto graph nodes.
 
 - **odgi** (tool) — Toolkit to sort, layout, extract, untangle and summarize variation graphs. Core analysis toolkit for PGGB grape graphs. [doi:10.1093/bioinformatics/btac308](https://doi.org/10.1093/bioinformatics/btac308) · [link](https://github.com/pangenome/odgi) · [details](docs/PANGENOME_CATALOG.md#L205)
 - **GBZ / GBWT** (tool) — Compressed haplotype-aware graph format used by vg Giraffe. Required format for Giraffe genotyping in script 14. [doi:10.1093/bioinformatics/btac656](https://doi.org/10.1093/bioinformatics/btac656) · [link](https://github.com/jltsiren/gbwtgraph) · [details](docs/PANGENOME_CATALOG.md#L206)
@@ -373,6 +438,7 @@ Graph manipulation toolkits, compressed indexes, and format specifications for q
 - **Fulgor** (tool) — Compact colored k-mer index for many genomes. Query which grape haplotypes contain a sequence without aligning. [doi:10.1186/s13015-024-00251-9](https://doi.org/10.1186/s13015-024-00251-9) · [link](https://github.com/jermp/fulgor)
 - **libbdsg / libhandlegraph** (tool) — C++ libraries for dynamic variation graphs used by vg and odgi. Basis for custom tools on grape graphs that need vg-compatible formats. [doi:10.1093/bioinformatics/btaa640](https://doi.org/10.1093/bioinformatics/btaa640) · [link](https://github.com/vgteam/libbdsg)
 - **Themisto** (tool) — Scalable colored k-mer index for pseudoalignment. Assign reads to grape haplotypes by k-mer colour. [doi:10.1093/bioinformatics/btad233](https://doi.org/10.1093/bioinformatics/btad233) · [link](https://github.com/algbio/themisto)
+- **SPUMONI 2** (tool) — Compressed pangenome index of minimizer digests for rapid read classification. Screens reads for Vitis versus pathogen or Muscadinia origin before mapping. [doi:10.1186/s13059-023-02958-1](https://doi.org/10.1186/s13059-023-02958-1) · [link](https://github.com/oma219/spumoni)
 
 <a id="section-9"></a>
 ## 9. Visualization
@@ -381,8 +447,14 @@ Browsers and plotting utilities for inspecting graph topology, haplotypes, synte
 
 **Needs:** the graph and/or alignments; optional tracks such as genes, variants, or methylation. [Data needs by scenario](#data-needs)
 
-- **Bandage** (tool) — Interactive viewer for assembly and small graphs. Inspect a single grape locus subgraph. [doi:10.1093/bioinformatics/btv383](https://doi.org/10.1093/bioinformatics/btv383) · [link](https://github.com/rrwick/Bandage) · [details](docs/PANGENOME_CATALOG.md#L225)
-- **BandageNG** (tool) — Maintained fork of Bandage with path and GFA improvements. Same use with modern GFA paths. [link](https://github.com/asl/BandageNG) · [details](docs/PANGENOME_CATALOG.md#L226)
+**Clusters:**
+- *Graph topology viewers* (alternatives): BandageNG, GfaViz, Gfaestus, strangepg, gfalook, odgi viz / draw, waragraph. BandageNG for individual loci; odgi viz for whole-chromosome overviews.
+- *Path and haplotype browsers* (alternatives): SequenceTubeMap, VRPG, PangyPlot, PanGraphViewer, MoMI-G, Panache, PanVA, JBrowse 2, IGV. SequenceTubeMap for vg graphs; JBrowse 2 for sharing results with breeders.
+- *Synteny and SV figures* (alternatives): NGenomeSyn, GenomeSyn, ntSynt-viz, SVbyEye. Generates publication figures across haplotypes.
+- *Repeat dot plots* (alternatives): ModDotPlot, StainedGlass. Visualises centromeres and tandem arrays in T2T haplotypes.
+- *Genome tracks* (complementary): pyGenomeTracks, karyoploteR, Circos, TBtools-II. Track-based figures generated without graph structures.
+
+- **BandageNG** (tool) — Maintained fork of Bandage (doi:10.1093/bioinformatics/btv383) incorporating path and GFA improvements; use this instead of the original to inspect single grape locus subgraphs with modern GFA paths. [link](https://github.com/asl/BandageNG) · [details](docs/PANGENOME_CATALOG.md#L226)
 
   <img src="docs/figures/catalog/09_bandageng_grch38_mhc.png" width="360" alt="BandageNG: Bandage-NG view of the MHC region (partial) of a Minigraph-Cactus graph built from GRCh38 plus its alt loci">
 
@@ -434,7 +506,7 @@ Browsers and plotting utilities for inspecting graph topology, haplotypes, synte
   <sub>**pyGenomeTracks**: pyGenomeTracks Hi-C plus track figure from Ramirez et al. 2018 Nat Commun (Drosophila melanogaster Hi-C; paper is CC-BY). Data: Drosophila melanogaster (non-grape data). Source: repository [deeptools/pyGenomeTracks](https://github.com/deeptools/pyGenomeTracks/blob/f25fcf1a48bb16a0afbd1cb95e9c5fed99d27fc7/docs/content/images/hic_example_nat_comm_small.png), GPL-3.0; figure originally from Ramírez et al. 2018, Nature Communications ([doi:10.1038/s41467-017-02525-w](https://doi.org/10.1038/s41467-017-02525-w), CC BY).</sub>
 - **karyoploteR** (tool) — R/Bioconductor package to plot data along chromosomes. Chromosome-scale plots of grape PAV or SV density. [doi:10.1093/bioinformatics/btx346](https://doi.org/10.1093/bioinformatics/btx346) · [link](https://github.com/bernatgel/karyoploteR)
 - **GenomeSyn** (tool) — Draws synteny and SVs among several genomes. Multi-haplotype synteny/SV figures for grape accessions. [doi:10.1016/j.jgg.2022.03.013](https://doi.org/10.1016/j.jgg.2022.03.013) · [link](https://github.com/jmsong2/GenomeSyn)
-- **TBtools** (tool) — GUI toolkit with many plots (synteny, heatmaps, Circos-like) for biologists. Widely used by grape labs for figures without scripting. [doi:10.1016/j.molp.2020.06.009](https://doi.org/10.1016/j.molp.2020.06.009) · [link](https://github.com/CJ-Chen/TBtools-II)
+- **TBtools-II** (tool) — GUI toolkit providing diverse plotting functions (synteny, heatmaps, Circos-like views) for biologists; TBtools-II is the current release (first TBtools paper doi:10.1016/j.molp.2020.06.009). Widely used by grape laboratories for figure generation without scripting. [doi:10.1016/j.molp.2023.09.010](https://doi.org/10.1016/j.molp.2023.09.010) · [link](https://github.com/CJ-Chen/TBtools-II)
 - **Gfaestus** (tool) — GPU-based interactive viewer for large GFA graphs using odgi layouts. Browse whole-chromosome grape PGGB graphs interactively. (no paper found) [link](https://github.com/chfi/gfaestus)
 
 <a id="section-10"></a>
@@ -443,6 +515,12 @@ Browsers and plotting utilities for inspecting graph topology, haplotypes, synte
 Methods and case studies linking pangenome structural variants, graph nodes, k-mers, transcriptomes, and methylomes to phenotypes, including Grapepan v1.0 SV-GWAS, NodeGWAS, and rpvg / spliced pangenome graphs.
 
 **Needs:** identity-checked graph genotypes plus phenotypes for GWAS (one representative per clone); plus RNA-seq from the same genotype for eQTL; plus native 5mC (ONT: pod5/fast5 or MM/ML tags; HiFi: kinetics) or bisulfite reads for methylation layers. [Data needs by scenario](#data-needs)
+
+**Clusters:**
+- *Expression and epigenome on the graph (10a)* (complementary): tensorQTL, QTLtools, coloc, phASER, rpvg / spliced pangenome graphs, modkit, methylGrapher, methylation on graphs: panmethyl, Graph Peak Caller. eQTL mapping with tensorQTL or QTLtools on graph SV genotypes; phASER for allele-specific expression in heterozygous clones; coloc to link eQTLs with GWAS signals.
+- *GWAS on graphs and k-mers (10b)* (alternatives): GEMMA, GCTA, PLINK 2, GAPIT 3, rMVP, NodeGWAS, kmersGWAS, kGWASflow, PanKmer, kmdiff, pyseer, panGWAS (PHAC). Mixed models (GEMMA, GAPIT) applied to graph genotypes first; k-mer GWAS captures variants missing from the graph.
+- *Linkage maps and family QTL (10b)* (in order): Lep-MAP3, R/qtl2. Grape F1 crosses: Lep-MAP3 maps per parent, followed by R/qtl2 scans.
+- *Genomic prediction (10b)* (alternatives): rrBLUP, BGLR, SV vs SNP genomic selection in rice, Pan-genome PAV in gene-bank genomic prediction. rrBLUP serves as a baseline, followed by BGLR using combined SNP and SV kernels.
 
 - **Grapepan v1.0 SV-GWAS** (analysis) — Graph pangenome of 29 haplotypes; 466 accessions genotyped; SVs add heritability and QTLs for 29 traits. Direct Vitis precedent for SV-GWAS and genomic prediction. [doi:10.1038/s41588-024-01967-5](https://doi.org/10.1038/s41588-024-01967-5) · [details](docs/PANGENOME_CATALOG.md#L246)
 - **Vitis super-pangenome SV-eQTL** (analysis) — 72 haplotype-resolved Vitis genomes; SV-eQTL and DM-infection transcriptomes identify VvLHT8 and other DM resistance loci. Model for SV-expression links in grape disease resistance. [doi:10.1038/s41588-025-02111-7](https://doi.org/10.1038/s41588-025-02111-7) · [details](docs/PANGENOME_CATALOG.md#L247)
@@ -477,6 +555,8 @@ Pangenome-level expression and epigenome analyses. This is not RNA evidence for 
 - **Barley pan-transcriptome** (analysis) — Core/shell/cloud transcripts across 20 genotypes. Template for a grape pan-transcriptome classification (core/shell/cloud at the expression layer). This does not supply gene models to gene-structure-annotation. [doi:10.1038/s41588-024-02069-y](https://doi.org/10.1038/s41588-024-02069-y) · [link](https://doi.org/10.1038/s41588-024-02069-y) · [details](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs047)
 - **tensorQTL** (tool) — GPU-accelerated cis/trans eQTL mapping. eQTL scans with graph SV genotypes on grape berry RNA-seq. [doi:10.1186/s13059-019-1836-7](https://doi.org/10.1186/s13059-019-1836-7) · [link](https://github.com/broadinstitute/tensorqtl)
 - **coloc** (tool) — Bayesian test for whether two association signals share a causal variant. Checks if a grape GWAS hit and an eQTL point to the same SV. [doi:10.1371/journal.pgen.1004383](https://doi.org/10.1371/journal.pgen.1004383) · [link](https://github.com/chr1swallace/coloc)
+- **phASER** (tool) — Phases genetic variants using RNA sequencing reads and quantifies haplotype-level expression. Measures allele-specific expression in heterozygous grape clones using graph haplotypes as a phasing guide. [doi:10.1038/ncomms12817](https://doi.org/10.1038/ncomms12817) · [link](https://github.com/secastel/phaser)
+- **QTLtools** (tool) — Comprehensive toolkit for molecular QTL mapping incorporating permutation and conditional analysis passes. Performs eQTL analysis on graph-derived SV genotypes alongside tensorQTL. [doi:10.1038/ncomms15452](https://doi.org/10.1038/ncomms15452) · [link](https://github.com/qtltools/qtltools)
 
 ### (b) QTL, pangenome-GWAS and genomic prediction
 
@@ -503,6 +583,10 @@ Association and prediction using graph or k-mer variants.
 - **PLINK 2** (tool) — Fast genotype data handling, QC and association. QC, LD pruning and PCA of grape cohort genotypes before GWAS. [doi:10.1186/s13742-015-0047-8](https://doi.org/10.1186/s13742-015-0047-8) · [link](https://github.com/chrchang/plink-ng)
 - **GAPIT 3** (tool) — R package for GWAS (MLM, FarmCPU, BLINK) and genomic prediction. Common in plant breeding; runs grape GWAS with several models. [doi:10.1016/j.gpb.2021.08.005](https://doi.org/10.1016/j.gpb.2021.08.005) · [link](https://github.com/jiabowang/GAPIT)
 - **rMVP** (tool) — Memory-efficient GWAS in R with built-in Manhattan/QQ plots. Large grape panels with SV/PAV markers; plots ready for reports. [doi:10.1016/j.gpb.2020.10.007](https://doi.org/10.1016/j.gpb.2020.10.007) · [link](https://github.com/xiaolei-lab/rMVP)
+- **Lep-MAP3** (tool) — Constructs linkage maps from high-density markers even with low-coverage data, supporting outcrossed F1 families. Grape mapping populations typically consist of heterozygous F1 crosses. [doi:10.1093/bioinformatics/btx494](https://doi.org/10.1093/bioinformatics/btx494) · [link](https://sourceforge.net/projects/lep-map3/)
+- **R/qtl2** (tool) — QTL mapping for experimental crosses and multi-parent populations. For an outcrossed grape F1, map each parent separately as a pseudo-testcross or use a tool built for CP populations [待确认: R/qtl2 cross types for outbred F1]. [doi:10.1534/genetics.118.301595](https://doi.org/10.1534/genetics.118.301595) · [link](https://github.com/rqtl/qtl2)
+- **BGLR** (tool) — Bayesian whole-genome regression framework supporting BayesA, BayesB, BayesC, and RKHS models. Enables comparison of SNP-only versus combined SNP and SV kernels for grape breeding values. [doi:10.1534/genetics.114.164442](https://doi.org/10.1534/genetics.114.164442) · [link](https://github.com/gdlc/BGLR-R)
+- **rrBLUP** (tool) — Ridge-regression BLUP and kernel models designed for genomic selection. Acts as a simple baseline prior to applying Bayesian models in grape panels. [doi:10.3835/plantgenome2011.08.0024](https://doi.org/10.3835/plantgenome2011.08.0024) · [link](https://cran.r-project.org/package=rrBLUP)
 
 <a id="section-11"></a>
 ## 11. Evolution, ancestry and introgression
@@ -510,6 +594,14 @@ Association and prediction using graph or k-mer variants.
 Genealogy (ARG / tree-sequence) inference, such as SINGER and tsinfer; introgression tests, such as Dsuite; and studies on grapevine domestication and clonal diversification.
 
 **Needs:** identity-checked population genotypes (one representative per clone), plus outgroups for introgression tests; phased haplotypes and ancestral alleles for genealogy (ARG / tree-sequence) inference. Dsuite only flags candidate introgressed regions and cannot separate introgression from selection. [Data needs by scenario](#data-needs)
+
+**Clusters:**
+- *Structure and admixture* (complementary): ADMIXTURE, PCAngsd, ADMIXTOOLS 2, TreeMix, Dsuite, Twisst. Applied after clone deduplication; PCAngsd is tailored for low-depth sequence data.
+- *Genealogies and ARGs* (alternatives): tsinfer, SINGER, ARG-Needle, Relate. All need phased haplotypes; check whether each needs ancestral (polarised) alleles [待确认]. hap-ibd (IBD segments; phased, not polarised data) complements them for pedigree work.
+- *Phylogeny* (complementary): IQ-TREE 2, ASTRAL, Mashtree. Used for reconstructing species and haplotype phylogenetic trees.
+- *Diversity, LD and demography* (complementary): pixy, PopLDdecay, ANGSD, SMC++. pixy needs an all-sites VCF that includes invariant sites; a graph VCF from vg deconstruct holds variant sites only, so add invariant or callable sites first. PopLDdecay to choose GWAS windows.
+- *Selection scans* (complementary): selscan, RAiSD, XP-CLR. Use them together to cross-check: XP-CLR does not need polarised alleles; selscan (iHS) does.
+- *Grape precedents* (complementary): Grapevine SV domestication, Grapevine clone diversification, Dual domestication of grapevine, NA Vitis wild introgression, Clonal diversity in grapevine (review), Haplotype-aware phylogenomics. Published grape results to compare graph-based findings with.
 
 - **Grapevine SV domestication** (analysis) — Population genetics of SVs and hemizygosity in grapevine domestication. Foundational Vitis SV study to compare graph results with. [doi:10.1038/s41477-019-0507-8](https://doi.org/10.1038/s41477-019-0507-8) · [details](docs/PANGENOME_CATALOG.md#L267)
 - **Grapevine clone diversification** (analysis) — Somatic SVs and SNVs among grapevine clones. Motivates clone-level graphs for Pinot/Chardonnay clones. [doi:10.1186/s12864-019-6211-2](https://doi.org/10.1186/s12864-019-6211-2) · [details](docs/PANGENOME_CATALOG.md#L268)
@@ -543,6 +635,13 @@ Genealogy (ARG / tree-sequence) inference, such as SINGER and tsinfer; introgres
 - **ASTRAL** (tool) — Species tree from many gene trees under incomplete lineage sorting. Vitis species tree from many loci with discordant histories. [doi:10.1186/s12859-018-2129-y](https://doi.org/10.1186/s12859-018-2129-y) · [link](https://github.com/smirarab/ASTRAL)
 - **RAiSD** (tool) — Detects selective sweeps using several sweep signatures together. Sweep scan on grape SNP/SV genotypes. [doi:10.1038/s42003-018-0085-8](https://doi.org/10.1038/s42003-018-0085-8) · [link](https://github.com/alachins/raisd)
 - **ADMIXTOOLS 2** (tool) — f-statistics and admixture graph fitting in R. Tests complex admixture models among wild and cultivated grape. [doi:10.7554/eLife.85492](https://doi.org/10.7554/eLife.85492) · [link](https://github.com/uqrmaie1/admixtools)
+- **Relate** (tool) — Reconstructs genome-wide genealogies for thousands of samples and estimates allele ages. Requires polarised and phased data; grape clones must be deduplicated beforehand. [doi:10.1038/s41588-019-0484-x](https://doi.org/10.1038/s41588-019-0484-x) · [link](https://myersgroup.github.io/relate/)
+- **hap-ibd** (tool) — Rapidly detects identity-by-descent segments within phased datasets, tracing shared haplotype blocks between grape cultivars and their parents. [doi:10.1016/j.ajhg.2020.02.010](https://doi.org/10.1016/j.ajhg.2020.02.010) · [link](https://github.com/browning-lab/hap-ibd)
+- **PCAngsd** (tool) — Evaluates population structure and admixture directly from genotype likelihoods, making it suitable for shallow wild-Vitis resequencing data where hard genotype calls are unreliable. [doi:10.1534/genetics.118.301336](https://doi.org/10.1534/genetics.118.301336) · [link](https://github.com/Rosemeis/pcangsd)
+- **ANGSD** (tool) — Population-genetic statistics from genotype likelihoods (SFS, theta, Fst). Low-depth or ancient grape samples. [doi:10.1186/s12859-014-0356-4](https://doi.org/10.1186/s12859-014-0356-4) · [link](https://github.com/ANGSD/angsd)
+- **pixy** (tool) — Unbiased pi and dxy with missing data by using invariant sites, so it needs an all-sites VCF. A graph VCF from vg deconstruct has variant sites only; add invariant or callable sites before using it. [doi:10.1111/1755-0998.13326](https://doi.org/10.1111/1755-0998.13326) · [link](https://github.com/ksamuk/pixy)
+- **PopLDdecay** (tool) — Calculates rapid linkage disequilibrium decay curves from VCF files, comparing LD decay between wild and cultivated grapes to establish GWAS window sizes. [doi:10.1093/bioinformatics/bty875](https://doi.org/10.1093/bioinformatics/bty875) · [link](https://github.com/BGI-shenzhen/PopLDdecay)
+- **XP-CLR** (tool) — Performs cross-population composite-likelihood tests to detect selective sweeps. Used for wild versus cultivated grape domestication scans without requiring polarised alleles. [doi:10.1101/gr.100545.109](https://doi.org/10.1101/gr.100545.109) · [link](https://github.com/hardingnj/xpclr)
 
 <a id="section-12"></a>
 ## 12. Vitis pangenome studies and public resources
@@ -550,6 +649,13 @@ Genealogy (ARG / tree-sequence) inference, such as SINGER and tsinfer; introgres
 Published *Vitis* and *Muscadinia* pangenome datasets, reference assemblies, reviews, and community databases, including Grapepan v1.0, Vitis super-pangenome, and PN_T2T reference.
 
 **Needs:** no new data recipe — reuse the published *Vitis* / *Muscadinia* assemblies, graphs, and panels listed here. VIVC is for names and pedigrees only; confirm sample identity from genotypes. Map both *Muscadinia* chr7 and chr20 to *Vitis* chr7. [Data needs by scenario](#data-needs)
+
+**Clusters:**
+- *Vitis pangenomes and graphs* (complementary): Grapepan v1.0, Vitis super-pangenome, Cultivated grapevine pangenome (G3), Vitis amurensis graph (Vampan), NA Vitis super-pangenome, Muscadine Carlos assembly + pan-genome. Existing graphs available for reuse or extension.
+- *Reference and cultivar assemblies* (complementary): PN_T2T reference, Cabernet Sauvignon FALCON-Unzip, Cabernet Sauvignon haplotype-resolved T2T, Muscadinia rotundifolia Trayshed diploid assembly, Munage haplotype-resolved assemblies, VitExpress + haplotype-resolved assembly, Börner rootstock (V. riparia × V. cinerea) assembly. Candidate haplotypes for incorporation into the graph, with PN_T2T serving as the coordinate backbone.
+- *Population and ancient panels* (complementary): 472 Vitis accessions resequencing, 204 V. vinifera genomes (European wine grapes), Evolutionary genomics of grape domestication, Palaeogenomics of French grapevine, Cultivated grape diversity with 10K SNPs. Public sequencing reads to genotype against the graph after identity verification.
+- *Clonal diversity in cultivars* (complementary): Chardonnay clonal population sequencing, Pinot blanc and gris as somatic mutants. Serves as templates for establishing clone-level panels (section 14).
+- *Portals and catalogues* (complementary): Grapedia, GrapeGenomics JBrowse, VIVC (Vitis International Variety Catalogue), Pierre et al. data deposit. VIVC for names and pedigrees; Grapedia for reference genomes and annotations.
 
 - **Grapepan v1.0** (analysis) — 18 T2T haplotypes plus 11 public assemblies; MC and PGGB graphs. Public Vitis graph to reuse. [doi:10.1038/s41588-024-01967-5](https://doi.org/10.1038/s41588-024-01967-5) · [details](docs/PANGENOME_CATALOG.md#L283)
 - **Vitis super-pangenome** (analysis) — 72 accessions (25 wild, 47 cultivated); assemblies and annotations on Zenodo. Largest genus-level phased grape panel. [doi:10.1038/s41588-025-02111-7](https://doi.org/10.1038/s41588-025-02111-7) · [link](https://doi.org/10.5281/zenodo.13982444) · [details](docs/PANGENOME_CATALOG.md#L284)
@@ -567,8 +673,7 @@ Published *Vitis* and *Muscadinia* pangenome datasets, reference assemblies, rev
 - **Grapedia** (tool) — Community grapevine genome and tools portal (genomes, Grape-RNA, browsers). Single entry for public Vitis genomes and annotations. [link](https://grapedia.org/) · [details](docs/PANGENOME_CATALOG.md#L288)
 - **GrapeGenomics JBrowse** (tool) — JBrowse 2 instances for many Vitis genomes. Browse grape assemblies used in a graph. [link](https://www.grapegenomics.com/pages/jbrowse2.php) · [details](docs/PANGENOME_CATALOG.md#L289)
 - **Grapevine pangenome review (Horticulturae)** (analysis) — Review of V. vinifera diversity beyond the reference and pangenomic frameworks. Recent grape-specific overview of pangenome designs. [doi:10.3390/horticulturae12060756](https://doi.org/10.3390/horticulturae12060756) · [details](docs/PANGENOME_CATALOG.md#L290)
-- **Graph pangenomes in polyploid crops (review)** (analysis) — Perspective on graph pangenomes for complex polyploid genomes from sugarcane to other crops. Useful for polyploid or interspecific grape rootstocks. [doi:10.1016/j.xplc.2026.101852](https://doi.org/10.1016/j.xplc.2026.101852) · [details](docs/PANGENOME_CATALOG.md#L291)
-- **PN_T2T reference** (resource) — Telomere-to-telomere PN40024 reference (PN_T2T / v5). Coordinate backbone used by Grapepan and Grapedia. [doi:10.1093/hr/uhad061](https://doi.org/10.1093/hr/uhad061) · [details](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs061)
+- **PN_T2T reference** (resource) — Telomere-to-telomere PN40024 reference (PN_T2T / v5). Coordinate backbone used by Grapepan and Grapedia. The first version of the same reference, the 12X genome (Jaillon 2007, doi:10.1038/nature06148), first showed the ancestral hexaploidy behind grape synteny triplets. PN40024.v4 stays a separate entry because it has its own coordinates and annotation. [doi:10.1093/hr/uhad061](https://doi.org/10.1093/hr/uhad061) · [details](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs061)
 
   <img src="docs/figures/catalog/12_pn_t2t_overview.jpg" width="360" alt="PN_T2T reference: Overview of the gap-free PN_T2T assembly of PN40024 compared with 12X.v0 (Figure 1)">
 
@@ -595,24 +700,32 @@ Published *Vitis* and *Muscadinia* pangenome datasets, reference assemblies, rev
 
   <sub>**Munage haplotype-resolved assemblies**: SweeD selective-sweep scan and PBS in Munage grapes (Figure 4). Data: Munage grapes (grape data). Source: Zhong et al. 2025, Horticulture Research, Figure 4 ([doi:10.1093/hr/uhaf274](https://doi.org/10.1093/hr/uhaf274)), CC BY.</sub>
 - **PN40024.v4 reference** (resource) — Improved PN40024 assembly and annotation (v4), before the T2T v5. Many public grape datasets still use v4 coordinates; needed for liftover to PN_T2T. [doi:10.1093/g3journal/jkad067](https://doi.org/10.1093/g3journal/jkad067)
-- **Grapevine 12X genome (Jaillon 2007)** (resource) — First grapevine reference genome (PN40024); showed ancestral hexaploidy. Historical reference; explains the gamma triplication seen in grape synteny. [doi:10.1038/nature06148](https://doi.org/10.1038/nature06148)
 - **Cabernet Sauvignon FALCON-Unzip** (resource) — Phased diploid assembly of Cabernet Sauvignon with FALCON-Unzip. Early phased grape cultivar; shows haplotype divergence in a clone. [doi:10.1038/nmeth.4035](https://doi.org/10.1038/nmeth.4035)
 - **472 Vitis accessions resequencing** (analysis) — Resequencing of 472 Vitis accessions for diversity and demographic history. Large short-read panel that can be genotyped on a grape graph. [doi:10.1038/s41467-019-09135-8](https://doi.org/10.1038/s41467-019-09135-8)
 - **VIVC (Vitis International Variety Catalogue)** (resource) — Database of grape varieties, synonyms, pedigrees and SSR profiles. Check accession identity and pedigree before adding a cultivar to the graph. [link](https://www.vivc.de/)
+- **Chardonnay clonal population sequencing** (analysis) — Sequencing of multiple Chardonnay clones against a new assembly to investigate somatic variation and ancestral inbreeding. Serves as a template for clone-level resequencing panels. [doi:10.1371/journal.pgen.1007807](https://doi.org/10.1371/journal.pgen.1007807)
+- **Pinot blanc and gris as somatic mutants** (analysis) — Demonstrates that Pinot blanc and Pinot gris originated via independent somatic mutations from Pinot noir, representing a classic case study for berry-colour somatic structural variants. [doi:10.1093/jxb/ers290](https://doi.org/10.1093/jxb/ers290)
+- **Cabernet Sauvignon haplotype-resolved T2T** (analysis) — Haplotype-resolved, gap-free genome assemblies of Cabernet Sauvignon providing two additional T2T haplotypes for graph construction. [doi:10.1038/s41597-026-06910-3](https://doi.org/10.1038/s41597-026-06910-3)
+- **Börner rootstock (V. riparia × V. cinerea) assembly** (analysis) — Partially phase-separated assembly of a disease-resistant rootstock providing rootstock haplotypes for interspecific graphs. [doi:10.3389/fpls.2020.00156](https://doi.org/10.3389/fpls.2020.00156)
+- **204 V. vinifera genomes (European wine grapes)** (analysis) — Resequencing of 204 accessions tracing the evolutionary origin of European wine grapes, offering a public panel for graph genotyping. [doi:10.1038/s41467-021-27487-y](https://doi.org/10.1038/s41467-021-27487-y)
+- **Evolutionary genomics of grape domestication** (analysis) — Characterises the domestication bottleneck, deleterious variant load, and selection patterns in cultivated versus wild grapes, providing a baseline for graph-based selection scans. [doi:10.1073/pnas.1709257114](https://doi.org/10.1073/pnas.1709257114)
+- **Palaeogenomics of French grapevine** (analysis) — Genotyping of ancient grape seeds against modern cultivars, revealing that a single seed matched Savagnin Blanc and implying centuries of clonal propagation. Serves as a precedent for applying ancient DNA methods to grape pangenome graphs. [doi:10.1038/s41477-019-0437-5](https://doi.org/10.1038/s41477-019-0437-5)
+- **Cultivated grape diversity with 10K SNPs** (analysis) — Genotyping a large cultivar collection to resolve synonyms, parentage relationships, and population structure, establishing an identity and pedigree reference prior to graph GWAS. [doi:10.1371/journal.pone.0192540](https://doi.org/10.1371/journal.pone.0192540)
 
 <a id="section-13"></a>
 ## 13. Workflows and pipelines
 
-End-to-end pangenome construction pipelines and multi-sample production workflows, such as nf-core/pangenome, Pan1c, and cactus-pangenome.
+End-to-end pangenome construction pipelines and multi-sample production workflows, such as nf-core/pangenome, Pan1c, and the cactus-pangenome workflow of Minigraph-Cactus.
 
 **Needs:** the same inputs as graph construction and, if the workflow includes variant calling, cohort reads (see sections 2 and 5). [Data needs by scenario](#data-needs)
 
+**Clusters:**
+- *Graph pipelines* (alternatives): nf-core/pangenome, Pan1c, HPRC release 2 graph workflow. nf-core/pangenome runs PGGB; Minigraph-Cactus (section 2) runs as the one-command cactus-pangenome workflow; this repo's scripts 04 and 12 mirror them.
+- *Workflow engines* (complementary): Snakemake, Nextflow, nf-core framework, Galaxy, Bioconda. Tool versions should be pinned using Bioconda containers.
+
 - **nf-core/pangenome** (tool) — Nextflow pipeline running PGGB tools on clusters. Drop-in orchestration for scripts 04–06. [doi:10.1093/bioinformatics/btae609](https://doi.org/10.1093/bioinformatics/btae609) · [link](https://github.com/nf-core/pangenome) · [details](docs/PANGENOME_CATALOG.md#L301)
 - **Pan1c** (tool) — Snakemake pipeline for chromosome-level PGGB/MC graphs with QC and reports. [preprint] Built by plant groups; matches the per-chromosome grape design. [doi:10.64898/2026.04.17.719212](https://doi.org/10.64898/2026.04.17.719212) · [link](https://forge.inrae.fr/genotoul-bioinfo/Pan1c/pan1c) · [details](docs/PANGENOME_CATALOG.md#L302)
-- **cactus-pangenome** (tool) — One-command Minigraph-Cactus workflow producing GBZ, VCF and indexes. Script 12 wrapper target. [doi:10.1038/s41587-023-01793-w](https://doi.org/10.1038/s41587-023-01793-w) · [link](https://github.com/ComparativeGenomicsToolkit/cactus/blob/master/doc/pangenome.md) · [details](docs/PANGENOME_CATALOG.md#L303)
-- **HPRC release 2 graph workflow** (tool) — Public recipes for wfmash alignment, implicit graph and variants for HPRC release 2. Concrete large-scale template for a growing grape panel. [link](https://github.com/pangenome/HPRCv2) · [details](docs/PANGENOME_CATALOG.md#L304)
-- **HPRC draft pangenome** (analysis) — Human draft pangenome reference and its graph/benchmark practices. Reference practice for graph releases and QC. [doi:10.1038/s41586-023-05896-x](https://doi.org/10.1038/s41586-023-05896-x) · [details](docs/PANGENOME_CATALOG.md#L305)
-- **Rice pangenome reference (wild + cultivated)** (analysis) — Pangenome of wild and cultivated rice as a reference resource. Example of releasing a crop graph reference with wild relatives. [doi:10.1038/s41586-025-08883-6](https://doi.org/10.1038/s41586-025-08883-6) · [details](docs/PANGENOME_CATALOG.md#L306)
+- **HPRC release 2 graph workflow** (tool) — Public recipes for wfmash alignment, implicit graph and variants for HPRC release 2. Concrete large-scale template for a growing grape panel. Its release 1 draft pangenome (doi:10.1038/s41586-023-05896-x) set the graph and benchmark practice. [link](https://github.com/pangenome/HPRCv2) · [details](docs/PANGENOME_CATALOG.md#L304)
 - **Snakemake** (tool) — Python-based workflow manager. Can wrap the numbered scripts in this repo into a reproducible workflow. [doi:10.12688/f1000research.29032.2](https://doi.org/10.12688/f1000research.29032.2) · [link](https://github.com/snakemake/snakemake)
 - **Nextflow** (tool) — Dataflow workflow manager for clusters and cloud. Runs nf-core/pangenome and similar graph pipelines on HPC. [doi:10.1038/nbt.3820](https://doi.org/10.1038/nbt.3820) · [link](https://github.com/nextflow-io/nextflow)
 - **nf-core framework** (resource) — Community standards and tooling for Nextflow pipelines. Template if the grape pipeline is ported to Nextflow. [doi:10.1038/s41587-020-0439-x](https://doi.org/10.1038/s41587-020-0439-x) · [link](https://github.com/nf-core/tools)
@@ -625,6 +738,13 @@ End-to-end pangenome construction pipelines and multi-sample production workflow
 Conceptual directions and DNA foundation models not yet tried on *Vitis*, such as COSIGT on ancient grape seeds, Berry-colour locus graph (VvMybA1), and PlantCaduceus.
 
 **Needs:** depends on the idea — ancient or herbarium reads (COSIGT, 1–2× at complex loci, not yet tried on *Vitis*); both haplotypes of several clones; or known-locus phenotypes such as berry colour. [Data needs by scenario](#data-needs)
+
+**Clusters:**
+- *Known-locus graph checks* (complementary): Berry-colour locus graph (VvMybA1), Seedlessness locus graph (VviAGL11), Muscat flavour locus graph (VvDXS), Downy mildew Rpv3 haplotypes on the graph. Initial tests for any new grape graph to verify whether alleles with established phenotypes are correctly distinguished.
+- *Clone-level questions* (complementary): Clone-level pangenome, Somatic variant calling across clones, Diploid genomes inferred on the graph. Addresses grape-specific challenges involving many clones per cultivar and scarce assemblies.
+- *Ancient and degraded DNA* (complementary): COSIGT on ancient grape seeds, Graph mapping for degraded DNA. Needs the ancient panels in section 12.
+- *DNA language models* (alternatives): Pangenome foundation models, DeepGene, PlantCaduceus, AgroNT, GPN, Evo 2. Evaluates variant-effect scoring on graph alleles; currently untested on Vitis data.
+- *Other graph uses* (complementary): Graph-node GWAS + eQTL fusion, Implicit-graph locus atlas, Personalized-graph scaffolding, Pan-proteome with predicted structures (barley abstract), Variant-aware CRISPR off-target search (CRISPRme), Tandem-repeat genotyping (TRGT). Exploratory; pick one with a clear grape question.
 
 - **COSIGT on ancient grape seeds** (idea) — Use low-coverage graph genotyping on archaeological grape seeds at complex loci. Domestication timing of SV alleles. [待确认: not tried on Vitis] [doi:10.1186/s13059-026-04242-4](https://doi.org/10.1186/s13059-026-04242-4) · [details](docs/PANGENOME_CATALOG.md#L316)
 - **Berry-colour locus graph (VvMybA1)** (idea) — Build a locus graph (impg or PGGB) around a known SV locus such as the Gret1 retrotransposon at VvMybA1 (berry colour). Test graph genotyping on a known grape SV with a clear phenotype. [doi:10.1126/science.1095011](https://doi.org/10.1126/science.1095011) · [details](docs/PANGENOME_CATALOG.md#L317)
@@ -642,6 +762,11 @@ Conceptual directions and DNA foundation models not yet tried on *Vitis*, such a
 - **Variant-aware CRISPR off-target search (CRISPRme)** (idea) — Searches CRISPR off-targets while accounting for population variants and haplotypes. Idea: use grape graph haplotypes so guides for gene editing are checked in all cultivars, not only PN40024. Tool was built for human data. [doi:10.1038/s41588-022-01257-y](https://doi.org/10.1038/s41588-022-01257-y) · [link](https://github.com/pinellolab/CRISPRme)
 - **Graph mapping for degraded DNA** (idea) — Mapping ancient DNA to a variation graph reduces reference bias and improves indel calls. Idea: map archaeological or herbarium grape samples to the grape graph; complements COSIGT on ancient seeds. [doi:10.1186/s13059-020-02160-7](https://doi.org/10.1186/s13059-020-02160-7) · [link](https://github.com/vgteam/vg)
 - **Tandem-repeat genotyping (TRGT)** (idea) — Genotypes and visualises tandem repeats from HiFi reads. Idea: compare tandem-repeat lengths between grape clones of one cultivar. [doi:10.1038/s41587-023-02057-3](https://doi.org/10.1038/s41587-023-02057-3) · [link](https://github.com/PacificBiosciences/trgt)
+- **Seedlessness locus graph (VviAGL11)** (idea) — Evaluates whether the pangenome graph resolves the VviAGL11 seedless allele, whose missense mutation represents the primary genetic origin of seedlessness. [doi:10.1104/pp.18.00259](https://doi.org/10.1104/pp.18.00259)
+- **Muscat flavour locus graph (VvDXS)** (idea) — Tests whether the graph genotypes the VvDXS K284N allele responsible for Muscat flavour across different cultivars. [doi:10.1093/jxb/err231](https://doi.org/10.1093/jxb/err231)
+- **Downy mildew Rpv3 haplotypes on the graph** (idea) — Incorporates Rpv3 resistance haplotypes and associated KASP markers onto graph paths to test marker transferability across diverse genetic backgrounds. [doi:10.1007/s10681-021-02952-3](https://doi.org/10.1007/s10681-021-02952-3)
+- **Diploid genomes inferred on the graph** (idea) — Reconstructs both haplotypes of a novel sample using short-read sequencing mapped to the graph, yielding near-assembly diploid sequences for clones that will never be assembled. [preprint] [doi:10.1101/2025.11.26.690754](https://doi.org/10.1101/2025.11.26.690754)
+- **Somatic variant calling across clones** (idea) — Call clone-specific variants against a shared cultivar graph; DeepSomatic-style callers are a candidate, but grape benchmarks are missing. [preprint] [doi:10.1101/2024.08.16.608331](https://doi.org/10.1101/2024.08.16.608331) · [link](https://github.com/google/deepsomatic)
 
 <a id="section-15"></a>
 ## 15. Peer plant pangenome studies and reviews
@@ -649,6 +774,11 @@ Conceptual directions and DNA foundation models not yet tried on *Vitis*, such a
 Pangenome studies and methodological reviews from other plant species, including Rice super pan-genome, Maize 26 genomes (NAM), and Pangenome graphs review.
 
 **Needs:** not a *Vitis* data recipe. These are precedents from other species. [Data needs by scenario](#data-needs)
+
+**Clusters:**
+- *Reviews* (complementary): Pangenome graphs review, Plant T2T methods review, What are we learning from plant pangenomes?, From structural pangenomes to functional panomics, Pangenomes for large/complex plant genomes, Complexity welcome (review), Graph pangenomes in polyploid crops (review). Recommended foundational reading.
+- *Clonal and perennial fruit crops* (complementary): Apple haplotype-resolved genomes (rootstock dwarfing), Potato wild/cultivated genomes, Citrus pangenome (citric acid gene). Represents crop designs closest to grape involving heterozygosity, clonal propagation, or fruit-related traits. The tomato heritability graph is listed in section 10.
+- *Crop graph studies* (complementary): Rice super pan-genome, Rice pangenome reference (wild + cultivated), Barley pangenome, Maize 26 genomes (NAM), Soybean pan-genome, Wheat multiple genomes, Cucumber graph pan-genome, Eggplant graph pangenomes + pan-phenome, Sorghum pan-genome, Setaria graph pan-genome, Pea pan-genome, Pearl millet pangenome (heat tolerance), Sunflower haplotype blocks, Arabidopsis 69 accessions. Useful methodologies to adapt, with particular attention to how heterozygosity was managed.
 
 - **Pangenome graphs review** (analysis) — Review of pangenome graph models and tools. Background for repo docs. [doi:10.1146/annurev-genom-120219-080406](https://doi.org/10.1146/annurev-genom-120219-080406) · [details](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs074)
 - **Plant T2T methods review** (analysis) — Review of plant T2T assembly and pangenome use. Assembly standards for Vitis T2T graphs. [doi:10.1038/s41588-024-01830-7](https://doi.org/10.1038/s41588-024-01830-7) · [link](https://www.nature.com/articles/s41588-024-01830-7) · [details](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs075)
@@ -671,6 +801,9 @@ Pangenome studies and methodological reviews from other plant species, including
 - **Sunflower haplotype blocks** (analysis) — Large non-recombining haplotypes (often inversions) underlie ecotype differences in wild sunflowers. Model for testing inversions and haploblocks in wild Vitis adaptation. [doi:10.1038/s41586-020-2467-6](https://doi.org/10.1038/s41586-020-2467-6)
 - **Setaria graph pan-genome** (analysis) — Graph pan-genome of foxtail millet and wild relatives with SV-trait associations. A graph-plus-GWAS design close to what this repo plans for grape. [doi:10.1038/s41588-023-01423-w](https://doi.org/10.1038/s41588-023-01423-w)
 - **Pea pan-genome** (analysis) — Improved pea reference and pan-genome with PAV and evolution analyses. Another legume example of reference upgrade plus pan-genome, as with PN40024 v4 to T2T. [doi:10.1038/s41588-022-01172-2](https://doi.org/10.1038/s41588-022-01172-2)
+- **Rice pangenome reference (wild + cultivated)** (analysis) — Pangenome of wild and cultivated rice as a reference resource. Example of releasing a crop graph reference with wild relatives. [doi:10.1038/s41586-025-08883-6](https://doi.org/10.1038/s41586-025-08883-6) · [details](docs/PANGENOME_CATALOG.md#L306)
+- **Graph pangenomes in polyploid crops (review)** (analysis) — Perspective on graph pangenomes for complex polyploid genomes from sugarcane to other crops. Useful for polyploid or interspecific grape rootstocks. [doi:10.1016/j.xplc.2026.101852](https://doi.org/10.1016/j.xplc.2026.101852) · [details](docs/PANGENOME_CATALOG.md#L291)
+- **Citrus pangenome (citric acid gene)** (analysis) — Pangenome of the orange subfamily found a key gene for fruit acidity. A clonal perennial fruit crop close to grape in design. [doi:10.1038/s41588-023-01516-6](https://doi.org/10.1038/s41588-023-01516-6)
 
 <a id="data-needs"></a>
 ## Data needed alongside the pangenome
@@ -713,6 +846,8 @@ Each section above opens with a one-line **Needs:** note. Full scenario details 
 ## Pipeline
 
 The pipeline is organized according to three waves of peer playbooks. See [`pipeline/00_overview.md`](pipeline/00_overview.md), [`docs/ATTRIBUTION.md`](docs/ATTRIBUTION.md), and [`docs/DUAL_GRAPH.md`](docs/DUAL_GRAPH.md).
+
+Workflow chart outlining tool choices and decision points (2026-11-14): [`docs/CATALOG.md#workflow-2026-11-14`](docs/CATALOG.md#workflow-2026-11-14).
 
 Wave 1-2 covers cannabis, potato, NA *Vitis*, Shuhua VCF, and *Oryza* SyRI. It uses scripts `01` to `10`.
 

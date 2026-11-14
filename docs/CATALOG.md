@@ -85,7 +85,7 @@ This text was written before the 2026-11-13 README update. Tools it calls "addit
 
 **Recommended data.** HiFi reads for phasing; ultra-long ONT if the aim is T2T (Verkko). Add Hi-C or genetic/optical maps only if contigs must be ordered into the 19 *V. vinifera* chromosomes (or the *Muscadinia* karyotype). Published sizes in the catalog: Grapepan v1.0, 18 T2T haplotypes plus 11 public assemblies (doi:10.1038/s41588-024-01967-5); *Vitis* super-pangenome, 72 accessions (doi:10.1038/s41588-025-02111-7); NA *Vitis* super-pangenome, nine North American species (doi:10.1186/s13059-023-03133-2). The default PGGB `-p 85 -s 10k` follows that NA *Vitis* playbook and should then be retuned with Mash (`pipeline/03`).
 
-**Sections and tools.** Section 1 (hifiasm, Verkko, purge_dups, RagTag, GreenHill, PhaseGrass; additions: Flye, NextDenovo, YaHS, HapHiC, ALLHiC, 3D-DNA, ALLMAPS). Section 2 (PGGB, Minigraph-Cactus, minigraph, PanSN-spec). Section 3 (Merqury, BUSCO, Inspector, odgi stats; requires the assembly reads when checking k-mers or base accuracy). Section 8 (odgi, GBZ/GBWT, GFA). Section 13 (nf-core/pangenome, cactus-pangenome, Pan1c). This repo: scripts 01–06, 12–13, 16.
+**Sections and tools.** Section 1 (hifiasm, Verkko, purge_dups, RagTag, GreenHill, PhaseGrass; additions: Flye, NextDenovo, YaHS, HapHiC, ALLHiC, 3D-DNA, ALLMAPS). Section 2 (PGGB, Minigraph-Cactus, minigraph, PanSN-spec). Section 3 (Merqury, BUSCO, Inspector, odgi stats; requires the assembly reads when checking k-mers or base accuracy). Section 8 (odgi, GBZ/GBWT, GFA). Section 13 (nf-core/pangenome, Pan1c; Minigraph-Cactus runs as the cactus-pangenome workflow). This repo: scripts 01–06, 12–13, 16.
 
 **Pitfalls.** Unguided primary or collapsed assemblies can leave haplotigs that later look like copy-number variation or PAV; that is when to use purge_dups. Blindly purging already-phased hap1/hap2 or trio haplotypes can cut real duplications and hemizygous segments, creating false sequence PAV or copy loss. A reference-anchored MC/minigraph graph can miss divergent repeats. `N_HAPS=8` in `config/example.env` is only a software example, not a sample-size recommendation.
 
@@ -262,7 +262,7 @@ The following are written as limiting statements in this v2 and are no longer ma
 
 **建议数据。** 用 HiFi 读长分相；若目标是 T2T 则加超长 ONT（Verkko）。只有必须把 contig 排到欧亚种 19 条染色体（或圆叶葡萄核型）上时，才加 Hi-C 或遗传/光学图。目录已收录的发表规模：Grapepan v1.0，18 条 T2T 单倍型加 11 条公开组装（doi:10.1038/s41588-024-01967-5）；葡萄属超泛基因组，72 份材料（doi:10.1038/s41588-025-02111-7）；北美葡萄属超泛基因组，9 个北美物种（doi:10.1186/s13059-023-03133-2）。默认的 PGGB `-p 85 -s 10k` 沿用该北美葡萄属流程，随后需用 Mash 重新调参（`pipeline/03`）。
 
-**章节和工具。** 第 1 节（hifiasm、Verkko、purge_dups、RagTag、GreenHill、PhaseGrass；扩充：Flye、NextDenovo、YaHS、HapHiC、ALLHiC、3D-DNA、ALLMAPS）。第 2 节（PGGB、Minigraph-Cactus、minigraph、PanSN-spec）。第 3 节（Merqury、BUSCO、Inspector、odgi stats；核对 k-mer 或碱基准确度时需要组装所用的读长）。第 8 节（odgi、GBZ/GBWT、GFA）。第 13 节（nf-core/pangenome、cactus-pangenome、Pan1c）。本仓库脚本：01–06、12–13、16。
+**章节和工具。** 第 1 节（hifiasm、Verkko、purge_dups、RagTag、GreenHill、PhaseGrass；扩充：Flye、NextDenovo、YaHS、HapHiC、ALLHiC、3D-DNA、ALLMAPS）。第 2 节（PGGB、Minigraph-Cactus、minigraph、PanSN-spec）。第 3 节（Merqury、BUSCO、Inspector、odgi stats；核对 k-mer 或碱基准确度时需要组装所用的读长）。第 8 节（odgi、GBZ/GBWT、GFA）。第 13 节（nf-core/pangenome、Pan1c；Minigraph-Cactus 以 cactus-pangenome 工作流运行）。本仓库脚本：01–06、12–13、16。
 
 **易错点。** 未经引导的 primary 或塌缩组装会残留 haplotig，在下游看似拷贝数变异或 PAV，这才是使用 purge_dups 的场景。对已分相的 hap1/hap2 或 trio 单倍型盲目去冗余，会切掉真实重复和半合子区段，制造假序列 PAV 或拷贝丢失。参考锚定的 MC/minigraph 图可能漏掉高分歧重复。`config/example.env` 中的 `N_HAPS=8` 只是软件示例，不是样本量建议。
 
@@ -422,3 +422,114 @@ The following are written as limiting statements in this v2 and are no longer ma
 10. 后续轮次是否从 Giraffe 或 PanGenie 论文中补引测序深度数字，暂留待定。
 
 以下内容在本 v2 中作为限定说明写出，不再标 [待确认]：在葡萄属泛基因组图上调用染色质互作（loop / TAD）不在本目录方法内；将 COSIGT 用于古代葡萄种子尚未在葡萄属上试过；降解 DNA 的图比对是拟扩充条目，所引证据为人类古 DNA 研究，非葡萄结果；Beagle 5 和 SHAPEIT5 仅接受双等位 VCF 位点，图 SV 拆成双等位位点并去除嵌套（vcfbub / vcfwave）后可写入此类 VCF，但在葡萄上的准确度尚未测试；modkit 是 ONT 官方软件，无对应论文。
+
+<a id="workflow-2026-11-14"></a>
+## Workflow chart (2026-11-14)
+
+The homepage sections ([`../README.md`](../README.md)) drawn as one analysis workflow with tool choices at each decision point. It does not change the default scripts in [`pipeline/00_overview.md`](../pipeline/00_overview.md); every tool named appears in the homepage catalog.
+
+```mermaid
+flowchart TD
+  ASM["Section 1: phased assemblies<br/>hifiasm or Verkko, then YaHS or HapHiC, JBAT review"] --> AQC{"Section 3: assemblies pass QC?<br/>Merqury, compleasm, LAI, Flagger"}
+  AQC -->|no| ASM
+  AQC -.->|"false duplication in a collapsed primary only"| PD["purge_dups, collapsed primary assemblies only<br/>never on phased haplotypes: it creates false PAV"]
+  PD -.-> AQC
+  AQC -->|yes| NAME["PanSN names, split by chromosome"]
+  NAME --> GT{"Section 2: which graph?"}
+  GT -->|"reference-anchored, fast"| MC["Minigraph-Cactus"]
+  GT -->|"unbiased all-vs-all"| PGGB["PGGB"]
+  GT -->|"compare both, dual graph"| DUAL["Minigraph-Cactus and PGGB"]
+  MC --> GQC["Section 3 and 8: odgi stats, gfatools, path checks"]
+  PGGB --> GQC
+  DUAL --> GQC
+  GQC --> DEC["Section 4: vg deconstruct, then vcfbub and vcfwave"]
+  DEC --> COH{"Section 5: cohort reads?"}
+  COH -->|"short reads, sites in graph"| GEN["vg Giraffe then vg call, or PanGenie"]
+  COH -->|"new SNPs and indels"| DV["DeepVariant pangenome-aware mode"]
+  COH -->|"low-depth breeding lines"| IMP["GLIMPSE2 or PHG v2 with a panel, STITCH without"]
+  COH -->|"no cohort"| Q
+  GEN --> IDC["identity check: KING or NgsRelate v2, one sample per clone"]
+  DV --> IDC
+  IDC -.->|"to build a panel"| PH["phase high-depth samples: WhatsHap, then SHAPEIT5 or Beagle 5"]
+  PH -.-> PANEL["reference panel"]
+  PANEL -.-> IMP
+  IMP --> IDC
+  IDC --> Q{"Downstream question"}
+  Q -->|"gene PAV and families, section 7"| PAV["GrAnnoT + GrAPEx, OrthoFinder 3, CAFE 5"]
+  Q -->|"synteny, section 6"| SYN["SyRI, plotsr, GENESPACE"]
+  Q -->|"GWAS and eQTL, section 10"| ASSOC["GEMMA or GAPIT 3, tensorQTL, coloc"]
+  Q -->|"ancestry, section 11"| ANC["ADMIXTURE, Dsuite, TreeMix"]
+  Q -->|"TE insertions, section 4"| TE["GraffiTE, McClintock 2"]
+  PAV --> VIS["Section 9: BandageNG, SequenceTubeMap, JBrowse 2"]
+  SYN --> VIS
+  ASSOC --> VIS
+```
+
+**Decision notes**
+
+- Graph type: Use Minigraph-Cactus when a reference-anchored SV graph suffices and speed matters; PGGB for an unbiased all-vs-all graph; both (see [`DUAL_GRAPH.md`](DUAL_GRAPH.md)) when results must not depend on the builder.
+- Genotyping: vg Giraffe + vg call and PanGenie only genotype sites already in the graph; DeepVariant in pangenome-aware mode finds new SNPs and indels; GLIMPSE2 or PHG v2 impute low-depth lines from a reference panel; STITCH works without a panel.
+- Check sample identity (KING on called genotypes, or NgsRelate v2 on genotype likelihoods for low-depth samples) and keep one sample per clone before any GWAS, eQTL or ancestry run.
+- Gene PAV requires gene models from gene-structure-annotation; sequence PAV and SVs come directly from the graph (section 4).
+- purge_dups belongs only to collapsed primary assemblies. On phased haplotypes it removes real hemizygous sequence and true duplicates, which then show up as false PAV and false copy-number loss in the graph.
+- Imputation panels: phase the high-depth, identity-checked samples (WhatsHap, then SHAPEIT5 or Beagle 5) before GLIMPSE2 or PHG v2 imputation, so clone duplicates do not enter the panel.
+
+**2026-11-14 catalog update.** 39 new homepage entries (total 339 → 371). Version merges and renames (one entry per program, named for the latest version; older versions only in the entry note): vg Giraffe long reads → vg Giraffe, PanGenie with haplotype sampling and polishing → PanGenie, Pangenome-aware DeepVariant → DeepVariant, Bandage → BandageNG, TBtools → TBtools-II, OrthoFinder → OrthoFinder 3, Grapevine 12X genome (Jaillon 2007) → PN_T2T reference, HPRC draft pangenome → HPRC release 2 graph workflow, cactus-pangenome → Minigraph-Cactus. Moved entries: Rice pangenome reference (wild + cultivated) (section 13 → 15), Graph pangenomes in polyploid crops (review) (section 12 → 15). Each section now opens with a **Clusters:** list. Section anchors are unchanged. New entries have no details row in this folder yet.
+
+<a id="workflow-2026-11-14-zh"></a>
+## 中文：流程图（2026-11-14）
+
+将主页各节（[`../README.zh.md`](../README.zh.md)）绘成一条分析流程，并在各判断点标出工具选择。本图不改变 [`pipeline/00_overview.md`](../pipeline/00_overview.md) 中的默认脚本；图中工具均收录于主页目录。图中标签沿用英文，与工具名保持一致。
+
+```mermaid
+flowchart TD
+  ASM["Section 1: phased assemblies<br/>hifiasm or Verkko, then YaHS or HapHiC, JBAT review"] --> AQC{"Section 3: assemblies pass QC?<br/>Merqury, compleasm, LAI, Flagger"}
+  AQC -->|no| ASM
+  AQC -.->|"false duplication in a collapsed primary only"| PD["purge_dups, collapsed primary assemblies only<br/>never on phased haplotypes: it creates false PAV"]
+  PD -.-> AQC
+  AQC -->|yes| NAME["PanSN names, split by chromosome"]
+  NAME --> GT{"Section 2: which graph?"}
+  GT -->|"reference-anchored, fast"| MC["Minigraph-Cactus"]
+  GT -->|"unbiased all-vs-all"| PGGB["PGGB"]
+  GT -->|"compare both, dual graph"| DUAL["Minigraph-Cactus and PGGB"]
+  MC --> GQC["Section 3 and 8: odgi stats, gfatools, path checks"]
+  PGGB --> GQC
+  DUAL --> GQC
+  GQC --> DEC["Section 4: vg deconstruct, then vcfbub and vcfwave"]
+  DEC --> COH{"Section 5: cohort reads?"}
+  COH -->|"short reads, sites in graph"| GEN["vg Giraffe then vg call, or PanGenie"]
+  COH -->|"new SNPs and indels"| DV["DeepVariant pangenome-aware mode"]
+  COH -->|"low-depth breeding lines"| IMP["GLIMPSE2 or PHG v2 with a panel, STITCH without"]
+  COH -->|"no cohort"| Q
+  GEN --> IDC["identity check: KING or NgsRelate v2, one sample per clone"]
+  DV --> IDC
+  IDC -.->|"to build a panel"| PH["phase high-depth samples: WhatsHap, then SHAPEIT5 or Beagle 5"]
+  PH -.-> PANEL["reference panel"]
+  PANEL -.-> IMP
+  IMP --> IDC
+  IDC --> Q{"Downstream question"}
+  Q -->|"gene PAV and families, section 7"| PAV["GrAnnoT + GrAPEx, OrthoFinder 3, CAFE 5"]
+  Q -->|"synteny, section 6"| SYN["SyRI, plotsr, GENESPACE"]
+  Q -->|"GWAS and eQTL, section 10"| ASSOC["GEMMA or GAPIT 3, tensorQTL, coloc"]
+  Q -->|"ancestry, section 11"| ANC["ADMIXTURE, Dsuite, TreeMix"]
+  Q -->|"TE insertions, section 4"| TE["GraffiTE, McClintock 2"]
+  PAV --> VIS["Section 9: BandageNG, SequenceTubeMap, JBrowse 2"]
+  SYN --> VIS
+  ASSOC --> VIS
+```
+
+**判断说明**
+
+- 图谱类型：仅需以参考为锚点的 SV 图谱且看重速度时用 Minigraph-Cactus；需要无偏全对全图谱时用 PGGB；若结论不能依赖特定建图工具，则两者都做（见 [`DUAL_GRAPH.md`](DUAL_GRAPH.md)）。
+- 分型：vg Giraffe + vg call 和 PanGenie 只对图谱中已有的位点分型；泛基因组感知模式的 DeepVariant 用来发现新的 SNP 和 indel；低深度育种材料用 GLIMPSE2 或 PHG v2 依据参考面板做填充；没有面板时用 STITCH。
+- 做 GWAS、eQTL 或祖先分析之前，先核对样本身份（已调用的基因型用 KING，低深度样本用基于基因型似然的 NgsRelate v2），每个克隆只保留一个样本。
+- 基因 PAV 需要 gene-structure-annotation 提供的基因模型；序列 PAV 和 SV 可直接从图谱获得（第 4 节）。
+- purge_dups 只用于塌缩的主组装。用在已分相的单倍型上，会切掉真实的半合子序列和真实重复，在图谱中表现为假 PAV 和假的拷贝数丢失。
+- 填补用的参考面板：先对已做身份核对的高深度样本定相（WhatsHap，再用 SHAPEIT5 或 Beagle 5），再做 GLIMPSE2 或 PHG v2 填补，避免克隆重复样本进入面板。
+
+**2026-11-14 目录更新。** 主页新增 39 条（总数 339 → 371）。同一软件的不同版本合并为一条，以最新版本命名，旧版本只在该条说明中提及：vg Giraffe long reads → vg Giraffe, PanGenie with haplotype sampling and polishing → PanGenie, Pangenome-aware DeepVariant → DeepVariant, Bandage → BandageNG, TBtools → TBtools-II, OrthoFinder → OrthoFinder 3, Grapevine 12X genome (Jaillon 2007) → PN_T2T reference, HPRC draft pangenome → HPRC release 2 graph workflow, cactus-pangenome → Minigraph-Cactus。调整小节的条目：Rice pangenome reference (wild + cultivated) (section 13 → 15), Graph pangenomes in polyploid crops (review) (section 12 → 15)。每节开头新增 **分组：** 列表。各节锚点不变。新条目在本目录中还没有详情行。
+
+仍标 [待确认] 的新条目：
+- Purge Haplotigs
+- DeepSomatic
+- R/qtl2
