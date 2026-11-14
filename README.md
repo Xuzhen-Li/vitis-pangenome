@@ -945,3 +945,5 @@ Image files are in `docs/figures/catalog/`. Each is real output of the software 
 An older two-file entry page and a one-line index also exist: [`docs/CATALOG.md`](docs/CATALOG.md), [`docs/CATALOG_INDEX_2026-11.md`](docs/CATALOG_INDEX_2026-11.md).
 
 Author: Xuzhen Li, [ORCID](https://orcid.org/0000-0003-3670-6657)
+
+Open research directions that use these resources, with data preparation and analysis steps for each, are collected in [vitis-open-directions](https://github.com/Xuzhen-Li/vitis-open-directions).
