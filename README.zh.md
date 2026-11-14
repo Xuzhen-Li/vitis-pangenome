@@ -945,3 +945,5 @@ set -a && source config/local.env && set +a
 另外还有较早的两份入口页和一行一条索引：[`docs/CATALOG.md`](docs/CATALOG.md)、[`docs/CATALOG_INDEX_2026-11.md`](docs/CATALOG_INDEX_2026-11.md)。
 
 作者：李旭真，[ORCID](https://orcid.org/0000-0003-3670-6657)
+
+用到这些资源的可做研究方向（每个都写了数据准备和分析步骤）见 [vitis-open-directions](https://github.com/Xuzhen-Li/vitis-open-directions)。
