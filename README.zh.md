@@ -17,25 +17,27 @@
 
 ## 方法目录
 
-本页按任务列出 2026-11 调研整理的 339 项方法、工具与分析（工具 240、分析 66、设想 19、资源 13、格式 1）；其中 87 项于 2026-11-13 新增，在 `docs/` 中还没有对应的详情行。默认分析流程仍为页面底部的流程脚本，本目录不改变该流程。完整表格与勘误见 `docs/` 目录下的详细文件。
+本页按任务列出 2026-11 调研整理及 2026-11-14 更新后的 371 项方法、工具与分析（工具 260、分析 74、设想 24、资源 12、格式 1）；其中 87 项于 2026-11-13 新增、39 项于 2026-11-14 新增，在 `docs/` 中都还没有对应的详情行。2026-11-14 另把 7 条条目并入其他条目：6 条旧版本并入最新版本，cactus-pangenome 并入 Minigraph-Cactus。默认分析流程仍为页面底部的流程脚本，本目录不改变该流程。完整表格与勘误见 `docs/` 目录下的详细文件。
+
+**2026-11-14 更新。** 每节开头新增 **分组：** 列表，把本节条目分为可替代（选一个）、互补（一起用）或按顺序（依次运行），并说明什么情况下选哪个。列表中的「A 或 B」表示二选一，「A → B」表示一条固定路线。同一软件的不同版本现在合并为一条，以最新版本命名；旧版本只在该条的说明里提及。带工具选择和判断节点的流程图见 [`docs/CATALOG.md`](docs/CATALOG.md#workflow-2026-11-14-zh)。
 
 ## 目录
 
-1. [上游输入：分相组装](#section-1) (16)
+1. [上游输入：分相组装](#section-1) (18)
 2. [图谱构建](#section-2) (23)
-3. [基因分型前的组装与图谱质控](#section-3) (24)
-4. [变异发现：序列 PAV、结构变异和 TE 插入](#section-4) (34)
-5. [群体基因分型与 reads 到图谱的比对](#section-5) (31)
+3. [基因分型前的组装与图谱质控](#section-3) (25)
+4. [变异发现：序列 PAV、结构变异和 TE 插入](#section-4) (35)
+5. [群体基因分型与 reads 到图谱的比对](#section-5) (32)
 6. [共线性、比对与比较图谱](#section-6) (15)
-7. [图谱层面的基因有无与基因家族拷贝数](#section-7) (23)
-8. [图谱分析、索引与格式](#section-8) (21)
-9. [可视化](#section-9) (27)
-10. [表达、QTL 与泛基因组 GWAS](#section-10) (33)
-11. [演化、祖先成分与渗入](#section-11) (20)
-12. [葡萄属泛基因组研究与公开资源](#section-12) (24)
-13. [工作流与流程](#section-13) (11)
-14. [尚未在葡萄属上验证的设想](#section-14) (16)
-15. [其他植物泛基因组研究与综述](#section-15) (21)
+7. [图谱层面的基因有无与基因家族拷贝数](#section-7) (26)
+8. [图谱分析、索引与格式](#section-8) (22)
+9. [可视化](#section-9) (26)
+10. [表达、QTL 与泛基因组 GWAS](#section-10) (39)
+11. [演化、祖先成分与渗入](#section-11) (27)
+12. [葡萄属泛基因组研究与公开资源](#section-12) (30)
+13. [工作流与流程](#section-13) (8)
+14. [尚未在葡萄属上验证的设想](#section-14) (21)
+15. [其他植物泛基因组研究与综述](#section-15) (24)
 
 - [数据需求：泛基因组还需要搭配什么数据](#data-needs)
 - [图片来源](#figure-credits)
@@ -48,6 +50,13 @@
 用于图谱构建前的分相组装、去冗余和挂载到染色体的工具，如 hifiasm、Verkko 和 purge_dups。
 
 **需要**：用于单倍型组装的长读长（HiFi 和/或 ONT）；只有必须把 contig 排到染色体上时，才加 Hi-C 或遗传/光学图。 [按情景看数据需求](#data-needs)
+
+**分组：**
+- *单倍型组装*（可替代）：hifiasm、Verkko、Flye、NextDenovo。HiFi 数据默认用 hifiasm（trio 或 Hi-C 分相）；有超长 ONT 且做 T2T 用 Verkko；仅 ONT 数据时才用 Flye 或 NextDenovo。
+- *分相辅助*（可替代）：Hi-C phasing with GreenHill、PhaseGrass、NOHIC。仅在缺少 trio 数据时使用；完成后需检查切换错误。
+- *去除冗余单倍型片段*（可替代）：purge_dups、Purge Haplotigs。仅用于塌缩的主组装；切勿用于已分相的单倍型。
+- *挂载*（按顺序）：YaHS 或 HapHiC 或 ALLHiC 或 3D-DNA 或 ALLMAPS 或 RagTag、Juicebox Assembly Tools (JBAT)。先自动挂载：有 Hi-C 用 YaHS 或 HapHiC（区分等位），有遗传图谱用 ALLMAPS，只有近缘参考时才用 RagTag；然后在 JBAT 中人工审查。
+- *缺口与端粒*（互补）：quarTeT、GCI。在 PanSN 重命名前，确认缺口数量和端粒末端。
 
 - **hifiasm** (工具) — 用 HiFi reads 组装分相的单倍型 contig，支持 trio 或 Hi-C 分相模式。 葡萄栽培品种是高度杂合的无性系，每个材料的两条分相单倍型是进入图谱的自然输入。 [doi:10.1038/s41592-020-01056-5](https://doi.org/10.1038/s41592-020-01056-5) · [link](https://github.com/chhylp123/hifiasm) · [详情](docs/PANGENOME_CATALOG.md#L40)
 - **Verkko** (工具) — 把 HiFi 和超长 ONT reads 组合成端粒到端粒（T2T）的单倍型组装。 补上着丝粒和长重复，避免图谱路径在缺口处断开，与葡萄 T2T 组装的情形一致。 [doi:10.1038/s41587-023-01662-6](https://doi.org/10.1038/s41587-023-01662-6) · [link](https://github.com/marbl/verkko) · [详情](docs/PANGENOME_CATALOG.md#L41)
@@ -69,6 +78,8 @@
 - **ALLHiC** (工具) — 面向多倍体和高杂合基因组、区分等位的 Hi-C 挂载工具。 可用于多倍体葡萄、圆叶葡萄材料，以及较早的葡萄组装。 [doi:10.1038/s41477-019-0487-8](https://doi.org/10.1038/s41477-019-0487-8) · [link](https://github.com/tangerzhang/ALLHiC)
 - **3D-DNA** (工具) — 用 Hi-C 挂载并纠正错接，结果可在 Juicebox 里手工检查。 葡萄染色体组装手工校正时常用。 [doi:10.1126/science.aal3327](https://doi.org/10.1126/science.aal3327) · [link](https://github.com/aidenlab/3d-dna)
 - **ALLMAPS** (工具) — 把遗传图、光学图或共线性图放在一起给 scaffold 排序。 葡萄遗传图谱多，可用来核对或修正染色体顺序。 [doi:10.1186/s13059-014-0573-1](https://doi.org/10.1186/s13059-014-0573-1) · [link](https://github.com/tanghaibao/jcvi)
+- **Purge Haplotigs** (工具) — 根据读长深度和共线性，对主组装中的等位 contig 重新归类。是 purge_dups 的替代方案；其论文以葡萄（赤霞珠）组装作为测试案例 [待确认：措辞]。 [doi:10.1186/s12859-018-2485-7](https://doi.org/10.1186/s12859-018-2485-7) · [link](https://bitbucket.org/mroachawri/purge_haplotigs)
+- **Juicebox Assembly Tools (JBAT)** (工具) — 交互式编辑 Hi-C 接触图，修正自动挂载后的错接与方向错误。用作葡萄染色体在 PanSN 命名前的人工审查步骤。 [preprint] [doi:10.1101/254797](https://doi.org/10.1101/254797) · [link](https://github.com/aidenlab/Juicebox)
 
 <a id="section-2"></a>
 ## 2. 图谱构建
@@ -77,12 +88,21 @@
 
 **需要**：按染色体命名（PanSN）的单倍型 FASTA。建图不需要群体读长。对已经分相的单倍型，先用 BUSCO Duplicated 和 Merqury 检查假重复，只在确有 haplotig 残留时才跑 purge_dups。 [按情景看数据需求](#data-needs)
 
+**分组：**
+- *图谱构建（按目标选）*（可替代）：PGGB、Minigraph-Cactus、minigraph。构建无偏全对全图谱（用于发现）选 PGGB；构建以参考为锚点、可直接用 Giraffe 的图谱选 Minigraph-Cactus；仅需轻量 SV 骨架选 minigraph。本仓库同时保留 PGGB 和 MC（双图谱）。
+- *PGGB 主链*（按顺序）：wfmash、seqwish、smoothxg、GFAffix。PGGB 依次运行的各步。
+- *smoothxg 内部的 POA 引擎*（可替代）：abPOA、SPOA。smoothxg 在内部使用其中一个。
+- *比对与隐式图辅助*（互补）：SweepGA、impg。不属于 PGGB 主链：SweepGA 过滤全基因组比对；impg 查询由比对构成的隐式图谱。
+- *全基因组比对*（可替代）：Progressive Cactus、SibeliaZ、pgr-tk、AlfaPang。默认路径之外做多基因组比对的替代方案。
+- *k-mer 与 de Bruijn 图*（可替代）：Bifrost、GGCAT、Cuttlefish 2、TwoPaCo、rust-mdbg。快速的着色 k-mer 图，适用于序列 PAV，不适用于 SV 分型。
+- *约定*（互补）：PanSN-spec、Chromosome-level graph partitioning、Pangenome graph construction review (Plant)。PanSN 命名和按染色体构建为必需输入条件。
+
 - **PGGB** (工具) — 由全对全比对构建无偏倚的变异图谱（wfmash → seqwish → smoothxg → GFAffix）。 已是本仓库的发现图谱（脚本 04–05）；Grapepan v1.0 也使用了 PGGB。 [doi:10.1038/s41592-024-02430-3](https://doi.org/10.1038/s41592-024-02430-3) · [link](https://github.com/pangenome/pggb) · [详情](docs/PANGENOME_CATALOG.md#L54)
 
   <img src="docs/figures/catalog/02_pggb_drb1_odgi_draw_w1600.png" width="360" alt="PGGB：用 DRB1-3123 测试集（12 条人类 HLA-DRB1 单倍型序列）构建的 PGGB 图谱的 odgi draw 二维布局">
 
   <sub>**PGGB**：用 DRB1-3123 测试集（12 条人类 HLA-DRB1 单倍型序列）构建的 PGGB 图谱的 odgi draw 二维布局。数据：人类（非葡萄数据）。来源：仓库 [pangenome/pggb](https://github.com/pangenome/pggb/blob/4225c6ce010553ef353c5ea13805e38c2016b503/docs/img/DRB1-3123.fa.gz.pggb-E-s5000-l15000-p80-n10-a0-K16-k8-w50000-j5000-e5000-I0-R0-N.smooth.chop.og.lay.draw_mqc.png)，MIT。</sub>
-- **Minigraph-Cactus** (工具) — 以参考为锚的碱基级泛基因组图谱：先用 minigraph 做 SV 骨架，再用 Cactus 比对，并带 vg/Giraffe 索引。 可得到供 Giraffe 使用的图谱；Grapepan v1.0 和栽培葡萄 G3 2026 图谱都用过。 [doi:10.1038/s41587-023-01793-w](https://doi.org/10.1038/s41587-023-01793-w) · [link](https://github.com/ComparativeGenomicsToolkit/cactus) · [详情](docs/PANGENOME_CATALOG.md#L55)
+- **Minigraph-Cactus** (工具) — 以参考为锚的碱基级泛基因组图谱：先用 minigraph 做 SV 骨架，再用 Cactus 比对，并带 vg/Giraffe 索引。 可得到供 Giraffe 使用的图谱；Grapepan v1.0 和栽培葡萄 G3 2026 图谱都用过。 可用 cactus-pangenome 一条命令运行（产出 GBZ、VCF 和索引；脚本 12 的封装目标）。 [doi:10.1038/s41587-023-01793-w](https://doi.org/10.1038/s41587-023-01793-w) · [link](https://github.com/ComparativeGenomicsToolkit/cactus) · [详情](docs/PANGENOME_CATALOG.md#L55)
 
   <img src="docs/figures/catalog/02_minigraph_cactus_yeast_chrI_w1600.png" width="360" alt="Minigraph-Cactus：Minigraph-Cactus 酵母泛基因组教程图谱中 I 号染色体的 odgi draw 布局（真实酵母组装）">
 
@@ -116,12 +136,18 @@
 
 **需要**：组装或图谱；核对 k-mer 或碱基准确度时，还要组装所用的读长。 [按情景看数据需求](#data-needs)
 
+**分组：**
+- *组装准确度*（互补）：Merqury、Merfin、CRAQ、Inspector、Flagger、QUAST、gfastats。每条单倍型用 Merqury 算 QV；打磨后用 Merfin；建图前用 Flagger 或 CRAQ 屏蔽不可靠区块。
+- *完整性*（互补）：BUSCO、compleasm、OMArk、LAI、tidk。compleasm 为更快的 BUSCO；重复区看 LAI；端粒看 tidk。
+- *读长与污染*（互补）：GenomeScope 2.0、Smudgeplot、KAT、BlobToolKit、skani。从读长估计倍性和杂合度；用 skani 排查被调换或标错的组装。
+- *图谱质控与基准*（互补）：odgi stats / validate、gfatools、gretl、Truvari、vcfdist、Leave-one-out haplotype benchmark、Crop graph evaluation framework、Human graph method comparison。脚本 16 运行 odgi + panacus；用 Truvari 或 vcfdist 比较图谱 VCF；留一法检验分型准确度。
+
 - **Merqury** (工具) — 无需参考、基于 k-mer 评估组装的 QV、完整性和分相。 每条单倍型进入图谱前都应运行。 [doi:10.1186/s13059-020-02134-9](https://doi.org/10.1186/s13059-020-02134-9) · [link](https://github.com/marbl/merqury) · [详情](docs/PANGENOME_CATALOG.md#L80)
 
   <img src="docs/figures/catalog/03_merqury_arabidopsis_spectra_cn.png" width="360" alt="Merqury：拟南芥 Col-0 × Cvi-0 F1 的 TrioCanu CLR Col-0 单倍型组装的 Merqury 拷贝数谱">
 
   <sub>**Merqury**：拟南芥 Col-0 × Cvi-0 F1 的 TrioCanu CLR Col-0 单倍型组装的 Merqury 拷贝数谱。数据：拟南芥（非葡萄数据）。来源：仓库 [marbl/merqury](https://github.com/marbl/merqury/blob/88f37c0f4dbb073001d194bcc5d5989a0b0527df/example/triocanu_clr.col.spectra-cn.fl.png)，公有领域（美国政府作品，NHGRI）。</sub>
-- **BUSCO** (工具) — 用单拷贝直系同源基因评估基因空间完整性。 每条葡萄属单倍型的常规门槛（Grapepan 报告约 98%）。 [doi:10.1093/molbev/msab199](https://doi.org/10.1093/molbev/msab199) · [link](https://busco.ezlab.org/) · [详情](docs/PANGENOME_CATALOG.md#L81)
+- **BUSCO** (工具) — 利用单拷贝直系同源基因评估基因空间完整性。每条葡萄属单倍型的常规质控门槛（Grapepan 报告约 98%）。谱系数据集现来自 OrthoDB v12（2024 年更新，doi:10.1093/nar/gkae987）。 [doi:10.1093/molbev/msab199](https://doi.org/10.1093/molbev/msab199) · [link](https://busco.ezlab.org/) · [详情](docs/PANGENOME_CATALOG.md#L81)
 - **compleasm** (工具) — 基于 miniprot 的更快 BUSCO 式完整性估计。 适合对几十条葡萄单倍型做快速复查。 [doi:10.1093/bioinformatics/btad595](https://doi.org/10.1093/bioinformatics/btad595) · [link](https://github.com/huangnengCSU/compleasm) · [详情](docs/PANGENOME_CATALOG.md#L82)
 - **LAI** (工具) — LTR Assembly Index，衡量重复区的连续性。 葡萄基因组约 55–59% 为 TE；LAI 可在建图前标出重复区组装薄弱之处。 [doi:10.1093/nar/gky730](https://doi.org/10.1093/nar/gky730) · [link](https://github.com/oushujun/LTR_retriever) · [详情](docs/PANGENOME_CATALOG.md#L83)
 - **Inspector** (工具) — 基于 reads 检测并纠正组装错误。 找出可能被误当成图谱 SV 的结构组装错误。 [doi:10.1186/s13059-021-02527-4](https://doi.org/10.1186/s13059-021-02527-4) · [link](https://github.com/Maggi-Chen/Inspector) · [详情](docs/PANGENOME_CATALOG.md#L84)
@@ -156,6 +182,7 @@
 - **OMArk** (工具) — 对照已知基因家族检查基因集是否完整、是否有污染。 和 BUSCO 互补，用于比较各葡萄组装的基因集（基因模型本身归 gene-structure-annotation）。 [doi:10.1038/s41587-024-02147-w](https://doi.org/10.1038/s41587-024-02147-w) · [link](https://github.com/DessimozLab/OMArk)
 - **tidk** (工具) — 在组装上找端粒重复并画出分布。 快速核对葡萄 T2T 单倍型两端是否都有端粒。 [doi:10.1093/bioinformatics/btaf049](https://doi.org/10.1093/bioinformatics/btaf049) · [link](https://github.com/tolkit/telomeric-identifier)
 - **BlobToolKit** (工具) — 画出 contig 的 GC、覆盖度和物种归属，用来发现污染。 建图前筛掉葡萄组装里的真菌、细菌或细胞器 contig。 [doi:10.1534/g3.119.400908](https://doi.org/10.1534/g3.119.400908) · [link](https://github.com/genomehubs/blobtoolkit)
+- **Merfin** (工具) — 利用读长 k-mer 过滤变异检测和打磨编辑并估计 QV。用于确认打磨未抹去葡萄单倍型中真实的杂合位点。 [doi:10.1038/s41592-022-01445-y](https://doi.org/10.1038/s41592-022-01445-y) · [link](https://github.com/arangrhie/merfin)
 
 <a id="section-4"></a>
 ## 4. 变异发现：序列 PAV、结构变异和 TE 插入
@@ -163,6 +190,13 @@
 用于检测序列有无变异（PAV）、结构变异与 TE 插入多态性的检测工具及图谱拆解方法，如 panacus、vg deconstruct 和 GraffiTE。TE 库构建不在本仓库中（位于 `vitis-te`）。
 
 **需要**：做序列 PAV 和 SV 用图谱或组装；做 TE 插入多态还要 vitis-te 中整理好的 TE 库。 [按情景看数据需求](#data-needs)
+
+**分组：**
+- *序列 PAV 与增长曲线*（互补）：panacus、odgi pav、pangrowth、panagram、GraTools、PanK-Pipeline、Heaps law openness。4a 小节统计序列或窗口的有无，而非基因的有无（见第 7 节）。
+- *图谱分解*（按顺序）：vg deconstruct、vcfbub、vcfwave (vcflib)、collapse-bubble。运行 vg deconstruct → vcfbub → vcfwave，生成规范化的图谱 VCF。
+- *基于组装的 SV*（可替代）：SyRI、PAV (EichlerLab assembly variant caller)、SVIM-asm、dipcall、Assemblytics。每条单倍型相对 PN_T2T 检测；SyRI 还可检出倒位和易位。
+- *基于读长的 SV*（按顺序）：Sniffles2 或 cuteSV 或 SVision-pro 或 DeBreak 或 SVDSS 或 Delly 或 Manta、Jasmine 或 SURVIVOR。先逐个样本检测（长读长用 Sniffles2 群体模式或 cuteSV；短读长用 Delly 或 Manta），再用 Jasmine 或 SURVIVOR 跨样本合并。
+- *TE 插入*（可替代）：GraffiTE、McClintock 2、TEMP2。基于图谱的 TE 分型用 GraffiTE；McClintock 2 可运行多个短读长检测工具。
 
 ### (a) 序列和窗口 PAV，以及增长曲线
 
@@ -219,6 +253,7 @@
 - **dipcall** (工具) — 用分相二倍体组装对参考检测变异。 给每个分相葡萄材料出“真值”式变异集，用来评估图分型结果。 [doi:10.1038/s41592-018-0054-7](https://doi.org/10.1038/s41592-018-0054-7) · [link](https://github.com/lh3/dipcall)
 - **McClintock 2** (工具) — 在一个流程里跑多个短读长 TE 插入检测器并比较结果。 检测葡萄群体的 TE 插入多态；TE 库本身来自 vitis-te。 [doi:10.1186/s13100-023-00296-4](https://doi.org/10.1186/s13100-023-00296-4) · [link](https://github.com/bergmanlab/mcclintock)
 - **TEMP2** (工具) — 从短读长检测种系和新发 TE 插入。 可看葡萄芽变克隆间的 TE 插入；用 vitis-te 的库。 [doi:10.1093/nar/gkab010](https://doi.org/10.1093/nar/gkab010) · [link](https://github.com/weng-lab/TEMP2)
+- **DeepSomatic** (工具) — 基于深度学习的体细胞 SNV 和 indel 检测工具，构建于 DeepVariant 之上，支持短读长和长读长。可用于检测同一品种不同克隆间的差异，但需改造其肿瘤/正常配对逻辑 [待确认：没有植物上的基准测试]。 [preprint] [doi:10.1101/2024.08.16.608331](https://doi.org/10.1101/2024.08.16.608331) · [link](https://github.com/google/deepsomatic)
 
 <a id="section-5"></a>
 ## 5. 群体基因分型与 reads 到图谱的比对
@@ -227,16 +262,22 @@
 
 **需要**：图谱加群体读长。Giraffe + vg call 只分型图中已有的位点（`vg augment` 可发现新变异，但非本仓库默认流程）。PanGenie 使用短读长 k-mer，需要已分相并拆成 bubble 的 VCF（如 Minigraph-Cactus 加 vcfbub），不能直接读 PGGB 的 GFA；长读长用 GraphAligner 或 minigraph。 [按情景看数据需求](#data-needs)
 
-- **vg Giraffe** (工具) — 面向 GBZ 泛基因组图谱的、考虑单倍型的快速短读长比对器。 脚本 14 的比对器；把重测序的葡萄群体比对到图谱。 [doi:10.1126/science.abg8871](https://doi.org/10.1126/science.abg8871) · [link](https://github.com/vgteam/vg) · [详情](docs/PANGENOME_CATALOG.md#L140)
-- **vg Giraffe long reads** (工具) — 把 Giraffe 扩展到大型泛基因组图谱上的快速长读长和短读长比对。[preprint] 把 HiFi/ONT 葡萄 reads 比对到与短读长相同的图谱上。 [doi:10.1101/2025.09.29.678807](https://doi.org/10.1101/2025.09.29.678807) · [link](https://github.com/vgteam/vg) · [详情](docs/PANGENOME_CATALOG.md#L141)
+**分组：**
+- *图谱已知位点分型*（可替代）：vg Giraffe → vg call、PanGenie、KAGE、BayesTyper、GraphTyper2、Paragraph、SVJedi-graph、Varigraph、Locityper、COSIGT、Plant graph genotyper benchmark + ensemble。默认：vg Giraffe → vg call（脚本 14）和 PanGenie（脚本 15）；它们只给图谱中已有的位点分型。
+- *长读长图谱比对*（可替代）：GraphAligner、GraphChainer、Haplotype-aware long-read alignment、Panmap、Moni-align、RecAlign。群体为 HiFi/ONT 数据时使用；Giraffe 现已同样支持长读长比对。
+- *线性检测*（可替代）：DeepVariant、Clair3、BCFtools、GATK HaplotypeCaller。以 PN_T2T 为参照的基线，也用于图谱中没有的 SNP。SVTyper 在线性参考上给已知 SV 分型，是另外一步。
+- *定相*（按顺序）：WhatsHap、SHAPEIT5 或 Beagle 5。WhatsHap 基于读长得到的定相片段，可以再交给 SHAPEIT5 或 Beagle 5 做群体统计定相。
+- *低深度填补*（可替代）：GLIMPSE2、STITCH、Practical Haplotype Graph (PHG v2)。GLIMPSE2 和 PHG v2 需要用已定相的高深度样本构建参考面板；没有面板的低深度家系用 STITCH。
+- *分析前的身份质控*（可替代）：KING、NgsRelate v2。已调用的基因型（深度较高）用 KING；低深度数据用基于基因型似然的 NgsRelate v2。在 GWAS 或选择扫描之前，每个克隆只留一个样本，并去掉同物异名样本。
+
+- **vg Giraffe** (工具) — 面向 GBZ 泛基因组图谱的单倍型感知快速短读长比对工具。脚本 14 使用的比对器，将重测序葡萄群体比对至图谱。2025 年的长读长扩展（预印本，doi:10.1101/2025.09.29.678807）可将 HiFi/ONT 葡萄读长与短读长比对到同一图谱。 [doi:10.1126/science.abg8871](https://doi.org/10.1126/science.abg8871) · [link](https://github.com/vgteam/vg) · [详情](docs/PANGENOME_CATALOG.md#L140)
 - **vg call** (工具) — 在 vg pack 之后，根据 read 支持对已知图谱气泡（SV 和小变异）做基因分型。 脚本 14 的步骤：对图谱中已有变异做群体基因分型，不是发现新的等位基因。 [doi:10.1186/s13059-020-1941-7](https://doi.org/10.1186/s13059-020-1941-7) · [link](https://github.com/vgteam/vg) · [详情](docs/PANGENOME_CATALOG.md#L142)
 - **Haplotype sampling (personalized graphs)** (工具) — 用 k-mer 为每个样本抽样最相近的单倍型，在比对前构建个性化图谱。 当葡萄图谱包含许多分歧较大的野生单倍型时，可改善比对。 [doi:10.1038/s41592-024-02407-2](https://doi.org/10.1038/s41592-024-02407-2) · [link](https://github.com/vgteam/vg) · [详情](docs/PANGENOME_CATALOG.md#L143)
-- **PanGenie** (工具) — 无需比对、基于 k-mer HMM，对短读长中已知的泛基因组变异做基因分型。 脚本 15；对图谱 SV 做快速群体基因分型。与 Giraffe+vg call 的差别在于使用 k-mer 还是 read 比对。 [doi:10.1038/s41588-022-01043-w](https://doi.org/10.1038/s41588-022-01043-w) · [link](https://github.com/eblerjana/pangenie) · [详情](docs/PANGENOME_CATALOG.md#L144)
+- **PanGenie** (工具) — 无需比对、基于 k-mer HMM，对短读长中已知的泛基因组变异做基因分型。 脚本 15；对图谱 SV 做快速群体基因分型。与 Giraffe+vg call 的差别在于使用 k-mer 还是 read 比对。 2026 年的版本加入了样本特异的单倍型采样和稀有变异打磨，可用于超过原先 254 条单倍型上限的参考面板（预印本，doi:10.64898/2026.06.29.735275）。 [待确认：打磨步骤是否会加入图谱外的等位基因] [doi:10.1038/s41588-022-01043-w](https://doi.org/10.1038/s41588-022-01043-w) · [link](https://github.com/eblerjana/pangenie) · [详情](docs/PANGENOME_CATALOG.md#L144)
 
   <img src="docs/figures/catalog/05_pangenie_1000g.jpg" width="360" alt="PanGenie：200 个无亲缘关系的千人基因组样本的 PanGenie 分型：等位基因频率与杂合度等质控（Fig. 4）">
 
   <sub>**PanGenie**：200 个无亲缘关系的千人基因组样本的 PanGenie 分型：等位基因频率与杂合度等质控（Fig. 4）。数据：人类（千人基因组）（非葡萄数据）。来源：Ebler et al. 2022, Nature Genetics, Fig. 4（[doi:10.1038/s41588-022-01043-w](https://doi.org/10.1038/s41588-022-01043-w)），CC BY。</sub>
-- **PanGenie with haplotype sampling and polishing** (工具) — 增加样本特异的单倍型抽样和稀有变异抛光，以扩大 PanGenie 群体规模。[preprint] 可处理比原先 254 条单倍型上限更大的葡萄面板。 [doi:10.64898/2026.06.29.735275](https://doi.org/10.64898/2026.06.29.735275) · [link](https://github.com/eblerjana/pangenie) · [详情](docs/PANGENOME_CATALOG.md#L145)
 - **Varigraph** (工具) — 面向图谱上小变异和大变异的 k-mer 分型器，包括多倍体等位基因剂量。 在植物基因组上构建并测试过；也可用于多倍体/杂种砧木材料。 [doi:10.1016/j.molp.2025.08.001](https://doi.org/10.1016/j.molp.2025.08.001) · [link](https://github.com/JiaoLab2021/varigraph) · [详情](docs/PANGENOME_CATALOG.md#L146)
 - **GraphAligner** (工具) — 把长读长比对到序列图谱。 把长读长比对到 minigraph 葡萄图谱。 [doi:10.1186/s13059-020-02157-2](https://doi.org/10.1186/s13059-020-02157-2) · [link](https://github.com/maickrau/GraphAligner) · [详情](docs/PANGENOME_CATALOG.md#L147)
 - **Haplotype-aware long-read alignment** (工具) — 在尊重单倍型路径的前提下把序列比对到泛基因组图谱（Minichain/考虑单倍型的共线性链式比对）。 避免跨葡萄单倍型的嵌合路径。 [doi:10.1101/gr.279143.124](https://doi.org/10.1101/gr.279143.124) · [详情](docs/PANGENOME_CATALOG.md#L148)
@@ -247,7 +288,6 @@
 - **SVJedi-graph** (工具) — 在包含相近/重叠 SV 的变异图谱上，用长读长对 SV 做基因分型。 用 ONT 数据对嵌套的葡萄 SV 做基因分型。 [doi:10.1093/bioinformatics/btad237](https://doi.org/10.1093/bioinformatics/btad237) · [link](https://github.com/SandraLouise/SVJedi-graph) · [详情](docs/PANGENOME_CATALOG.md#L153)
 - **COSIGT** (工具) — 以 1–2x 覆盖度，通过把读深向量与图谱单倍型匹配，对复杂位点做基因分型。 用于低覆盖度或古代葡萄种子 DNA 在复杂位点上的基因分型。 [doi:10.1186/s13059-026-04242-4](https://doi.org/10.1186/s13059-026-04242-4) · [link](https://github.com/davidebolo1993/cosigt) · [详情](docs/PANGENOME_CATALOG.md#L154)
 - **Panmap** (工具) — 在带有突变注释的泛基因组上，用系统发育压缩的 k-mer 索引做放置、比对和基因分型。[preprint] 把新的葡萄样本放到单倍型系统树上的一种设想。 [doi:10.64898/2026.03.29.711974](https://doi.org/10.64898/2026.03.29.711974) · [link](https://github.com/amkram/panmap) · [详情](docs/PANGENOME_CATALOG.md#L155)
-- **Pangenome-aware DeepVariant** (工具) — 在 pileup 图像中加入泛基因组单倍型的小变异检测。[preprint] 在分歧较大的葡萄区域可得到更准确的 SNP/indel。这是可以报告图谱中尚不存在的 SNP/indel 的小变异发现；它不是对已知图谱气泡的基因分型，与本节中的 Giraffe + vg call 或 PanGenie 不同。 [doi:10.1101/2025.06.05.657102](https://doi.org/10.1101/2025.06.05.657102) · [link](https://github.com/google/deepvariant) · [详情](docs/PANGENOME_CATALOG.md#L156)
 - **Locityper** (工具) — 通过从面板中选择已知单倍型的最佳配对（短读长或长读长），对复杂多态位点做基因分型。 针对面板中已有的单倍型，对 NLR 或其他高度变异的葡萄位点做群体基因分型；它不发现新的等位基因。 [doi:10.1038/s41588-025-02362-4](https://doi.org/10.1038/s41588-025-02362-4) · [link](https://github.com/tprodanov/locityper) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs015)
 - **GraphChainer** (工具) — 用于长读长图谱比对的共线性链式方法。 在重复区更准确地放置长读长。 [doi:10.1093/bioinformatics/btad460](https://doi.org/10.1093/bioinformatics/btad460) · [link](https://github.com/algbio/GraphChainer) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs016)
 - **RecAlign** (工具) — 考虑重组的、面向变异图谱的长读长比对。 重组葡萄后代的 reads 会在单倍型之间切换。 [doi:10.1186/s12859-026-06640-8](https://doi.org/10.1186/s12859-026-06640-8) · [link](https://github.com/AlgoLab/rec_align_exps) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs017)
@@ -263,9 +303,13 @@
 - **SHAPEIT5** (工具) — 给大群体定相，包括稀有变异。 图分型后给葡萄群体 VCF 定相。 [doi:10.1038/s41588-023-01415-w](https://doi.org/10.1038/s41588-023-01415-w) · [link](https://github.com/odelaneau/shapeit5)
 - **BCFtools** (工具) — 对 VCF/BCF 做变异检测、过滤、合并和规范化。 葡萄群体 vg call / PanGenie 结果日常过滤和规范化。 [doi:10.1093/gigascience/giab008](https://doi.org/10.1093/gigascience/giab008) · [link](https://github.com/samtools/bcftools)
 - **Clair3** (工具) — 深度学习的长读长小变异检测。 用葡萄 ONT/HiFi 读长检测 SNP/indel，与图分型结果比对。 [doi:10.1038/s43588-022-00387-x](https://doi.org/10.1038/s43588-022-00387-x) · [link](https://github.com/HKU-BAL/Clair3)
-- **DeepVariant** (工具) — 深度学习 SNP 和 indel 检测，支持短读长和长读长。 作为目录中已有“pangenome-aware DeepVariant”的线性基线。 [doi:10.1038/nbt.4235](https://doi.org/10.1038/nbt.4235) · [link](https://github.com/google/deepvariant)
+- **DeepVariant** (工具) — 基于深度学习的 SNP 和 indel 检测工具，支持短读长和长读长。其泛基因组感知模式（预印本，doi:10.1101/2025.06.05.657102）把图谱单倍型加入 pileup，在分化较大的区域更准确（基准测试来自人类数据，尚未在葡萄上测试）；它发现的是图谱中尚未包含的 SNP/indel，不是对已知图谱气泡做分型，这一点与 Giraffe + vg call 或 PanGenie 不同。 [doi:10.1038/nbt.4235](https://doi.org/10.1038/nbt.4235) · [link](https://github.com/google/deepvariant)
 - **SVTyper** (工具) — 用短读长对已知 SV 做贝叶斯分型。 用短读长给已知葡萄 SV 分型，作线性对照。 [doi:10.1038/nmeth.3505](https://doi.org/10.1038/nmeth.3505) · [link](https://github.com/hall-lab/svtyper)
 - **WhatsHap** (工具) — 基于读长的定相，并给读长打单倍型标签。 给葡萄长读长定相并按单倍型打标签，便于等位特异分析。 [doi:10.1101/085050](https://doi.org/10.1101/085050) · [link](https://github.com/whatshap/whatshap)
+- **KING** (工具) — 基于基因型稳健估计亲缘关系并检出重复样本。作为 GWAS 前排查同物异名、错标样本及同一品种克隆的第一步。 [doi:10.1093/bioinformatics/btq559](https://doi.org/10.1093/bioinformatics/btq559) · [link](https://www.kingrelatedness.com/)
+- **NgsRelate v2** (工具) — 基于基因型似然估计亲缘关系与近交系数，低深度样本同样适用。用于在浅层重测序数据中核对葡萄系谱的亲子关系。 [doi:10.1093/gigascience/giz034](https://doi.org/10.1093/gigascience/giz034) · [link](https://github.com/ANGSD/NgsRelate)
+- **STITCH** (工具) — 在无参考面板的情况下从低覆盖度测序数据填补基因型。适用于低深度测序的育种群体（F1 或半同胞家系）。 [doi:10.1038/ng.3594](https://doi.org/10.1038/ng.3594) · [link](https://github.com/rwdavies/STITCH)
+- **GATK HaplotypeCaller** (工具) — 广泛用于葡萄重测序群体的联合分型 SNP/indel 检测工具。作为图谱分型之外的线性基线；合并公开葡萄群体数据时需注意批次效应。 [preprint] [doi:10.1101/201178](https://doi.org/10.1101/201178) · [link](https://github.com/broadinstitute/gatk)
 
 <a id="section-6"></a>
 ## 6. 共线性、比对与比较图谱
@@ -273,6 +317,11 @@
 用于基因组间组装比较与共线性区块分析的全基因组比对和共线性工具，如 minimap2、AnchorWave 和 GENESPACE。
 
 **需要**：两个或更多组装；若做基于基因的共线性（GENESPACE、JCVI），还要 gene-structure-annotation 里的基因模型。跨属做葡萄属与圆叶葡萄属共线性时，须把圆叶葡萄的 chr7 和 chr20 同时映射到葡萄属 chr7，不要按编号一对一配对。 [按情景看数据需求](#data-needs)
+
+**分组：**
+- *基因组比对*（可替代）：minimap2、AnchorWave、MUMmer4、FastGA、LAST。近缘单倍型用 minimap2；远缘或重排较多的基因组用 AnchorWave。
+- *共线性*（可替代）：GENESPACE、JCVI / MCscan、MCScanX、WGDI、ntSynt、halSynteny、msyd、Mumemto。葡萄属间基于基因的共线性用 GENESPACE；多倍化事件用 WGDI；无注释时用 ntSynt。
+- *绘图*（互补）：plotsr、D-GENIES。SyRI 结果用 plotsr 绘制；快速点图用 D-GENIES。
 
 - **minimap2** (工具) — 通用的长序列和组装比对器。 用于 SyRI 和点图的组装对组装比对。 [doi:10.1093/bioinformatics/bty191](https://doi.org/10.1093/bioinformatics/bty191) · [link](https://github.com/lh3/minimap2) · [详情](docs/PANGENOME_CATALOG.md#L166)
 - **AnchorWave** (工具) — 以基因为锚的全基因组比对，可处理全基因组复制（WGD）和 SV。 在分歧较大的葡萄属物种 / Muscadinia 之间可得到更好的比对。 [doi:10.1073/pnas.2113075119](https://doi.org/10.1073/pnas.2113075119) · [link](https://github.com/baoxingsong/AnchorWave) · [详情](docs/PANGENOME_CATALOG.md#L167)
@@ -309,7 +358,14 @@
 
 **需要**：图谱或单倍型，加上来自 gene-structure-annotation 的基因模型或蛋白。本节不生产新的基因模型。 [按情景看数据需求](#data-needs)
 
-- **OrthoFinder** (工具) — 推断跨基因组的直系同源组和基因树。 葡萄单倍型间的基因家族拷贝数表（使用来自注释仓库的基因模型）。 [doi:10.1186/s13059-019-1832-y](https://doi.org/10.1186/s13059-019-1832-y) · [link](https://github.com/davidemms/OrthoFinder) · [详情](docs/PANGENOME_CATALOG.md#L183)
+**分组：**
+- *泛基因聚类*（可替代）：OrthoFinder 3、SonicParanoid2、Broccoli、GET_HOMOLOGUES-EST、Pandagma、pangene、PanTools (ploidy-aware)、GET_PANGENES。基因家族用 OrthoFinder；泛基因集用 pangene 或 Pandagma；需要注释仓库提供基因模型。
+- *投射到单倍型*（可替代）：miniprot、Liftoff、LiftOn、GrAnnoT + GrAPEx。将同一套注释投射到所有单倍型上，从而检验基因是否真正缺失，而非仅未被注释。
+- *读深拷贝数*（可替代）：CNVnator、cn.MOPS、Control-FREEC、Hecaton。多样本用 cn.MOPS；单个材料用 Control-FREEC。mosdepth 只计算这些工具所用的覆盖度。
+- *NLR 泛基因库*（互补）：Pan-NLRome、NLR-Annotator、Melon pan-NLRome graph、NLR neighborhoods by graph traversal (Arabidopsis)。NLR 位点取自注释仓库，按单倍型统计。
+- *家族演化*（互补）：CAFE 5、DupGen_finder。在基因家族确定后分析扩张与重复模式。
+
+- **OrthoFinder 3** (工具) — 推断跨基因组的直系同源组和基因树；当前为第 3 版（2025 预印本），2019 年论文（doi:10.1186/s13059-019-1832-y）描述的是第 2 版。用于构建葡萄单倍型间的基因家族拷贝数表（使用注释仓库中的基因模型）。 [doi:10.1101/2025.07.15.664860](https://doi.org/10.1101/2025.07.15.664860) · [link](https://github.com/OrthoFinder/OrthoFinder) · [详情](docs/PANGENOME_CATALOG.md#L183)
 - **Pandagma** (工具) — 考虑共线性的泛基因和家族集合，处理 WGD 和染色体约束。 为葡萄属内比较构建泛基因集合。 [doi:10.1093/bioinformatics/btae526](https://doi.org/10.1093/bioinformatics/btae526) · [link](https://github.com/legumeinfo/pandagma) · [详情](docs/PANGENOME_CATALOG.md#L184)
 - **pangene** (工具) — 由蛋白到基因组比对（miniprot）构建泛基因图谱，显示基因顺序和拷贝变化。 在不必全面重新注释的情况下，做图谱层面的基因有无/拷贝数分析。 [doi:10.1093/bioinformatics/btae456](https://doi.org/10.1093/bioinformatics/btae456) · [link](https://github.com/lh3/pangene) · [详情](docs/PANGENOME_CATALOG.md#L185)
 
@@ -344,6 +400,9 @@
 - **mosdepth** (工具) — 快速计算 BAM/CRAM 的逐碱基和逐区域覆盖度。 用覆盖度给重测序葡萄材料判断基因有无。 [doi:10.1093/bioinformatics/btx699](https://doi.org/10.1093/bioinformatics/btx699) · [link](https://github.com/brentp/mosdepth)
 - **DupGen_finder** (工具) — 把重复基因按产生方式分类（WGD、串联、邻近、转座、分散）。 葡萄保留 γ 三倍化；可把它和家族里的串联拷贝变化分开。 [doi:10.1186/s13059-019-1650-2](https://doi.org/10.1186/s13059-019-1650-2) · [link](https://github.com/qiao-xin/DupGen_finder)
 - **Hecaton** (工具) — 面向植物、从短读长检测 CNV。 在植物上测试过，适合葡萄重测序数据。 [待确认: 未找到代码网址] [doi:10.1186/s12864-019-6153-8](https://doi.org/10.1186/s12864-019-6153-8)
+- **cn.MOPS** (工具) — 同时基于多个样本的读深进行群体水平拷贝数检测。用于分析葡萄重测序群体中的基因家族拷贝数。 [doi:10.1093/nar/gks003](https://doi.org/10.1093/nar/gks003) · [link](https://bioconductor.org/packages/cn.mops/)
+- **Control-FREEC** (工具) — 根据读深和 B 等位基因频率估计拷贝数与等位组成。用于检查单个葡萄材料中的剂量变化和半合子区域。 [doi:10.1093/bioinformatics/btr670](https://doi.org/10.1093/bioinformatics/btr670) · [link](https://github.com/BoevaLab/FREEC)
+- **GrAnnoT + GrAPEx** (工具) — GrAnnoT 将基因注释转移到泛基因组图谱的每条路径上；GrAPEx（2026 预印本，doi:10.64898/2026.09.28.754982）汇总各单倍型的基因有无。可直接从葡萄图谱获取基因 PAV。 [doi:10.24072/pcjournal.651](https://doi.org/10.24072/pcjournal.651) · [link](https://forge.ird.fr/diade/dynadiv/grannot)
 
 <a id="section-8"></a>
 ## 8. 图谱分析、索引与格式
@@ -351,6 +410,12 @@
 用于查询和拆解泛基因组图谱的处理工具包、压缩索引与格式规范，包括 odgi、GBZ / GBWT 和 GFA specification。
 
 **需要**：图谱本身（GFA / GBZ / GBWT）。除非做 IBD 等分析，不需要额外的群体数据。 [按情景看数据需求](#data-needs)
+
+**分组：**
+- *图谱工具包与格式*（互补）：odgi、vg toolkit、GBZ / GBWT、GFA specification、GfaPy、libbdsg / libhandlegraph、AGC。PGGB 图谱用 odgi；MC 图谱用 vg/GBZ。
+- *气泡与 snarl*（互补）：BubbleGun、Snarl decomposition、Popping bubbles (arXiv)、Cataloging variants in pangenome graphs (pantree)。说明分型前图谱位点是如何定义的。
+- *k-mer 索引*（可替代）：KMC 3、Fulgor、Themisto、SPUMONI 2、ropebwt3。不比对就能判断序列归属和对读长分类。Mash 给出的是草图距离（脚本 03），不是索引。
+- *图谱上的覆盖度与应用*（互补）：gfainject、gafpack、Graph IBD with SVs (GIBD)、GRAFIMO、Billi。将比对结果或序列基序投射至图谱节点。
 
 - **odgi** (工具) — 用于排序、布局、提取、解开和汇总变异图谱的工具包。 PGGB 葡萄图谱的核心分析工具包。 [doi:10.1093/bioinformatics/btac308](https://doi.org/10.1093/bioinformatics/btac308) · [link](https://github.com/pangenome/odgi) · [详情](docs/PANGENOME_CATALOG.md#L205)
 - **GBZ / GBWT** (工具) — vg Giraffe 使用的、压缩且考虑单倍型的图谱格式。 脚本 14 中 Giraffe 基因分型所需的格式。 [doi:10.1093/bioinformatics/btac656](https://doi.org/10.1093/bioinformatics/btac656) · [link](https://github.com/jltsiren/gbwtgraph) · [详情](docs/PANGENOME_CATALOG.md#L206)
@@ -373,6 +438,7 @@
 - **Fulgor** (工具) — 面向多基因组的紧凑彩色 k-mer 索引。 不比对即可查一段序列在哪些葡萄单倍型里。 [doi:10.1186/s13015-024-00251-9](https://doi.org/10.1186/s13015-024-00251-9) · [link](https://github.com/jermp/fulgor)
 - **libbdsg / libhandlegraph** (工具) — vg 和 odgi 使用的动态变异图 C++ 库。 要写与 vg 格式兼容的葡萄图工具时的基础库。 [doi:10.1093/bioinformatics/btaa640](https://doi.org/10.1093/bioinformatics/btaa640) · [link](https://github.com/vgteam/libbdsg)
 - **Themisto** (工具) — 可扩展的彩色 k-mer 索引，用于伪比对。 按 k-mer 颜色把读长分到葡萄单倍型。 [doi:10.1093/bioinformatics/btad233](https://doi.org/10.1093/bioinformatics/btad233) · [link](https://github.com/algbio/themisto)
+- **SPUMONI 2** (工具) — 基于 minimizer 摘要的压缩泛基因组索引，用于快速读长分类。比对前筛查读长源自葡萄属、病原菌还是圆叶葡萄。 [doi:10.1186/s13059-023-02958-1](https://doi.org/10.1186/s13059-023-02958-1) · [link](https://github.com/oma219/spumoni)
 
 <a id="section-9"></a>
 ## 9. 可视化
@@ -381,8 +447,14 @@
 
 **需要**：图谱和/或比对结果；可按需添加基因、变异或甲基化等轨道。 [按情景看数据需求](#data-needs)
 
-- **Bandage** (工具) — 用于组装图和小型图谱的交互式查看器。 检查单个葡萄位点的子图。 [doi:10.1093/bioinformatics/btv383](https://doi.org/10.1093/bioinformatics/btv383) · [link](https://github.com/rrwick/Bandage) · [详情](docs/PANGENOME_CATALOG.md#L225)
-- **BandageNG** (工具) — Bandage 的持续维护分支，改进了路径和 GFA 支持。 同样的用途，支持更现代的 GFA 路径。 [link](https://github.com/asl/BandageNG) · [详情](docs/PANGENOME_CATALOG.md#L226)
+**分组：**
+- *图谱拓扑查看*（可替代）：BandageNG、GfaViz、Gfaestus、strangepg、gfalook、odgi viz / draw、waragraph。单个位点用 BandageNG；整条染色体概览用 odgi viz。
+- *路径与单倍型浏览器*（可替代）：SequenceTubeMap、VRPG、PangyPlot、PanGraphViewer、MoMI-G、Panache、PanVA、JBrowse 2、IGV。vg 图谱用 SequenceTubeMap；向育种人员分享结果用 JBrowse 2。
+- *共线性与 SV 图*（可替代）：NGenomeSyn、GenomeSyn、ntSynt-viz、SVbyEye。跨单倍型的发表级插图。
+- *重复区点图*（可替代）：ModDotPlot、StainedGlass。展示 T2T 单倍型中的着丝粒与串联阵列。
+- *基因组轨道图*（互补）：pyGenomeTracks、karyoploteR、Circos、TBtools-II。不含图谱结构的轨道图。
+
+- **BandageNG** (工具) — Bandage（doi:10.1093/bioinformatics/btv383）的持续维护分支，改进了路径和 GFA 支持；检查单个葡萄位点子图时可用其替代原版，以支持现代 GFA 路径。 [link](https://github.com/asl/BandageNG) · [详情](docs/PANGENOME_CATALOG.md#L226)
 
   <img src="docs/figures/catalog/09_bandageng_grch38_mhc.png" width="360" alt="BandageNG：由 GRCh38 及其 alt 位点构建的 Minigraph-Cactus 图谱中 MHC 区域（部分）的 Bandage-NG 视图">
 
@@ -434,7 +506,7 @@
   <sub>**pyGenomeTracks**：pyGenomeTracks 绘制的 Hi-C 加轨道图（黑腹果蝇 Hi-C，原图来自 Ramírez et al. 2018 Nat Commun）。数据：黑腹果蝇（非葡萄数据）。来源：仓库 [deeptools/pyGenomeTracks](https://github.com/deeptools/pyGenomeTracks/blob/f25fcf1a48bb16a0afbd1cb95e9c5fed99d27fc7/docs/content/images/hic_example_nat_comm_small.png)，GPL-3.0；原图来自 Ramírez et al. 2018, Nature Communications（[doi:10.1038/s41467-017-02525-w](https://doi.org/10.1038/s41467-017-02525-w)，CC BY）。</sub>
 - **karyoploteR** (工具) — R/Bioconductor 包，沿染色体画数据。 画葡萄 PAV 或 SV 密度的染色体图。 [doi:10.1093/bioinformatics/btx346](https://doi.org/10.1093/bioinformatics/btx346) · [link](https://github.com/bernatgel/karyoploteR)
 - **GenomeSyn** (工具) — 绘制多个基因组之间的共线性和结构变异。 画多个葡萄单倍型的共线性和 SV 图。 [doi:10.1016/j.jgg.2022.03.013](https://doi.org/10.1016/j.jgg.2022.03.013) · [link](https://github.com/jmsong2/GenomeSyn)
-- **TBtools** (工具) — 面向生物学家的图形界面工具包，含共线性、热图、环形图等。 国内葡萄实验室常用，不写代码也能出图。 [doi:10.1016/j.molp.2020.06.009](https://doi.org/10.1016/j.molp.2020.06.009) · [link](https://github.com/CJ-Chen/TBtools-II)
+- **TBtools-II** (工具) — 面向生物学家的图形界面工具包，提供共线性、热图、环形图等多种绘图功能；TBtools-II 为当前版本（首篇 TBtools 论文见 doi:10.1016/j.molp.2020.06.009）。国内葡萄实验室常用，无需编写脚本即可作图。 [doi:10.1016/j.molp.2023.09.010](https://doi.org/10.1016/j.molp.2023.09.010) · [link](https://github.com/CJ-Chen/TBtools-II)
 - **Gfaestus** (工具) — 基于 GPU 的大型 GFA 图交互查看器，用 odgi 布局。 交互浏览整条染色体的葡萄 PGGB 图。（未找到论文） [link](https://github.com/chfi/gfaestus)
 
 <a id="section-10"></a>
@@ -443,6 +515,12 @@
 将泛基因组结构变异、图谱节点、k-mer、转录组和甲基化组与表型关联的方法及研究案例，包括 Grapepan v1.0 SV-GWAS、NodeGWAS 和 rpvg / spliced pangenome graphs。
 
 **需要**：GWAS 用已核对身份的图基因型加表型（每个克隆保留一份代表）；eQTL 再加同一基因型的 RNA-seq；甲基化层再加天然 5mC（ONT 需保留 pod5/fast5 或 MM/ML 标签，HiFi 需保留 kinetics）或亚硫酸氢盐读长。 [按情景看数据需求](#data-needs)
+
+**分组：**
+- *图谱上的表达与表观（10a）*（互补）：tensorQTL、QTLtools、coloc、phASER、rpvg / spliced pangenome graphs、modkit、methylGrapher、methylation on graphs: panmethyl、Graph Peak Caller。在图谱 SV 基因型上用 tensorQTL 或 QTLtools 做 eQTL；杂合克隆中的等位基因特异表达用 phASER；用 coloc 关联 eQTL 与 GWAS 信号。
+- *图谱与 k-mer GWAS（10b）*（可替代）：GEMMA、GCTA、PLINK 2、GAPIT 3、rMVP、NodeGWAS、kmersGWAS、kGWASflow、PanKmer、kmdiff、pyseer、panGWAS (PHAC)。先在图谱基因型上运行混合模型（GEMMA、GAPIT）；图谱缺失的变异用 k-mer GWAS 捕获。
+- *连锁图谱与家系 QTL（10b）*（按顺序）：Lep-MAP3、R/qtl2。葡萄 F1 杂交群体：先用 Lep-MAP3 分别构建双亲图谱，再用 R/qtl2 进行扫描。
+- *基因组预测（10b）*（可替代）：rrBLUP、BGLR、SV vs SNP genomic selection in rice、Pan-genome PAV in gene-bank genomic prediction。先以 rrBLUP 作基线，再用 BGLR 联合 SNP+SV 核。
 
 - **Grapepan v1.0 SV-GWAS** (分析) — 29 条单倍型的图谱泛基因组；对 466 份材料做基因分型；SV 为 29 个性状增加了遗传力和 QTL。 葡萄属 SV-GWAS 和基因组预测的直接先例。 [doi:10.1038/s41588-024-01967-5](https://doi.org/10.1038/s41588-024-01967-5) · [详情](docs/PANGENOME_CATALOG.md#L246)
 - **Vitis super-pangenome SV-eQTL** (分析) — 72 个单倍型分辨的葡萄属基因组；SV-eQTL 和霜霉病侵染转录组鉴定出 VvLHT8 及其他抗霜霉病位点。 葡萄抗病中 SV 与表达联系的模型。 [doi:10.1038/s41588-025-02111-7](https://doi.org/10.1038/s41588-025-02111-7) · [详情](docs/PANGENOME_CATALOG.md#L247)
@@ -477,6 +555,8 @@
 - **Barley pan-transcriptome** (分析) — 20 个基因型中的核心/壳/云转录本。 葡萄泛转录组分类（在表达层做核心/壳/云）的模板。这不向 gene-structure-annotation 提供基因模型。 [doi:10.1038/s41588-024-02069-y](https://doi.org/10.1038/s41588-024-02069-y) · [link](https://doi.org/10.1038/s41588-024-02069-y) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs047)
 - **tensorQTL** (工具) — GPU 加速的 cis/trans eQTL 定位。 用图 SV 基因型和葡萄果实 RNA-seq 做 eQTL 扫描。 [doi:10.1186/s13059-019-1836-7](https://doi.org/10.1186/s13059-019-1836-7) · [link](https://github.com/broadinstitute/tensorqtl)
 - **coloc** (工具) — 贝叶斯方法检验两个关联信号是否共用一个致病变异。 看葡萄 GWAS 位点和 eQTL 是否指向同一个 SV。 [doi:10.1371/journal.pgen.1004383](https://doi.org/10.1371/journal.pgen.1004383) · [link](https://github.com/chr1swallace/coloc)
+- **phASER** (工具) — 利用 RNA 测序读长对变异定相，并定量单倍型水平表达。以图谱单倍型为定相参照，分析杂合葡萄克隆中的等位基因特异表达。 [doi:10.1038/ncomms12817](https://doi.org/10.1038/ncomms12817) · [link](https://github.com/secastel/phaser)
+- **QTLtools** (工具) — 完整的分子 QTL 定位工具包，支持置换检验和条件分析。可与 tensorQTL 并用，基于图谱推导的 SV 基因型开展 eQTL 分析。 [doi:10.1038/ncomms15452](https://doi.org/10.1038/ncomms15452) · [link](https://github.com/qtltools/qtltools)
 
 ### (b) QTL、泛基因组 GWAS 与基因组预测
 
@@ -503,6 +583,10 @@
 - **PLINK 2** (工具) — 快速处理基因型数据、质控和关联。 GWAS 前给葡萄群体基因型做质控、LD 修剪和 PCA。 [doi:10.1186/s13742-015-0047-8](https://doi.org/10.1186/s13742-015-0047-8) · [link](https://github.com/chrchang/plink-ng)
 - **GAPIT 3** (工具) — R 包，做 GWAS（MLM、FarmCPU、BLINK）和基因组预测。 植物育种常用，可用多种模型做葡萄 GWAS。 [doi:10.1016/j.gpb.2021.08.005](https://doi.org/10.1016/j.gpb.2021.08.005) · [link](https://github.com/jiabowang/GAPIT)
 - **rMVP** (工具) — 省内存的 R 语言 GWAS，自带曼哈顿图和 QQ 图。 适合带 SV/PAV 标记的大葡萄群体，图可直接用于报告。 [doi:10.1016/j.gpb.2020.10.007](https://doi.org/10.1016/j.gpb.2020.10.007) · [link](https://github.com/xiaolei-lab/rMVP)
+- **Lep-MAP3** (工具) — 即使在低覆盖度数据下也能利用高密度标记构建连锁图谱，并支持异交 F1 家系。葡萄作图群体通常为杂合 F1 杂交后代。 [doi:10.1093/bioinformatics/btx494](https://doi.org/10.1093/bioinformatics/btx494) · [link](https://sourceforge.net/projects/lep-map3/)
+- **R/qtl2** (工具) — 面向实验杂交群体和多亲本群体的 QTL 定位。葡萄异交 F1 需按亲本拆开、按拟测交方式分析，或改用支持 CP 群体的工具 [待确认：R/qtl2 对异交 F1 的群体类型支持]。 [doi:10.1534/genetics.118.301595](https://doi.org/10.1534/genetics.118.301595) · [link](https://github.com/rqtl/qtl2)
+- **BGLR** (工具) — 贝叶斯全基因组回归框架（BayesA/B/C、RKHS）。可比较仅用 SNP 与 SNP+SV 联合核对葡萄育种值的预测效果。 [doi:10.1534/genetics.114.164442](https://doi.org/10.1534/genetics.114.164442) · [link](https://github.com/gdlc/BGLR-R)
+- **rrBLUP** (工具) — 用于基因组选择的岭回归 BLUP 和核模型。在葡萄群体中可作为引入贝叶斯模型前的简单基线。 [doi:10.3835/plantgenome2011.08.0024](https://doi.org/10.3835/plantgenome2011.08.0024) · [link](https://cran.r-project.org/package=rrBLUP)
 
 <a id="section-11"></a>
 ## 11. 演化、祖先成分与渗入
@@ -510,6 +594,14 @@
 谱系（ARG / 树序列）推断，如 SINGER 和 tsinfer；基因渗入检验，如 Dsuite；以及葡萄驯化与无性系分化的相关研究。
 
 **需要**：已核对身份的群体基因型（每个克隆保留一份代表），做渗入检验还要外类群；做谱系（ARG / 树序列）推断还要分相单倍型和祖先等位基因。Dsuite 只标出候选渗入区段，不能区分渗入与选择。 [按情景看数据需求](#data-needs)
+
+**分组：**
+- *群体结构与混合*（互补）：ADMIXTURE、PCAngsd、ADMIXTOOLS 2、TreeMix、Dsuite、Twisst。在去除克隆重复后运行；低深度测序数据用 PCAngsd。
+- *谱系与 ARG*（可替代）：tsinfer、SINGER、ARG-Needle、Relate。都需要已定相的单倍型；各工具是否需要祖先（已极化）等位基因，需逐个核对 [待确认]。hap-ibd（IBD 片段；需定相、不需极化）可与它们互补，用于系谱分析。
+- *系统发育*（互补）：IQ-TREE 2、ASTRAL、Mashtree。构建物种树与单倍型树。
+- *多样性、LD 与群体历史*（互补）：pixy、PopLDdecay、ANGSD、SMC++。pixy 需要包含不变位点的 all-sites VCF；vg deconstruct 导出的图谱 VCF 只有变异位点，要先补上不变位点或可检出区域。用 PopLDdecay 确定 GWAS 窗口。
+- *选择扫描*（互补）：selscan、RAiSD、XP-CLR。合用并互相印证：XP-CLR 不需要极化的等位基因；selscan（iHS）需要。
+- *葡萄先例*（互补）：Grapevine SV domestication、Grapevine clone diversification、Dual domestication of grapevine、NA Vitis wild introgression、Clonal diversity in grapevine (review)、Haplotype-aware phylogenomics。已发表的葡萄研究结果，可用于对照评估基于图谱的发现。
 
 - **Grapevine SV domestication** (分析) — 葡萄驯化中 SV 和半合性的群体遗传学。 可将图谱结果与之比较的基础性葡萄属 SV 研究。 [doi:10.1038/s41477-019-0507-8](https://doi.org/10.1038/s41477-019-0507-8) · [详情](docs/PANGENOME_CATALOG.md#L267)
 - **Grapevine clone diversification** (分析) — 葡萄无性系之间的体细胞 SV 和 SNV。 说明有必要为 Pinot/Chardonnay 等无性系建立无性系水平的图谱。 [doi:10.1186/s12864-019-6211-2](https://doi.org/10.1186/s12864-019-6211-2) · [详情](docs/PANGENOME_CATALOG.md#L268)
@@ -543,6 +635,13 @@
 - **ASTRAL** (工具) — 在不完全谱系分选下由大量基因树推物种树。 用大量历史不一致的位点推葡萄属物种树。 [doi:10.1186/s12859-018-2129-y](https://doi.org/10.1186/s12859-018-2129-y) · [link](https://github.com/smirarab/ASTRAL)
 - **RAiSD** (工具) — 综合多种选择清除信号检测选择清除。 在葡萄 SNP/SV 基因型上扫描选择清除。 [doi:10.1038/s42003-018-0085-8](https://doi.org/10.1038/s42003-018-0085-8) · [link](https://github.com/alachins/raisd)
 - **ADMIXTOOLS 2** (工具) — 用 R 计算 f 统计量并拟合混合图。 检验野生和栽培葡萄之间复杂的混合模型。 [doi:10.7554/eLife.85492](https://doi.org/10.7554/eLife.85492) · [link](https://github.com/uqrmaie1/admixtools)
+- **Relate** (工具) — 为数千个样本推断全基因组谱系并估计等位基因年龄。需要已极化、已定相的数据；葡萄克隆须先去重。 [doi:10.1038/s41588-019-0484-x](https://doi.org/10.1038/s41588-019-0484-x) · [link](https://myersgroup.github.io/relate/)
+- **hap-ibd** (工具) — 在定相数据中快速检测同源一致（IBD）片段，追踪葡萄品种与其亲本间共享的单倍型区块。 [doi:10.1016/j.ajhg.2020.02.010](https://doi.org/10.1016/j.ajhg.2020.02.010) · [link](https://github.com/browning-lab/hap-ibd)
+- **PCAngsd** (工具) — 直接基于基因型似然评估群体结构与混合，适用于硬判定基因型不可靠的浅层重测序野生葡萄数据。 [doi:10.1534/genetics.118.301336](https://doi.org/10.1534/genetics.118.301336) · [link](https://github.com/Rosemeis/pcangsd)
+- **ANGSD** (工具) — 基于基因型似然计算群体遗传统计量（SFS、theta、Fst），适用于低深度或古代葡萄样本。 [doi:10.1186/s12859-014-0356-4](https://doi.org/10.1186/s12859-014-0356-4) · [link](https://github.com/ANGSD/angsd)
+- **pixy** (工具) — 利用不变位点，在有缺失数据时无偏地计算 pi 和 dxy，因此需要 all-sites VCF。vg deconstruct 导出的图谱 VCF 只有变异位点，使用前要补上不变位点或可检出区域。 [doi:10.1111/1755-0998.13326](https://doi.org/10.1111/1755-0998.13326) · [link](https://github.com/ksamuk/pixy)
+- **PopLDdecay** (工具) — 基于 VCF 快速计算连锁不平衡衰减曲线，通过比较野生与栽培葡萄的 LD 衰减确定 GWAS 窗口大小。 [doi:10.1093/bioinformatics/bty875](https://doi.org/10.1093/bioinformatics/bty875) · [link](https://github.com/BGI-shenzhen/PopLDdecay)
+- **XP-CLR** (工具) — 跨群体复合似然检验，用于检测选择清除。可用于野生与栽培葡萄的驯化扫描，且无需极化等位基因。 [doi:10.1101/gr.100545.109](https://doi.org/10.1101/gr.100545.109) · [link](https://github.com/hardingnj/xpclr)
 
 <a id="section-12"></a>
 ## 12. 葡萄属泛基因组研究与公开资源
@@ -550,6 +649,13 @@
 已发表的葡萄属（*Vitis*）与圆叶葡萄属（*Muscadinia*）泛基因组数据集、参考基因组组装、综述与公开数据库，包括 Grapepan v1.0、Vitis super-pangenome 和 PN_T2T reference。
 
 **需要**：无新数据方案——直接复用本节列出的已发表葡萄属 / 圆叶葡萄属组装、图谱和面板。VIVC 仅用于名称和系谱，样本身份须从基因型确认。将圆叶葡萄的 chr7 和 chr20 同时映射到葡萄属 chr7。 [按情景看数据需求](#data-needs)
+
+**分组：**
+- *葡萄属泛基因组与图谱*（互补）：Grapepan v1.0、Vitis super-pangenome、Cultivated grapevine pangenome (G3)、Vitis amurensis graph (Vampan)、NA Vitis super-pangenome、Muscadine Carlos assembly + pan-genome。可复用或扩展的现有图谱。
+- *参考与品种组装*（互补）：PN_T2T reference、Cabernet Sauvignon FALCON-Unzip、Cabernet Sauvignon haplotype-resolved T2T、Muscadinia rotundifolia Trayshed diploid assembly、Munage haplotype-resolved assemblies、VitExpress + haplotype-resolved assembly、Börner rootstock (V. riparia × V. cinerea) assembly。可纳入图谱的候选单倍型，其中 PN_T2T 作为坐标骨架。
+- *群体与古代样本*（互补）：472 Vitis accessions resequencing、204 V. vinifera genomes (European wine grapes)、Evolutionary genomics of grape domestication、Palaeogenomics of French grapevine、Cultivated grape diversity with 10K SNPs。可在图谱上分型的公开测序读长；分型前须先核对样本身份。
+- *品种内的克隆多样性*（互补）：Chardonnay clonal population sequencing、Pinot blanc and gris as somatic mutants。构建克隆层面群体面板的参考样板（见第 14 节）。
+- *门户与目录*（互补）：Grapedia、GrapeGenomics JBrowse、VIVC (Vitis International Variety Catalogue)、Pierre et al. data deposit。名称和系谱查 VIVC；参考基因组和注释查 Grapedia。
 
 - **Grapepan v1.0** (分析) — 18 条 T2T 单倍型加 11 个公开组装；包含 MC 和 PGGB 图谱。 可复用的公开葡萄属图谱。 [doi:10.1038/s41588-024-01967-5](https://doi.org/10.1038/s41588-024-01967-5) · [详情](docs/PANGENOME_CATALOG.md#L283)
 - **Vitis super-pangenome** (分析) — 72 份材料（25 份野生，47 份栽培）；组装和注释存放在 Zenodo。 目前最大的属水平分相葡萄面板。 [doi:10.1038/s41588-025-02111-7](https://doi.org/10.1038/s41588-025-02111-7) · [link](https://doi.org/10.5281/zenodo.13982444) · [详情](docs/PANGENOME_CATALOG.md#L284)
@@ -567,8 +673,7 @@
 - **Grapedia** (工具) — 社区葡萄基因组和工具门户（基因组、Grape-RNA、浏览器）。 公开葡萄属基因组和注释的统一入口。 [link](https://grapedia.org/) · [详情](docs/PANGENOME_CATALOG.md#L288)
 - **GrapeGenomics JBrowse** (工具) — 许多葡萄属基因组的 JBrowse 2 实例。 浏览用于图谱的葡萄组装。 [link](https://www.grapegenomics.com/pages/jbrowse2.php) · [详情](docs/PANGENOME_CATALOG.md#L289)
 - **Grapevine pangenome review (Horticulturae)** (分析) — 综述参考基因组之外的 V. vinifera 多样性以及泛基因组框架。 较近的、专门针对葡萄的泛基因组设计综述。 [doi:10.3390/horticulturae12060756](https://doi.org/10.3390/horticulturae12060756) · [详情](docs/PANGENOME_CATALOG.md#L290)
-- **Graph pangenomes in polyploid crops (review)** (分析) — 关于复杂多倍体基因组（从甘蔗到其他作物）图谱泛基因组的评述。 对多倍体或种间葡萄砧木有用。 [doi:10.1016/j.xplc.2026.101852](https://doi.org/10.1016/j.xplc.2026.101852) · [详情](docs/PANGENOME_CATALOG.md#L291)
-- **PN_T2T reference** (资源) — 端粒到端粒的 PN40024 参考（PN_T2T / v5）。 Grapepan 和 Grapedia 使用的坐标骨架。 [doi:10.1093/hr/uhad061](https://doi.org/10.1093/hr/uhad061) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs061)
+- **PN_T2T reference** (资源) — 端粒到端粒的 PN40024 参考（PN_T2T / v5）。 Grapepan 和 Grapedia 使用的坐标骨架。 同一参考的最早版本 12X 基因组（Jaillon 2007，doi:10.1038/nature06148）首次揭示了葡萄共线性三联体背后的古六倍化。PN40024.v4 有自己的坐标系和注释，仍单独列为一条。 [doi:10.1093/hr/uhad061](https://doi.org/10.1093/hr/uhad061) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs061)
 
   <img src="docs/figures/catalog/12_pn_t2t_overview.jpg" width="360" alt="PN_T2T reference：PN40024 无缺口 PN_T2T 组装与 12X.v0 的比较概览（Figure 1）">
 
@@ -595,24 +700,32 @@
 
   <sub>**Munage haplotype-resolved assemblies**：木纳格葡萄的 SweeD 选择扫描与 PBS（Figure 4）。数据：木纳格葡萄（葡萄数据）。来源：Zhong et al. 2025, Horticulture Research, Figure 4（[doi:10.1093/hr/uhaf274](https://doi.org/10.1093/hr/uhaf274)），CC BY。</sub>
 - **PN40024.v4 reference** (资源) — 改进的 PN40024 组装和注释（v4），早于 T2T v5。 很多公开葡萄数据仍用 v4 坐标，换到 PN_T2T 时要用到。 [doi:10.1093/g3journal/jkad067](https://doi.org/10.1093/g3journal/jkad067)
-- **Grapevine 12X genome (Jaillon 2007)** (资源) — 第一个葡萄参考基因组（PN40024），发现祖先六倍化。 历史参考；解释葡萄共线性里看到的 γ 三倍化。 [doi:10.1038/nature06148](https://doi.org/10.1038/nature06148)
 - **Cabernet Sauvignon FALCON-Unzip** (资源) — 用 FALCON-Unzip 得到的赤霞珠分相二倍体组装。 较早的分相葡萄品种组装，显示单个克隆内的单倍型差异。 [doi:10.1038/nmeth.4035](https://doi.org/10.1038/nmeth.4035)
 - **472 Vitis accessions resequencing** (分析) — 472 份葡萄属材料重测序，分析多样性和种群历史。 大型短读长群体，可在葡萄图上分型。 [doi:10.1038/s41467-019-09135-8](https://doi.org/10.1038/s41467-019-09135-8)
 - **VIVC (Vitis International Variety Catalogue)** (资源) — 葡萄品种、异名、系谱和 SSR 指纹数据库。 把品种加入图之前核对身份和系谱。 [link](https://www.vivc.de/)
+- **Chardonnay clonal population sequencing** (分析) — 将多个霞多丽克隆测序并比对至新组装，解析体细胞变异与祖先近交，为克隆层面重测序面板提供设计样板。 [doi:10.1371/journal.pgen.1007807](https://doi.org/10.1371/journal.pgen.1007807)
+- **Pinot blanc and gris as somatic mutants** (分析) — 证明白比诺和灰比诺均由黑比诺经独立体细胞突变产生，是浆果颜色体细胞结构变异的经典案例。 [doi:10.1093/jxb/ers290](https://doi.org/10.1093/jxb/ers290)
+- **Cabernet Sauvignon haplotype-resolved T2T** (分析) — 赤霞珠的单倍型分辨无缺口基因组，为图谱构建新增两条 T2T 单倍型。 [doi:10.1038/s41597-026-06910-3](https://doi.org/10.1038/s41597-026-06910-3)
+- **Börner rootstock (V. riparia × V. cinerea) assembly** (分析) — 抗病砧木的部分分相组装，为种间图谱提供砧木单倍型。 [doi:10.3389/fpls.2020.00156](https://doi.org/10.3389/fpls.2020.00156)
+- **204 V. vinifera genomes (European wine grapes)** (分析) — 对 204 份材料重测序并追溯欧洲酿酒葡萄的演化起源，提供可用于图谱分型的公开群体面板。 [doi:10.1038/s41467-021-27487-y](https://doi.org/10.1038/s41467-021-27487-y)
+- **Evolutionary genomics of grape domestication** (分析) — 刻画栽培与野生葡萄的驯化瓶颈、有害变异负荷及选择模式，为基于图谱的选择扫描提供对照基线。 [doi:10.1073/pnas.1709257114](https://doi.org/10.1073/pnas.1709257114)
+- **Palaeogenomics of French grapevine** (分析) — 将古代葡萄种子与现代品种对照分型，发现其中一粒与 Savagnin Blanc 匹配，表明该品种已无性繁殖数百年；为在葡萄泛基因组图谱上应用古 DNA 方法提供了先例。 [doi:10.1038/s41477-019-0437-5](https://doi.org/10.1038/s41477-019-0437-5)
+- **Cultivated grape diversity with 10K SNPs** (分析) — 对大批栽培品种分型以理清同物异名、亲本关系和群体结构，为图谱 GWAS 前提供身份与系谱参照。 [doi:10.1371/journal.pone.0192540](https://doi.org/10.1371/journal.pone.0192540)
 
 <a id="section-13"></a>
 ## 13. 工作流与流程
 
-端到端的泛基因组构建工作流与多样本分析流程，如 nf-core/pangenome、Pan1c 和 cactus-pangenome。
+端到端的泛基因组构建工作流与多样本分析流程，如 nf-core/pangenome、Pan1c 和 Minigraph-Cactus 的 cactus-pangenome 工作流。
 
 **需要**：与图谱构建相同的输入；若流程包含变异检出，再加群体读长（见第 2 和 5 节）。 [按情景看数据需求](#data-needs)
 
+**分组：**
+- *图谱流程*（可替代）：nf-core/pangenome、Pan1c、HPRC release 2 graph workflow。nf-core/pangenome 运行 PGGB；Minigraph-Cactus（第 2 节）可用 cactus-pangenome 一条命令运行；本仓库的脚本 04 和 12 与它们对应。
+- *工作流引擎*（互补）：Snakemake、Nextflow、nf-core framework、Galaxy、Bioconda。使用 Bioconda 容器锁定工具版本。
+
 - **nf-core/pangenome** (工具) — 在集群上运行 PGGB 工具的 Nextflow 流程。 脚本 04–06 可直接用的编排。 [doi:10.1093/bioinformatics/btae609](https://doi.org/10.1093/bioinformatics/btae609) · [link](https://github.com/nf-core/pangenome) · [详情](docs/PANGENOME_CATALOG.md#L301)
 - **Pan1c** (工具) — 用于染色体水平 PGGB/MC 图谱的 Snakemake 流程，带质控和报告。[preprint] 由植物研究组构建；与按染色体构建葡萄图谱的设计一致。 [doi:10.64898/2026.04.17.719212](https://doi.org/10.64898/2026.04.17.719212) · [link](https://forge.inrae.fr/genotoul-bioinfo/Pan1c/pan1c) · [详情](docs/PANGENOME_CATALOG.md#L302)
-- **cactus-pangenome** (工具) — 一条命令运行的 Minigraph-Cactus 流程，产出 GBZ、VCF 和索引。 脚本 12 的封装目标。 [doi:10.1038/s41587-023-01793-w](https://doi.org/10.1038/s41587-023-01793-w) · [link](https://github.com/ComparativeGenomicsToolkit/cactus/blob/master/doc/pangenome.md) · [详情](docs/PANGENOME_CATALOG.md#L303)
-- **HPRC release 2 graph workflow** (工具) — HPRC 第 2 版公开方案：wfmash 比对、隐式图谱和变异。 面向不断扩大的葡萄面板的具体大规模模板。 [link](https://github.com/pangenome/HPRCv2) · [详情](docs/PANGENOME_CATALOG.md#L304)
-- **HPRC draft pangenome** (分析) — 人类草稿泛基因组参考及其图谱/评测做法。 图谱发布和质控的参考做法。 [doi:10.1038/s41586-023-05896-x](https://doi.org/10.1038/s41586-023-05896-x) · [详情](docs/PANGENOME_CATALOG.md#L305)
-- **Rice pangenome reference (wild + cultivated)** (分析) — 野生稻和栽培稻的泛基因组，作为参考资源。 发布带野生近缘种的作物图谱参考的例子。 [doi:10.1038/s41586-025-08883-6](https://doi.org/10.1038/s41586-025-08883-6) · [详情](docs/PANGENOME_CATALOG.md#L306)
+- **HPRC release 2 graph workflow** (工具) — HPRC 第 2 版公开方案：wfmash 比对、隐式图谱和变异。 面向不断扩大的葡萄面板的具体大规模模板。 其第 1 版草图泛基因组（doi:10.1038/s41586-023-05896-x）确立了图谱构建和基准测试的做法。 [link](https://github.com/pangenome/HPRCv2) · [详情](docs/PANGENOME_CATALOG.md#L304)
 - **Snakemake** (工具) — 基于 Python 的流程管理器。 可把本仓库编号脚本包成可复现流程。 [doi:10.12688/f1000research.29032.2](https://doi.org/10.12688/f1000research.29032.2) · [link](https://github.com/snakemake/snakemake)
 - **Nextflow** (工具) — 面向集群和云的数据流流程管理器。 在 HPC 上跑 nf-core/pangenome 等建图流程。 [doi:10.1038/nbt.3820](https://doi.org/10.1038/nbt.3820) · [link](https://github.com/nextflow-io/nextflow)
 - **nf-core framework** (资源) — Nextflow 流程的社区规范和工具。 若把葡萄流程移到 Nextflow，可作模板。 [doi:10.1038/s41587-020-0439-x](https://doi.org/10.1038/s41587-020-0439-x) · [link](https://github.com/nf-core/tools)
@@ -625,6 +738,13 @@
 尚未在葡萄属上尝试的分析设想与 DNA 基础模型，如 COSIGT on ancient grape seeds、Berry-colour locus graph (VvMybA1) 和 PlantCaduceus。
 
 **需要**：视具体设想而定——古 DNA 或标本馆读长（COSIGT，复杂位点 1–2×，尚未在葡萄属上试过）；同一品种多个克隆的两套单倍型；或果皮颜色等已知位点的表型。 [按情景看数据需求](#data-needs)
+
+**分组：**
+- *已知位点图谱检验*（互补）：Berry-colour locus graph (VvMybA1)、Seedlessness locus graph (VviAGL11)、Muscat flavour locus graph (VvDXS)、Downy mildew Rpv3 haplotypes on the graph。任何新葡萄图谱的首要检验：能否区分已知表型的等位基因？
+- *克隆层面的问题*（互补）：Clone-level pangenome、Somatic variant calling across clones、Diploid genomes inferred on the graph。针对葡萄特有问题：单品种克隆众多，但专用组装稀缺。
+- *古代与降解 DNA*（互补）：COSIGT on ancient grape seeds、Graph mapping for degraded DNA。需要第 12 节中的古代样本数据。
+- *DNA 语言模型*（可替代）：Pangenome foundation models、DeepGene、PlantCaduceus、AgroNT、GPN、Evo 2。评估图谱等位基因的变异效应打分；目前尚未在葡萄属上测试。
+- *图谱的其他用途*（互补）：Graph-node GWAS + eQTL fusion、Implicit-graph locus atlas、Personalized-graph scaffolding、Pan-proteome with predicted structures (barley abstract)、Variant-aware CRISPR off-target search (CRISPRme)、Tandem-repeat genotyping (TRGT)。探索性方向；选一个有明确葡萄问题的去做。
 
 - **COSIGT on ancient grape seeds** (设想) — 在复杂位点上，对考古葡萄种子做低覆盖度图谱基因分型。 SV 等位基因的驯化时间。[待确认: 未在葡萄属上尝试] [doi:10.1186/s13059-026-04242-4](https://doi.org/10.1186/s13059-026-04242-4) · [详情](docs/PANGENOME_CATALOG.md#L316)
 - **Berry-colour locus graph (VvMybA1)** (设想) — 在已知 SV 位点周围构建位点图谱（impg 或 PGGB），例如 VvMybA1（果色）处的 Gret1 反转录转座子。 在一个表型清楚的已知葡萄 SV 上测试图谱基因分型。 [doi:10.1126/science.1095011](https://doi.org/10.1126/science.1095011) · [详情](docs/PANGENOME_CATALOG.md#L317)
@@ -642,6 +762,11 @@
 - **Variant-aware CRISPR off-target search (CRISPRme)** (设想) — 考虑群体变异和单倍型来搜索 CRISPR 脱靶位点。 设想：用葡萄图单倍型检查编辑向导，在所有品种上查脱靶，而不只是 PN40024。工具原为人类数据设计。 [doi:10.1038/s41588-022-01257-y](https://doi.org/10.1038/s41588-022-01257-y) · [link](https://github.com/pinellolab/CRISPRme)
 - **Graph mapping for degraded DNA** (设想) — 把古 DNA 比对到变异图，可减少参考偏倚、改善 indel 检测。 设想：把考古或标本葡萄样本比对到葡萄图；与古种子 COSIGT 互补。 [doi:10.1186/s13059-020-02160-7](https://doi.org/10.1186/s13059-020-02160-7) · [link](https://github.com/vgteam/vg)
 - **Tandem-repeat genotyping (TRGT)** (设想) — 从 HiFi 读长对串联重复分型并可视化。 设想：比较同一品种不同葡萄克隆间的串联重复长度。 [doi:10.1038/s41587-023-02057-3](https://doi.org/10.1038/s41587-023-02057-3) · [link](https://github.com/PacificBiosciences/trgt)
+- **Seedlessness locus graph (VviAGL11)** (设想) — 检验泛基因组图谱能否区分 VviAGL11 无核等位基因；该错义突变是无核性状的主要遗传来源。 [doi:10.1104/pp.18.00259](https://doi.org/10.1104/pp.18.00259)
+- **Muscat flavour locus graph (VvDXS)** (设想) — 检验图谱能否在不同品种中分型决定麝香风味的 VvDXS K284N 等位基因。 [doi:10.1093/jxb/err231](https://doi.org/10.1093/jxb/err231)
+- **Downy mildew Rpv3 haplotypes on the graph** (设想) — 将 Rpv3 抗性单倍型及其关联的 KASP 标记置于图谱路径上，检验标记在不同遗传背景间的通用性。 [doi:10.1007/s10681-021-02952-3](https://doi.org/10.1007/s10681-021-02952-3)
+- **Diploid genomes inferred on the graph** (设想) — 在图谱上根据短读长推断新样本的两条单倍型，为那些不会去单独组装的克隆得到接近组装质量的二倍体序列。 [preprint] [doi:10.1101/2025.11.26.690754](https://doi.org/10.1101/2025.11.26.690754)
+- **Somatic variant calling across clones** (设想) — 以同一品种的共享图谱为参照，检测各克隆特有的变异；DeepSomatic 这类工具是候选方案，但还缺少葡萄上的基准测试。 [preprint] [doi:10.1101/2024.08.16.608331](https://doi.org/10.1101/2024.08.16.608331) · [link](https://github.com/google/deepsomatic)
 
 <a id="section-15"></a>
 ## 15. 其他植物泛基因组研究与综述
@@ -649,6 +774,11 @@
 其他植物物种的泛基因组研究论文与方法学综述，包括 Rice super pan-genome、Maize 26 genomes (NAM) 和 Pangenome graphs review。
 
 **需要**：非葡萄属数据方案，仅为其他物种的先例。 [按情景看数据需求](#data-needs)
+
+**分组：**
+- *综述*（互补）：Pangenome graphs review、Plant T2T methods review、What are we learning from plant pangenomes?、From structural pangenomes to functional panomics、Pangenomes for large/complex plant genomes、Complexity welcome (review)、Graph pangenomes in polyploid crops (review)。推荐背景读物。
+- *无性繁殖与多年生果树*（互补）：Apple haplotype-resolved genomes (rootstock dwarfing)、Potato wild/cultivated genomes、Citrus pangenome (citric acid gene)。与葡萄研究设计最为接近：高杂合、无性繁殖或涉及果实性状。番茄遗传力图谱研究列于第 10 节。
+- *作物图谱研究*（互补）：Rice super pan-genome、Rice pangenome reference (wild + cultivated)、Barley pangenome、Maize 26 genomes (NAM)、Soybean pan-genome、Wheat multiple genomes、Cucumber graph pan-genome、Eggplant graph pangenomes + pan-phenome、Sorghum pan-genome、Setaria graph pan-genome、Pea pan-genome、Pearl millet pangenome (heat tolerance)、Sunflower haplotype blocks、Arabidopsis 69 accessions。可借鉴的方法学研究，需重点关注各研究对杂合性的处理方式。
 
 - **Pangenome graphs review** (分析) — 泛基因组图谱模型和工具的综述。 本仓库文档的背景。 [doi:10.1146/annurev-genom-120219-080406](https://doi.org/10.1146/annurev-genom-120219-080406) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs074)
 - **Plant T2T methods review** (分析) — 植物 T2T 组装和泛基因组应用的综述。 葡萄属 T2T 图谱的组装标准。 [doi:10.1038/s41588-024-01830-7](https://doi.org/10.1038/s41588-024-01830-7) · [link](https://www.nature.com/articles/s41588-024-01830-7) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs075)
@@ -671,6 +801,9 @@
 - **Sunflower haplotype blocks** (分析) — 野生向日葵中大片不重组的单倍型（多为倒位）决定生态型差异。 可借鉴用于检验野生葡萄适应中的倒位和单倍型块。 [doi:10.1038/s41586-020-2467-6](https://doi.org/10.1038/s41586-020-2467-6)
 - **Setaria graph pan-genome** (分析) — 谷子及野生近缘种的图泛基因组，含 SV-性状关联。 图加 GWAS 的设计与本仓库葡萄计划接近。 [doi:10.1038/s41588-023-01423-w](https://doi.org/10.1038/s41588-023-01423-w)
 - **Pea pan-genome** (分析) — 改进的豌豆参考基因组和泛基因组，含 PAV 和演化分析。 又一个“参考升级+泛基因组”的例子，类似 PN40024 v4 到 T2T。 [doi:10.1038/s41588-022-01172-2](https://doi.org/10.1038/s41588-022-01172-2)
+- **Rice pangenome reference (wild + cultivated)** (分析) — 野生稻和栽培稻的泛基因组，作为参考资源。 发布带野生近缘种的作物图谱参考的例子。 [doi:10.1038/s41586-025-08883-6](https://doi.org/10.1038/s41586-025-08883-6) · [详情](docs/PANGENOME_CATALOG.md#L306)
+- **Graph pangenomes in polyploid crops (review)** (分析) — 关于复杂多倍体基因组（从甘蔗到其他作物）图谱泛基因组的评述。 对多倍体或种间葡萄砧木有用。 [doi:10.1016/j.xplc.2026.101852](https://doi.org/10.1016/j.xplc.2026.101852) · [详情](docs/PANGENOME_CATALOG.md#L291)
+- **Citrus pangenome (citric acid gene)** (分析) — 柑橘亚科的泛基因组找到了决定果实酸度的关键基因。是设计上与葡萄接近的无性繁殖多年生果树。 [doi:10.1038/s41588-023-01516-6](https://doi.org/10.1038/s41588-023-01516-6)
 
 <a id="data-needs"></a>
 ## 数据需求：泛基因组还需要搭配什么数据
@@ -713,6 +846,8 @@
 ## 分析流程
 
 参照三批同行的分析流程整理。参见 [`pipeline/00_overview.md`](pipeline/00_overview.md)、[`docs/ATTRIBUTION.md`](docs/ATTRIBUTION.md) 和 [`docs/DUAL_GRAPH.md`](docs/DUAL_GRAPH.md)。
+
+列出工具选择与判断节点的工作流程图（2026-11-14）：[`docs/CATALOG.md#workflow-2026-11-14-zh`](docs/CATALOG.md#workflow-2026-11-14-zh)。
 
 Wave 1-2 涵盖 cannabis、potato、NA *Vitis*、Shuhua VCF 和 *Oryza* SyRI。使用脚本 `01` 到 `10`。
 
