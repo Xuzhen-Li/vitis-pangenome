@@ -8,7 +8,7 @@
 
 ## 不包含的内容
 
-- TE 库构建：[vitis-te](https://github.com/Xuzhen-Li/vitis-te)
+- TE 库构建：[TE-Lib](https://github.com/Xuzhen-Li/TE-Lib)
 - 纯质体：[grapevine-plastid](https://github.com/Xuzhen-Li/grapevine-plastid)
 - 基因模型（坐标、GFF3、蛋白序列）：[gene-structure-annotation](https://github.com/Xuzhen-Li/gene-structure-annotation)
 - GO / KEGG / 可读名称 / 结构域：[gene-function-annotation](https://github.com/Xuzhen-Li/gene-function-annotation)
@@ -187,9 +187,9 @@
 <a id="section-4"></a>
 ## 4. 变异发现：序列 PAV、结构变异和 TE 插入
 
-用于检测序列有无变异（PAV）、结构变异与 TE 插入多态性的检测工具及图谱拆解方法，如 panacus、vg deconstruct 和 GraffiTE。TE 库构建不在本仓库中（位于 `vitis-te`）。
+用于检测序列有无变异（PAV）、结构变异与 TE 插入多态性的检测工具及图谱拆解方法，如 panacus、vg deconstruct 和 GraffiTE。TE 库构建不在本仓库中（位于 `TE-Lib`）。
 
-**需要**：做序列 PAV 和 SV 用图谱或组装；做 TE 插入多态还要 vitis-te 中整理好的 TE 库。 [按情景看数据需求](#data-needs)
+**需要**：做序列 PAV 和 SV 用图谱或组装；做 TE 插入多态还要 TE-Lib 中整理好的 TE 库。 [按情景看数据需求](#data-needs)
 
 **分组：**
 - *序列 PAV 与增长曲线*（互补）：panacus、odgi pav、pangrowth、panagram、GraTools、PanK-Pipeline、Heaps law openness。4a 小节统计序列或窗口的有无，而非基因的有无（见第 7 节）。
@@ -236,7 +236,7 @@
 - **SVarp** (工具) — 从比对到泛基因组图谱的长读长中发现图谱中没有的新 SV 等位基因。[preprint] 相对葡萄图谱做真正的新 SV 发现，不同于对已知气泡的基因分型。 [doi:10.1101/2024.02.18.580171](https://doi.org/10.1101/2024.02.18.580171) · [link](https://github.com/asylvz/SVarp) · [详情](docs/PANGENOME_CATALOG.md#L125)
 - **SVPG** (工具) — 利用单倍型分辨的泛基因组参考，从长读长检测 SV，并快速把新样本增补进图谱。[preprint] 加入新的葡萄属材料而不必重建整张图谱。 [doi:10.1101/2025.07.11.664486](https://doi.org/10.1101/2025.07.11.664486) · [link](https://github.com/coopsor/SVPG) · [详情](docs/PANGENOME_CATALOG.md#L126)
 - **Swave** (工具) — 深度学习方法，利用组装来源泛基因组图谱中的群体特征，解析简单和复杂 SV。 从 PGGB/MC 葡萄图谱得到的 SV 分类，比仅做气泡分解更好。 [doi:10.1038/s41588-026-02538-6](https://doi.org/10.1038/s41588-026-02538-6) · [link](https://github.com/songbowang125/Swave) · [详情](docs/PANGENOME_CATALOG.md#L127)
-- **GraffiTE** (工具) — 从组装/长读长中寻找多态 TE 插入，构建图谱并对其基因分型（v1.1 增加甲基化，2026 预印本 10.64898/2026.11.06.764993）。 TE 插入可驱动葡萄性状（例如 VvMybA1 处的 Gret1）；可得到每个材料的多态 TE 目录。这不是 vitis-te 中的 TE 库构建，也不是结构注释里用可信库做软屏蔽的步骤。 [doi:10.1101/2023.09.11.557209](https://doi.org/10.1101/2023.09.11.557209) · [link](https://github.com/cgroza/GraffiTE) · [详情](docs/PANGENOME_CATALOG.md#L128)
+- **GraffiTE** (工具) — 从组装/长读长中寻找多态 TE 插入，构建图谱并对其基因分型（v1.1 增加甲基化，2026 预印本 10.64898/2026.11.06.764993）。 TE 插入可驱动葡萄性状（例如 VvMybA1 处的 Gret1）；可得到每个材料的多态 TE 目录。这不是 TE-Lib 中的 TE 库构建，也不是结构注释里用可信库做软屏蔽的步骤。 [doi:10.1101/2023.09.11.557209](https://doi.org/10.1101/2023.09.11.557209) · [link](https://github.com/cgroza/GraffiTE) · [详情](docs/PANGENOME_CATALOG.md#L128)
 - **TE insertion polymorphisms from pangenome (rice)** (分析) — 水稻泛基因组范围内与耐寒相关的 TE 插入多态。 把葡萄 TE-SV 与抗寒性（例如 V. amurensis）联系起来的模板。 [doi:10.1038/s41467-025-62887-4](https://doi.org/10.1038/s41467-025-62887-4) · [详情](docs/PANGENOME_CATALOG.md#L129)
 - **SV size and class taxonomy** (设想) — 按类别（INS/DEL/INV/DUP/complex）、大小区间以及 TE/串联来源报告 SV，而不是只给一个计数。 避免在葡萄汇总中把序列 PAV、SV 和基因 PAV 混在一起。 [doi:10.1126/science.abf7117](https://doi.org/10.1126/science.abf7117) · [详情](docs/PANGENOME_CATALOG.md#L130)
 - **Inversions in pangenome graphs** (分析) — 倒位在图谱中如何表示和检测。 葡萄 SV 图谱在着丝粒附近报告许多倒位；图谱 VCF 可能对它们表示不当。 [doi:10.1093/nargab/lqag125](https://doi.org/10.1093/nargab/lqag125) · [link](https://pmc.ncbi.nlm.nih.gov/articles/PMC13669635/) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs013)
@@ -251,8 +251,8 @@
 
   <sub>**Assemblytics**：仓库中拟南芥示例（组装对参考比对）的 Assemblytics 插入、缺失、重复与串联扩张/收缩大小分布。数据：拟南芥（非葡萄数据）。来源：仓库 [MariaNattestad/assemblytics](https://github.com/MariaNattestad/assemblytics/blob/7acd1acec5b4175ab71a7c885a6ddadec0e355ab/output_examples/arabidopsis/Arabidopsis_example.Assemblytics.size_distributions.all_variants.log_all_sizes.png)，MIT。</sub>
 - **dipcall** (工具) — 用分相二倍体组装对参考检测变异。 给每个分相葡萄材料出“真值”式变异集，用来评估图分型结果。 [doi:10.1038/s41592-018-0054-7](https://doi.org/10.1038/s41592-018-0054-7) · [link](https://github.com/lh3/dipcall)
-- **McClintock 2** (工具) — 在一个流程里跑多个短读长 TE 插入检测器并比较结果。 检测葡萄群体的 TE 插入多态；TE 库本身来自 vitis-te。 [doi:10.1186/s13100-023-00296-4](https://doi.org/10.1186/s13100-023-00296-4) · [link](https://github.com/bergmanlab/mcclintock)
-- **TEMP2** (工具) — 从短读长检测种系和新发 TE 插入。 可看葡萄芽变克隆间的 TE 插入；用 vitis-te 的库。 [doi:10.1093/nar/gkab010](https://doi.org/10.1093/nar/gkab010) · [link](https://github.com/weng-lab/TEMP2)
+- **McClintock 2** (工具) — 在一个流程里跑多个短读长 TE 插入检测器并比较结果。 检测葡萄群体的 TE 插入多态；TE 库本身来自 TE-Lib。 [doi:10.1186/s13100-023-00296-4](https://doi.org/10.1186/s13100-023-00296-4) · [link](https://github.com/bergmanlab/mcclintock)
+- **TEMP2** (工具) — 从短读长检测种系和新发 TE 插入。 可看葡萄芽变克隆间的 TE 插入；用 TE-Lib 的库。 [doi:10.1093/nar/gkab010](https://doi.org/10.1093/nar/gkab010) · [link](https://github.com/weng-lab/TEMP2)
 - **DeepSomatic** (工具) — 基于深度学习的体细胞 SNV 和 indel 检测工具，构建于 DeepVariant 之上，支持短读长和长读长。可用于检测同一品种不同克隆间的差异，但需改造其肿瘤/正常配对逻辑 [待确认：没有植物上的基准测试]。 [preprint] [doi:10.1101/2024.08.16.608331](https://doi.org/10.1101/2024.08.16.608331) · [link](https://github.com/google/deepsomatic)
 
 <a id="section-5"></a>
@@ -678,7 +678,7 @@
   <img src="docs/figures/catalog/12_pn_t2t_overview.jpg" width="360" alt="PN_T2T reference：PN40024 无缺口 PN_T2T 组装与 12X.v0 的比较概览（Figure 1）">
 
   <sub>**PN_T2T reference**：PN40024 无缺口 PN_T2T 组装与 12X.v0 的比较概览（Figure 1）。数据：PN40024（葡萄数据）。来源：Shi et al. 2023, Horticulture Research, Figure 1（[doi:10.1093/hr/uhad061](https://doi.org/10.1093/hr/uhad061)），CC BY。</sub>
-- **Pierre et al. data deposit** (资源) — 16 个栽培品种的单倍型组装、注释、TE 注释和图谱。 本目录使用其中的单倍型组装和图谱。基因注释属于两个注释仓库；TE 注释或 TE 库属于 vitis-te。本条目不是本仓库中结构注释或 TE 库构建的方法。 [doi:10.57745/ckd4h5](https://doi.org/10.57745/ckd4h5) · [link](https://doi.org/10.57745/ckd4h5) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs062)
+- **Pierre et al. data deposit** (资源) — 16 个栽培品种的单倍型组装、注释、TE 注释和图谱。 本目录使用其中的单倍型组装和图谱。基因注释属于两个注释仓库；TE 注释或 TE 库属于 TE-Lib。本条目不是本仓库中结构注释或 TE 库构建的方法。 [doi:10.57745/ckd4h5](https://doi.org/10.57745/ckd4h5) · [link](https://doi.org/10.57745/ckd4h5) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs062)
 - **Muscadinia rotundifolia Trayshed diploid assembly** (资源) — 分相的 Trayshed 组装；chr7/chr20 融合；R 基因扩增。 葡萄科超泛基因组的外群；必须处理核型差异。 [doi:10.1093/g3journal/jkab033](https://doi.org/10.1093/g3journal/jkab033) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs063)
 - **Muscadine Carlos assembly + pan-genome** (资源) — Carlos 组装和 4 个基因组的共线性泛基因组。 vinifera 中没有的皮尔斯病抗性基因。 [doi:10.1186/s12864-023-09514-y](https://doi.org/10.1186/s12864-023-09514-y) · [link](https://pmc.ncbi.nlm.nih.gov/articles/PMC10357881/) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs064)
 
@@ -808,7 +808,7 @@
 <a id="data-needs"></a>
 ## 数据需求：泛基因组还需要搭配什么数据
 
-每个情景列出**最低数据**（没有就做不了）、**建议数据**（只写有出处的葡萄属或近缘植物设计）、**对应目录章节和工具**，以及**易错点**。「图谱」指由单倍型组装建成的葡萄属泛基因组变异图（本仓库）。本仓库不含的内容放在兄弟仓库：TE 库构建在 [vitis-te](https://github.com/Xuzhen-Li/vitis-te)；基因模型在 [gene-structure-annotation](https://github.com/Xuzhen-Li/gene-structure-annotation)；名称、GO/KEGG 和结构域在 [gene-function-annotation](https://github.com/Xuzhen-Li/gene-function-annotation)。
+每个情景列出**最低数据**（没有就做不了）、**建议数据**（只写有出处的葡萄属或近缘植物设计）、**对应目录章节和工具**，以及**易错点**。「图谱」指由单倍型组装建成的葡萄属泛基因组变异图（本仓库）。本仓库不含的内容放在兄弟仓库：TE 库构建在 [TE-Lib](https://github.com/Xuzhen-Li/TE-Lib)；基因模型在 [gene-structure-annotation](https://github.com/Xuzhen-Li/gene-structure-annotation)；名称、GO/KEGG 和结构域在 [gene-function-annotation](https://github.com/Xuzhen-Li/gene-function-annotation)。
 
 上面每节开头都有一行「需要：」。各情景的详细说明（最低数据、建议数据、对应工具、易错点）以及仍标 [待确认] 的条目，见 [`docs/CATALOG.md`](docs/CATALOG.md#data-needs-zh)。下表中的「扩充」指 2026-11-13 新加入本页的条目。
 
@@ -826,7 +826,7 @@
 | 8. 甲基化 / 表观 SV | 图谱 + ONT/PacBio 的天然 5mC，或亚硫酸氢盐测序读长 | 分相、单倍型水平的甲基化；葡萄 trio 是直接先例（doi:10.1186/s13059-025-03858-2）。GraffiTE v1.1 还在 TE 插入上加入了甲基化（预印本 10.64898/2026.11.06.764993）。 | 10(a)、4、1 |
 | 9. 三维 / Hi-C | contig 组装 + Hi-C 读长（或遗传图 / 光学图）用来排染色体 | 建图前每套单倍型都有 Hi-C，或用 Hi-C 模式分相（hifiasm / GreenHill）。目录所列 Hi-C 工具用于挂载和分相。本目录没有在图上调用染色质互作的方法。 | 1（及第 1 节扩充）；检查可用第 9 节 |
 | 10. 系谱 / 重组 | 亲本–子代或其他已知系谱的基因型 | 用 trio 做分相；用已发表遗传图核染色体顺序；用 VIVC 查同义名和官方系谱。tsinfer 需要分相数据（doi:10.1038/s41588-019-0483-y）。 | 5、11、8、1、12 |
-| 11. TE 插入多态 | 图谱或组装 / 长读长 + vitis-te 中整理好的 TE 库 | 每份材料有长读长或单倍型组装；GraffiTE 建 TE 插入图并分型（doi:10.1101/2023.09.11.557209）。果皮颜色（VvMybA1 上的 Gret1）是经典葡萄例子（doi:10.1126/science.1095011）。 | 4、5、14（位点设想）；TE 库本身不在本仓库 |
+| 11. TE 插入多态 | 图谱或组装 / 长读长 + TE-Lib 中整理好的 TE 库 | 每份材料有长读长或单倍型组装；GraffiTE 建 TE 插入图并分型（doi:10.1101/2023.09.11.557209）。果皮颜色（VvMybA1 上的 Gret1）是经典葡萄例子（doi:10.1126/science.1095011）。 | 4、5、14（位点设想）；TE 库本身不在本仓库 |
 | 12. 古 DNA 比对 | 图谱 + 考古或标本馆材料的短、损伤读长 | COSIGT 可在 1–2× 深度下对复杂位点分型（doi:10.1186/s13059-026-04242-4）。把它用在古代葡萄种子上，尚未在葡萄属上试过。损伤 DNA 比对到变异图是拟扩充条目，引用的证据是人类古 DNA 研究（doi:10.1186/s13059-020-02160-7），不是葡萄结果。 | 5（COSIGT）、14 |
 | 13. 育种 / 标记设计 | 育种或种质群体在图上的基因型 + 表型；已有标记时还要对应位点的单倍型 | Grapepan v1.0 报告 SV 增加了遗传力和 QTL（doi:10.1038/s41588-024-01967-5）。软件 PHGv2（[maize-genetics/phg_v2](https://github.com/maize-genetics/phg_v2)；须记录版本或 commit 和访问日期；2026-11-13 核对）和 GLIMPSE2 可把面板中*已有*位点填充到低深度样本（见易错点）。PHG 方法论文（Bradbury 等，2022，doi:10.1093/bioinformatics/btac410）描述的是 PHG v1，未查到独立的 v2 DOI。先用基因型核对身份；VIVC 只用于名称和系谱，不能代替核对。 | 5、10(b)、12、14 |
 

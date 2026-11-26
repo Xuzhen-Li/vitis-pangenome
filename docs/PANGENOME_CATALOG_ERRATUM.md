@@ -71,7 +71,7 @@ v1 L128 correctly places GraffiTE in section 4(b) as a tool for finding, graphin
 
 **Proposed addition to the V055 “Why it matters for *Vitis*” cell**, after the v1 sentence:
 
-> This is not TE-library construction for vitis-te, and not the trusted-library soft-mask step of structural annotation.
+> This is not TE-library construction for TE-Lib, and not the trusted-library soft-mask step of structural annotation.
 
 ---
 
