@@ -2,6 +2,24 @@
 
 [English](README.md)
 
+## 从这里开始
+
+本仓库是一个植物泛基因组知识库，内容包括泛基因组图谱、存在/缺失变异（PAV）、结构变异（SV）、拷贝数，以及在图谱上做基因分型。它讲清概念，按分析步骤列出软件及其论文，并给出一条参考流程。全程以葡萄（*Vitis*）为示例。[`pipeline/`](pipeline/00_overview.md) 里的脚本是演示各步骤的简短参考代码，不是持续维护的软件包。
+
+| 我想 | 去哪里 |
+|---|---|
+| 了解主要概念 | [知识地图：概念](docs/KNOWLEDGE_MAP.zh.md#概念) |
+| 为某一步选工具 | [知识地图：按分析步骤列出的软件](docs/KNOWLEDGE_MAP.zh.md#按分析步骤列出的软件)，再看它链接的目录章节 |
+| 从组装一路做到基因分型 | [知识地图：参考流程](docs/KNOWLEDGE_MAP.zh.md#参考流程) |
+| 看葡萄的相关研究 | [知识地图：葡萄示例](docs/KNOWLEDGE_MAP.zh.md#葡萄示例)；[第 12 节](#section-12) |
+| 查某项分析需要哪些数据 | [数据需求](#data-needs) |
+| 看引导图 | [`docs/figures/guide/`](docs/figures/guide/README.zh.md) |
+| 重用文字、图或代码 | [`LICENSE`](LICENSE)（代码，MIT）和 [`NOTICE.zh.md`](NOTICE.zh.md)（文字和图，CC BY 4.0） |
+
+<img src="docs/figures/guide/03_concepts_on_one_graph.png" width="640" alt="示意图：四条单倍型路径穿过泛基因组图谱，图中有 SNP、存在/缺失、拷贝数和倒位形成的泡，以及核心/可变基因表">
+
+下面是按任务排列的完整方法目录。
+
 本仓库提供 *Vitis* 泛基因组图谱、存在/缺失变异以及混合变异/剂量方法。
 
 本仓库不包含未发表的基因型或私有样本矩阵。

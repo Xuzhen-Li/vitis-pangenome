@@ -2,6 +2,24 @@
 
 [中文](README.zh.md)
 
+## Start here
+
+This repository is a knowledge base on plant pangenomes: pangenome graphs, presence/absence variation (PAV), structural variants (SV), copy number and genotyping on graphs. It explains the ideas, lists the tools for each analysis step with their papers, and gives one reference route. Grapevine (*Vitis*) is the worked example throughout. The scripts in [`pipeline/`](pipeline/00_overview.md) are short reference code for the steps, not a maintained software package.
+
+| I want to | Go to |
+|---|---|
+| learn the main ideas | [Knowledge map: concepts](docs/KNOWLEDGE_MAP.md#concepts) |
+| choose a tool for one step | [Knowledge map: tools by analysis step](docs/KNOWLEDGE_MAP.md#tools-by-analysis-step), then the catalogue section it links |
+| follow one route from assemblies to genotypes | [Knowledge map: reference workflow](docs/KNOWLEDGE_MAP.md#reference-workflow) |
+| see the grapevine studies | [Knowledge map: grapevine](docs/KNOWLEDGE_MAP.md#grapevine-as-the-worked-example); [section 12](#section-12) |
+| check what data an analysis needs | [Data needed alongside the pangenome](#data-needs) |
+| look at the guide figures | [`docs/figures/guide/`](docs/figures/guide/README.md) |
+| reuse text, figures or code | [`LICENSE`](LICENSE) (code, MIT) and [`NOTICE.md`](NOTICE.md) (text and figures, CC BY 4.0) |
+
+<img src="docs/figures/guide/03_concepts_on_one_graph.png" width="640" alt="Schematic: four haplotype paths through a pangenome graph with bubbles for a SNP, presence/absence, copy number and an inversion, and a core/dispensable gene table">
+
+The full methods catalogue follows below, by task.
+
 This repository provides *Vitis* pangenome graphs, presence/absence variation, and mixed-variant / dosage methods.
 
 It contains no unpublished genotypes or private sample matrices.
