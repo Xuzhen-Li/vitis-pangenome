@@ -13,7 +13,7 @@ A one-line index of every entry (name, type, section, and a jump to the row) is 
 
 ## Boundary
 
-- TE library construction: [vitis-te](https://github.com/Xuzhen-Li/vitis-te)
+- TE library construction: [TE-Lib](https://github.com/Xuzhen-Li/TE-Lib)
 - Gene models (coordinates, GFF3, proteins): [gene-structure-annotation](https://github.com/Xuzhen-Li/gene-structure-annotation)
 - GO / KEGG / readable names / domains: [gene-function-annotation](https://github.com/Xuzhen-Li/gene-function-annotation)
 - This repository: pangenome graphs, presence/absence variation, and genotyping of sites already in the graph
@@ -201,13 +201,13 @@ This text was written before the 2026-11-13 README update. Tools it calls "addit
 
 **What it answers.** Which TE insertions vary among haplotypes or in a resequenced cohort, including insertions that affect traits (Gret1 at VvMybA1 and berry colour; doi:10.1126/science.1095011).
 
-**Minimum data.** A graph or assemblies / long reads, **and** a curated TE library. The library is built and maintained in vitis-te, not in this repository. GraffiTE can then build a TE-insertion graph and genotype it (doi:10.1101/2023.09.11.557209). Short-read TE callers (McClintock 2, TEMP2; additions) also require that library.
+**Minimum data.** A graph or assemblies / long reads, **and** a curated TE library. The library is built and maintained in TE-Lib, not in this repository. GraffiTE can then build a TE-insertion graph and genotype it (doi:10.1101/2023.09.11.557209). Short-read TE callers (McClintock 2, TEMP2; additions) also require that library.
 
 **Recommended data.** Haplotype assemblies or long reads per accession, not just short reads, to resolve breakpoints. Add methylation on those insertions if testing for silencing (GraffiTE v1.1 preprint). A known-locus graph around VvMybA1 is a section 14 idea for a phenotype with a clear SV cause.
 
 **Sections and tools.** Section 4 (GraffiTE and related TE-insertion notes). Section 5 to genotype known insertions in a cohort. Section 14 (berry-colour locus graph). Not section 7 gene annotation, and not the soft-masking step of structural annotation.
 
-**Pitfalls.** A generic RepeatMasker library cannot replace the curated *Vitis* library in vitis-te. Calling polymorphic insertions is not the same as annotating TEs on a single reference. Short-read-only calls are less reliable in grape repeats.
+**Pitfalls.** A generic RepeatMasker library cannot replace the curated *Vitis* library in TE-Lib. Calling polymorphic insertions is not the same as annotating TEs on a single reference. Short-read-only calls are less reliable in grape repeats.
 
 ### 12. Ancient DNA mapping
 
@@ -378,13 +378,13 @@ The following are written as limiting statements in this v2 and are no longer ma
 
 **回答的问题。** 哪些 TE 插入在单倍型间或重测序群体中存在多态，包括影响性状的插入（VvMybA1 位点的 Gret1 与果皮颜色；doi:10.1126/science.1095011）。
 
-**最低数据。** 图谱或组装 / 长读长，**以及**整理好的 TE 库。TE 库在 vitis-te 中构建和维护，不在本仓库。随后 GraffiTE 可构建 TE 插入图并分型（doi:10.1101/2023.09.11.557209）。短读长 TE 检测工具（McClintock 2、TEMP2；扩充）同样需要该库。
+**最低数据。** 图谱或组装 / 长读长，**以及**整理好的 TE 库。TE 库在 TE-Lib 中构建和维护，不在本仓库。随后 GraffiTE 可构建 TE 插入图并分型（doi:10.1101/2023.09.11.557209）。短读长 TE 检测工具（McClintock 2、TEMP2；扩充）同样需要该库。
 
 **建议数据。** 每份材料配有单倍型组装或长读长（而非只有短读长），以解析断点。若关注沉默机制，可加上这些插入位点的甲基化（GraffiTE v1.1 预印本）。围绕 VvMybA1 构建局部图，是第 14 节针对明确 SV 致因性状的设想。
 
 **章节和工具。** 第 4 节（GraffiTE 及相关 TE 插入说明）。第 5 节用于在群体中对已知插入分型。第 14 节（果皮颜色位点图）。不属于第 7 节的基因注释，也不是结构注释中的软屏蔽步骤。
 
-**易错点。** 通用 RepeatMasker 库不能替代 vitis-te 中整理好的葡萄属 TE 库。分析多态性插入不等于在单一参考基因组上做 TE 注释。仅靠短读长在葡萄重复区检出率更低。
+**易错点。** 通用 RepeatMasker 库不能替代 TE-Lib 中整理好的葡萄属 TE 库。分析多态性插入不等于在单一参考基因组上做 TE 注释。仅靠短读长在葡萄重复区检出率更低。
 
 ### 12. 古 DNA 比对
 

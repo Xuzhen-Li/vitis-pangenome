@@ -82,7 +82,7 @@ v3 Why cell: `Downloadable cultivated-grape graph.`
 
 **Proposed replacement for the VS062 “Why it matters for *Vitis*” cell:**
 
-> This catalog uses the haplotyped assemblies and the graph. Gene annotations belong in the two annotation repositories; TE annotation or TE libraries belong in vitis-te. This entry is not a method for structural annotation or TE-library construction in this repository.
+> This catalog uses the haplotyped assemblies and the graph. Gene annotations belong in the two annotation repositories; TE annotation or TE libraries belong in TE-Lib. This entry is not a method for structural annotation or TE-library construction in this repository.
 
 ---
 
