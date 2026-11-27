@@ -1,9 +1,9 @@
-# Attribution (字爹 / peer templates)
+# Attribution (peer workflow templates)
 
-Scripts under `pipeline/` are **rewritten for this *Vitis* lab grain**.
+Scripts under `pipeline/` are **adapted for this *Vitis* pangenome workflow**.
 No third-party genotypes ship here.
 
-## Wave 1 — graph build defaults
+## Group 1 — graph build defaults
 
 | Peer | Code / paper | Reused idea |
 |------|----------------|-------------|
@@ -11,7 +11,7 @@ No third-party genotypes ship here.
 | Potato (phased) | [Chenglin20170390/Haplotype-diversity](https://github.com/Chenglin20170390/Haplotype-diversity) | Mash; PGGB vs MC; vcfbub bins; odgi PAV |
 | North American *Vitis* | [noecochetel/North_American_Vitis_Pangenome](https://github.com/noecochetel/North_American_Vitis_Pangenome) (MIT) | `-p 85 -s 10k`; LV=0 class; vg genotyping |
 
-## Wave 2 — VCF / alignment companions
+## Group 2 — VCF / alignment companions
 
 | Peer | Code | Reused idea |
 |------|------|-------------|
@@ -19,7 +19,7 @@ No third-party genotypes ship here.
 | *Oryza* | [LengFeng00/oryza-pangenome-pipeline](https://github.com/LengFeng00/oryza-pangenome-pipeline) | SyRI pan-SV merge |
 | Tomato | [YaoZhou89/TGG](https://github.com/YaoZhou89/TGG) | HiFi multi-caller pointer |
 
-## Wave 3 — dual graph + genotyping
+## Group 3 — dual graph + genotyping
 
 | Peer | Code | Reused idea |
 |------|------|-------------|

@@ -9,7 +9,7 @@ This is the reading entry for the 2026-11 methods survey. It does not change the
 
 A one-line index of every entry (name, type, section, and a jump to the row) is in [`CATALOG_INDEX_2026-11.md`](CATALOG_INDEX_2026-11.md).
 
-**How to read the supplement.** It is already on [PR #1](https://github.com/Xuzhen-Li/vitis-pangenome/pull/1), but a genetics review failed it on a must-fix (①-1). Use it together with [`PANGENOME_CATALOG_SUPPLEMENT_1_ERRATUM.md`](PANGENOME_CATALOG_SUPPLEMENT_1_ERRATUM.md). Formal inclusion waits on a revision. The main catalog also has wording fixes in [`PANGENOME_CATALOG_ERRATUM.md`](PANGENOME_CATALOG_ERRATUM.md); those sentences have not been applied to the catalog files.
+**How to read the supplement.** The supplement is available in [PR #1](https://github.com/Xuzhen-Li/vitis-pangenome/pull/1) and has pending corrections. Read it together with [`PANGENOME_CATALOG_SUPPLEMENT_1_ERRATUM.md`](PANGENOME_CATALOG_SUPPLEMENT_1_ERRATUM.md) until those edits are merged. Pending wording corrections for the main catalog are listed in [`PANGENOME_CATALOG_ERRATUM.md`](PANGENOME_CATALOG_ERRATUM.md).
 
 ## Boundary
 
@@ -67,7 +67,7 @@ These rows are still marked 待确认 in the catalog files. Preprints are labell
 
 ## Errata (wording not yet applied)
 
-- Main catalog: [`PANGENOME_CATALOG_ERRATUM.md`](PANGENOME_CATALOG_ERRATUM.md) — must-fix ①-3 on V093 (NLR-Annotator is a structure-layer locus finder; this catalog only borrows the locus list for copy-number), plus suggested wording for V045, V074, V055 and V092
+- Main catalog: [`PANGENOME_CATALOG_ERRATUM.md`](PANGENOME_CATALOG_ERRATUM.md) — required scope clarification for V093 (NLR-Annotator is a structure-layer locus finder; this catalog only borrows the locus list for copy-number), plus wording clarifications for V045, V074, V055 and V092
 - Supplement 1: [`PANGENOME_CATALOG_SUPPLEMENT_1_ERRATUM.md`](PANGENOME_CATALOG_SUPPLEMENT_1_ERRATUM.md) — must-fix ①-1 (Helixer, Liftoff, LiftOn, TOGA and NLR-Annotator must not be treated as one class), plus suggested wording for several supplement rows
 
 <a id="data-needs-details"></a>
@@ -244,7 +244,7 @@ These remain open:
 9. NOHIC and personalized-graph scaffolding: already [待确认] in the catalog.
 10. Whether a later pass should quote a depth figure from the Giraffe or PanGenie papers remains open.
 
-The following are written as limiting statements in this v2 and are no longer marked [待确认]: calling chromatin contacts (loops / TADs) on a *Vitis* pangenome graph is not a method in this catalog; using COSIGT on ancient grape seeds has not yet been tried on *Vitis*; graph mapping of degraded DNA is a proposed addition and the cited evidence is a human aDNA study, not a grape result; Beagle 5 and SHAPEIT5 take biallelic VCF sites only, and graph SVs can be written to such a VCF after splitting to biallelic sites and removing nesting (vcfbub / vcfwave), with accuracy in grapevine untested; modkit is official ONT software and has no paper.
+The following are written as explicit scope limits and are no longer marked [待确认]: calling chromatin contacts (loops / TADs) on a *Vitis* pangenome graph is not a method in this catalog; using COSIGT on ancient grape seeds has not yet been tried on *Vitis*; graph mapping of degraded DNA is a proposed addition and the cited evidence is a human aDNA study, not a grape result; Beagle 5 and SHAPEIT5 take biallelic VCF sites only, and graph SVs can be written to such a VCF after splitting to biallelic sites and removing nesting (vcfbub / vcfwave), with accuracy in grapevine untested; modkit is official ONT software and has no paper.
 
 
 <a id="data-needs-zh"></a>
@@ -419,9 +419,9 @@ The following are written as limiting statements in this v2 and are no longer ma
 6. Hecaton（第 7 节扩充）：扩充整理时未查到代码地址。
 8. panmethyl：目录注明未核对论文。
 9. NOHIC 和个性化图挂载：目录中已标为 [待确认]。
-10. 后续轮次是否从 Giraffe 或 PanGenie 论文中补引测序深度数字，暂留待定。
+10. 是否从 Giraffe 或 PanGenie 论文中补充引用测序深度数字，暂留待定。
 
-以下内容在本 v2 中作为限定说明写出，不再标 [待确认]：在葡萄属泛基因组图上调用染色质互作（loop / TAD）不在本目录方法内；将 COSIGT 用于古代葡萄种子尚未在葡萄属上试过；降解 DNA 的图比对是拟扩充条目，所引证据为人类古 DNA 研究，非葡萄结果；Beagle 5 和 SHAPEIT5 仅接受双等位 VCF 位点，图 SV 拆成双等位位点并去除嵌套（vcfbub / vcfwave）后可写入此类 VCF，但在葡萄上的准确度尚未测试；modkit 是 ONT 官方软件，无对应论文。
+以下内容现已作为明确的范围限定写出，不再标 [待确认]：在葡萄属泛基因组图上调用染色质互作（loop / TAD）不在本目录方法内；将 COSIGT 用于古代葡萄种子尚未在葡萄属上试过；降解 DNA 的图比对是拟扩充条目，所引证据为人类古 DNA 研究，非葡萄结果；Beagle 5 和 SHAPEIT5 仅接受双等位 VCF 位点，图 SV 拆成双等位位点并去除嵌套（vcfbub / vcfwave）后可写入此类 VCF，但在葡萄上的准确度尚未测试；modkit 是 ONT 官方软件，无对应论文。
 
 <a id="workflow-2026-11-14"></a>
 ## Workflow chart (2026-11-14)

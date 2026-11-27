@@ -20,7 +20,7 @@ Upstream MIT R helpers live in
 (`PANGENOME.seq_pangenome_modeling.R`, gene intersect). Port later if you need
 core/dispensable curves beyond panacus.
 
-## Wave 3 (also adapted as 12–16)
+## Group 3 (also adapted as 12–16)
 
 - andrew010417/pangenome_graph_pipeline — dual graph + giraffe + PanGenie + QC
 - Chenghong412/wheat_pangenome — per-chr minigraph

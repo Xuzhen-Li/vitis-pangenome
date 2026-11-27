@@ -9,7 +9,7 @@ Full credit: [docs/ATTRIBUTION.md](../docs/ATTRIBUTION.md) · dual-graph: [docs/
 7. `07_vcf_classify.sh` → 8. `08_vg_genotype_sketch.sh` (legacy map path)
 9. `09_vcf_postprocess.sh` → 10. `10_syri_pan_sv_merge.py` (alignment check)
 
-## B. Second graph + modern genotyping (wave 3)
+## B. Second graph + modern genotyping (group 3)
 
 12. `12_minigraph_cactus.sh` — MC / giraffe-ready
 13. `13_minigraph_per_chr.sh` — light minigraph backbone

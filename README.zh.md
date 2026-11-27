@@ -185,7 +185,7 @@
 - **gretl** (工具) — 图谱统计（节点/路径相似度、自助法增长、窗口）。 用窗口水平的图谱统计比较 PGGB 与 MC 葡萄图谱。 [doi:10.1093/bioinformatics/btae755](https://doi.org/10.1093/bioinformatics/btae755) · [link](https://github.com/MoinSebi/gretl) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs007)
 - **gfastats** (工具) — 组装/图谱的统计与操作。 在葡萄属组装之间给出一致的 N50/缺口统计。 [doi:10.1093/bioinformatics/btac460](https://doi.org/10.1093/bioinformatics/btac460) · [link](https://github.com/vgl-hub/gfastats) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs008)
 - **skani** (工具) — 通过稀疏链式连接快速估计 ANI。 对含野生种的图谱，成对相似度比 Mash 更准确。 [doi:10.1038/s41592-023-02018-3](https://doi.org/10.1038/s41592-023-02018-3) · [link](https://github.com/bluenote-1577/skani) · [详情](docs/PANGENOME_CATALOG_SUPPLEMENT_1.md#vs009)
-- **QUAST** (工具) — 统计组装连续性；有参考时还能报错误组装。 每条葡萄单倍型进图前的常规第一轮统计。 [doi:10.1093/bioinformatics/btt086](https://doi.org/10.1093/bioinformatics/btt086) · [link](https://github.com/ablab/quast)
+- **QUAST** (工具) — 统计组装连续性；有参考时还能报错误组装。 每条葡萄单倍型进图前的常规初步统计。 [doi:10.1093/bioinformatics/btt086](https://doi.org/10.1093/bioinformatics/btt086) · [link](https://github.com/ablab/quast)
 - **GenomeScope 2.0** (工具) — 用 k-mer 频谱估计基因组大小、杂合度和倍性。 决定是否做分相组装前，先看葡萄品种的杂合度。 [doi:10.1038/s41467-020-14998-3](https://doi.org/10.1038/s41467-020-14998-3) · [link](https://github.com/tbenavi1/genomescope2.0)
 
   <img src="docs/figures/catalog/03_genomescope2_seabass_w1600.png" width="360" alt="GenomeScope 2.0：欧洲鲈鱼短读长的 GenomeScope 2.0 k-mer（k=21）分布与模型拟合（仓库示例 example1）">
@@ -863,13 +863,13 @@
 
 ## 分析流程
 
-参照三批同行的分析流程整理。参见 [`pipeline/00_overview.md`](pipeline/00_overview.md)、[`docs/ATTRIBUTION.md`](docs/ATTRIBUTION.md) 和 [`docs/DUAL_GRAPH.md`](docs/DUAL_GRAPH.md)。
+参照三组同行的分析流程整理。参见 [`pipeline/00_overview.md`](pipeline/00_overview.md)、[`docs/ATTRIBUTION.md`](docs/ATTRIBUTION.md) 和 [`docs/DUAL_GRAPH.md`](docs/DUAL_GRAPH.md)。
 
 列出工具选择与判断节点的工作流程图（2026-11-14）：[`docs/CATALOG.md#workflow-2026-11-14-zh`](docs/CATALOG.md#workflow-2026-11-14-zh)。
 
-Wave 1-2 涵盖 cannabis、potato、NA *Vitis*、Shuhua VCF 和 *Oryza* SyRI。使用脚本 `01` 到 `10`。
+第 1–2 组涵盖 cannabis、potato、NA *Vitis*、Shuhua VCF 和 *Oryza* SyRI。使用脚本 `01` 到 `10`。
 
-Wave 3 涵盖 maize、wheat 和 barley minigraph，以及 dual PGGB-MC + Giraffe / PanGenie。使用脚本 `12` 到 `16`。
+第 3 组涵盖 maize、wheat 和 barley minigraph，以及 dual PGGB-MC + Giraffe / PanGenie。使用脚本 `12` 到 `16`。
 
 各脚本一行说明（文件名和职责来自现有 README 和 `pipeline/00_overview.md`）：
 

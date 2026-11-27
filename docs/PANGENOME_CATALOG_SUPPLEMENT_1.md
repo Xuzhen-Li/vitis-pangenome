@@ -1,4 +1,4 @@
-# Pangenome methods catalog for *Vitis* — supplement 1 (v3)
+# Pangenome methods catalog for *Vitis* — supplement 1
 
 Additional entries not present in `docs/PANGENOME_CATALOG.md` (PR #1, commit a16315c). Same columns and section numbers as that file; section 15 is new. IDs use the prefix `VS` so they cannot clash with `V001`–`V162`.
 
