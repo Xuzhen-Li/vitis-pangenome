@@ -1,12 +1,12 @@
-# Erratum to vitis-pangenome catalog supplement v3
+# Erratum to vitis-pangenome catalog supplement 1
 
 - Date: 2026-11-13 00:06 CST (Asia/Shanghai)
-- Author: auto-paper-写作
-- Purpose: record required and suggested wording fixes for supplement v3. This file is new. It does not change the supplement, the main catalog, `catalog_v1_erratum.md`, or `docs/PANGENOME_CATALOG.md` in [PR #1](https://github.com/Xuzhen-Li/vitis-pangenome/pull/1). The supplement should not be added to PR #1 in this form.
-- Supplement checked (read-only): `/workspace/github-maintain-20261112/vitis-pangenome/work/executor-b/catalog_supplement_v3.md` (sha256 `7923b734780643e2f7cacf436d54de0d9b1b7963213b1bdeee2cafaa3aaa0be8`)
-- Review: `/workspace/github-maintain-20261112/reviews/geneticist_review_catalog_supplement_v3.md` (sha256 `bc64dfeeaf73b2bfdbf4aac667fbcdfc47e86ee6214b935dd799853aefb6083f`). Verdict: FAIL on ①-1.
-- Style follows `/workspace/github-maintain-20261112/vitis-pangenome/catalog_v1_erratum.md`.
-- Scope: close ①-1 as written in the review, and absorb ②-1 to ②-8, each with a paste-ready English replacement. Do not reopen or change plan A for main-catalog ①-3 (V093).
+- Author: repository maintainer
+- Purpose: record required and suggested wording fixes for `docs/PANGENOME_CATALOG_SUPPLEMENT_1.md` without modifying the supplement, the main catalog, `docs/PANGENOME_CATALOG_ERRATUM.md`, or `docs/PANGENOME_CATALOG.md` in [PR #1](https://github.com/Xuzhen-Li/vitis-pangenome/pull/1).
+- Supplement checked (read-only): `catalog_supplement_v3.md` (sha256 of the original text, before the title wording edit: `7923b734780643e2f7cacf436d54de0d9b1b7963213b1bdeee2cafaa3aaa0be8`)
+- Source text: `geneticist_review_catalog_supplement_v3.md` (sha256 `bc64dfeeaf73b2bfdbf4aac667fbcdfc47e86ee6214b935dd799853aefb6083f`). Status: one required correction on the gene-annotation scope note (L248) and eight wording clarifications below.
+- Style follows `catalog_v1_erratum.md`.
+- Scope: provide replacement English wording for the L248 scope note and eight table entries below, while keeping the V093 scope decision in `docs/PANGENOME_CATALOG_ERRATUM.md` unchanged.
 
 Replacement sentences below are English, ready to paste into a later new file. They are not applied here.
 
@@ -14,11 +14,11 @@ Replacement sentences below are English, ready to paste into a later new file. T
 
 ## ①-1 (must fix) — Notes L248 must not treat five tools as one class
 
-v3 L248 currently says:
+Supplement 1 L248 currently says:
 
 > Not included on purpose: Helixer, LiftOn, Liftoff, TOGA and NLR-Annotator make or transfer gene models; they belong in the two annotation repositories, not here.
 
-That sentence is wrong in three ways. Helixer does make gene models. Liftoff, LiftOn and TOGA transfer or project gene models. NLR-Annotator does neither: it is structure-layer locus finding from sequence motifs, including partial genes and pseudogenes. The main catalog already keeps Liftoff (V090) and NLR-Annotator (V093) in section 7 with boundary sentences, under plan A of the closed ①-3 in `catalog_v1_erratum.md`. A supplement note that sends all five tools only to the annotation repositories would contradict that closure.
+That sentence is wrong in three ways. Helixer does make gene models. Liftoff, LiftOn and TOGA transfer or project gene models. NLR-Annotator does neither: it is structure-layer locus finding from sequence motifs, including partial genes and pseudogenes. The main catalog already keeps Liftoff (V090) and NLR-Annotator (V093) in section 7 with scope sentences (see `docs/PANGENOME_CATALOG_ERRATUM.md`). A supplement note that sends all five tools only to the annotation repositories would contradict that.
 
 **Proposed replacement for the L248 bullet only** (do not change L249–L250):
 
@@ -30,7 +30,7 @@ That sentence is wrong in three ways. Helixer does make gene models. Liftoff, Li
 
 Section 4a intro (L64) already says these are not gene-level PAV. The “What it does” cell says growth can come from k-mers or from gene families. The “Why it matters” cell already asks for the two to be reported separately.
 
-v3 Why cell: `Report k-mer (sequence) and gene-family growth separately for Vitis; they answer different questions.`
+Current Why cell: `Report k-mer (sequence) and gene-family growth separately for Vitis; they answer different questions.`
 
 **Proposed replacement for the VS012 “Why it matters for *Vitis*” cell:**
 
@@ -42,7 +42,7 @@ v3 Why cell: `Report k-mer (sequence) and gene-family growth separately for Viti
 
 SibeliaZ finds locally collinear blocks and is a graph-free synteny tool, closer in spirit to section 6. This erratum does not move the row. If it stays in section 2, the entry must say it does not build a pangenome graph.
 
-v3 Why cell: `Synteny-block view of grape haplotypes as a graph-free alternative.`
+Current Why cell: `Synteny-block view of grape haplotypes as a graph-free alternative.`
 
 **Proposed replacement for the VS006 “Why it matters for *Vitis*” cell:**
 
@@ -52,9 +52,9 @@ v3 Why cell: `Synteny-block view of grape haplotypes as a graph-free alternative
 
 ## ②-3 — VS049 (PanKmer), L173
 
-The “What it does” cell covers k-mer indexing, presence/absence and association. The v3 Why cell only mentions assembly comparison. If the row stays in section 10b, the Why cell should land on association, and should say the index itself is not gene-level PAV and not section 5 genotyping of known sites.
+The “What it does” cell covers k-mer indexing, presence/absence and association. The current Why cell only mentions assembly comparison. If the row stays in section 10b, the Why cell should land on association, and should say the index itself is not gene-level PAV and not section 5 genotyping of known sites.
 
-v3 Why cell: `Reference-free comparison of many grape assemblies.`
+Current Why cell: `Reference-free comparison of many grape assemblies.`
 
 **Proposed replacement for the VS049 “Why it matters for *Vitis*” cell:**
 
@@ -66,7 +66,7 @@ v3 Why cell: `Reference-free comparison of many grape assemblies.`
 
 Section 10a intro (L153) already says this is not RNA evidence for gene-structure annotation and not functional annotation. The entry should repeat that at item level.
 
-v3 Why cell: `Template for a grape pan-transcriptome classification.`
+Current Why cell: `Template for a grape pan-transcriptome classification.`
 
 **Proposed replacement for the VS047 “Why it matters for *Vitis*” cell:**
 
@@ -78,7 +78,7 @@ v3 Why cell: `Template for a grape pan-transcriptome classification.`
 
 The deposit includes haplotyped assemblies, annotations, TE annotation and a graph. This catalog should take the assemblies and the graph only.
 
-v3 Why cell: `Downloadable cultivated-grape graph.`
+Current Why cell: `Downloadable cultivated-grape graph.`
 
 **Proposed replacement for the VS062 “Why it matters for *Vitis*” cell:**
 
@@ -88,7 +88,7 @@ v3 Why cell: `Downloadable cultivated-grape graph.`
 
 ## ②-6 — VS088 (From structural pangenomes to functional panomics), L240
 
-v3 Why cell: `Recent synthesis matching this catalog's scope.` The review is broader than this catalog (it includes functional panomics).
+Current Why cell: `Recent synthesis matching this catalog's scope.` The review is broader than this catalog (it includes functional panomics).
 
 **Proposed replacement for the VS088 “Why it matters for *Vitis*” cell:**
 
@@ -98,9 +98,9 @@ v3 Why cell: `Recent synthesis matching this catalog's scope.` The review is bro
 
 ## ②-7 — VS073 (barley pan-proteome with predicted structures), L218
 
-v3 “What it does” cell: `Conference abstract: 856,971 proteoforms from 76 barley genotypes with predicted-structure clustering. [conference abstract, not peer-reviewed]`
+Current “What it does” cell: `Conference abstract: 856,971 proteoforms from 76 barley genotypes with predicted-structure clustering. [conference abstract, not peer-reviewed]`
 
-v3 Why cell: `Idea for a grape pan-proteome layer; abstract only, not peer-reviewed.`
+Current Why cell: `Idea for a grape pan-proteome layer; abstract only, not peer-reviewed.`
 
 “Predicted-structure clustering” means predicted protein three-dimensional structures, not gene-structure annotation.
 
@@ -112,7 +112,7 @@ v3 Why cell: `Idea for a grape pan-proteome layer; abstract only, not peer-revie
 
 ## ②-8 — VS020 (GLIMPSE2), L96
 
-v3 Why cell: `Impute known graph SV/SNP sites into skim-sequenced grape populations; known sites only.`
+Current Why cell: `Impute known graph SV/SNP sites into skim-sequenced grape populations; known sites only.`
 
 “Known sites only” is correct. The “SV” in “graph SV/SNP sites” is not. GLIMPSE2 is used for phasing and imputation of SNPs and small indels from a low-coverage panel (doi:10.1038/s41588-023-01438-3). This erratum does not treat it as a tool that can impute graph structural variants; no such evidence is cited here.
 
@@ -126,4 +126,4 @@ v3 Why cell: `Impute known graph SV/SNP sites into skim-sequenced grape populati
 
 - It does not edit `catalog_supplement_v3.md`, `catalog_v1.md`, `catalog_v1_erratum.md`, or the PR copy of `docs/PANGENOME_CATALOG.md`.
 - It does not open, update, or merge a pull request, and it does not add the supplement to PR #1.
-- It does not change plan A for main-catalog ①-3 (V093 stays in section 7 with a locus-list boundary sentence).
+- It does not change the V093 scope decision in `docs/PANGENOME_CATALOG_ERRATUM.md` (V093 stays in section 7 with a locus-list scope sentence).

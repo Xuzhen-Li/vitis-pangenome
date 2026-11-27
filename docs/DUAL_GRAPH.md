@@ -1,4 +1,4 @@
-# Dual-graph strategy (third-wave peers)
+# Dual-graph strategy (comparative crop workflows)
 
 | Path | When | Peers |
 |------|------|-------|

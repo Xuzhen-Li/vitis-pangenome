@@ -863,13 +863,13 @@ Each section above opens with a one-line **Needs:** note. Full scenario details 
 
 ## Pipeline
 
-The pipeline is organized according to three waves of peer playbooks. See [`pipeline/00_overview.md`](pipeline/00_overview.md), [`docs/ATTRIBUTION.md`](docs/ATTRIBUTION.md), and [`docs/DUAL_GRAPH.md`](docs/DUAL_GRAPH.md).
+The pipeline is organized into three groups of reference workflows. See [`pipeline/00_overview.md`](pipeline/00_overview.md), [`docs/ATTRIBUTION.md`](docs/ATTRIBUTION.md), and [`docs/DUAL_GRAPH.md`](docs/DUAL_GRAPH.md).
 
 Workflow chart outlining tool choices and decision points (2026-11-14): [`docs/CATALOG.md#workflow-2026-11-14`](docs/CATALOG.md#workflow-2026-11-14).
 
-Wave 1-2 covers cannabis, potato, NA *Vitis*, Shuhua VCF, and *Oryza* SyRI. It uses scripts `01` to `10`.
+Groups 1–2 cover cannabis, potato, NA *Vitis*, Shuhua VCF, and *Oryza* SyRI. They use scripts `01` to `10`.
 
-Wave 3 covers maize, wheat, and barley minigraph, and dual PGGB-MC + Giraffe / PanGenie. It uses scripts `12` to `16`.
+Group 3 covers maize, wheat, and barley minigraph, and dual PGGB-MC + Giraffe / PanGenie. It uses scripts `12` to `16`.
 
 Scripts, one line each (file names and roles from the existing README and `pipeline/00_overview.md`):
 
